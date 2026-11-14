@@ -53,6 +53,13 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.8rem;color:#fff}
 .plItem:hover,.plItem:active{background:var(--ac2)}
+.place-card{background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(60,60,120,.07)}
+.place-card .ico{height:64px;display:flex;align-items:center;justify-content:center;font-size:1.9rem;background:var(--ac2)}
+.place-card .body{padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.place-card .body>b{font-size:.95rem;color:var(--tx)}
+.place-card .body>span.mu{font-size:.8rem;line-height:1.3}
+.place-card a{font-size:.82rem;text-decoration:none}
+.place-card a.go{margin-top:4px;font-weight:600}
 </style>
 </head>
 <body>
@@ -124,7 +131,7 @@ ali:["Ce questionnaire ne remplace pas un avis médical : un médecin ou un·e d
 };
 const hash=async(p,s)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
 const NAV_ICO={home:'🏠',bilan:'🧭',suivi:'📈',aide:'📍',compte:'👤',ressources:'📚',legal:'📄'};
-const SUB={aide:[['Rechercher une ville','aide-recherche'],['Carte & liste','mapWrap']],ressources:[['Numéros vérifiés','res-numeros'],['Espace admin','res-admin']]};
+const SUB={aide:[['Rechercher une ville','aide-recherche'],['Résultats','resWrap']],ressources:[['Numéros vérifiés','res-numeros'],['Espace admin','res-admin']]};
 function goSub(parent,anchor){go(parent);setTimeout(()=>{const el=document.getElementById(anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},60)}
 function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["compte",user?"👤 "+esc(user.prenom||user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
 $('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
@@ -159,37 +166,57 @@ function aideV(){const CL=CATS[aideThemeSel]||CATS_DEFAULT;if(!catSel||!CL.some(
 $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide près de chez moi${aideThemeSel?' — <span style="color:var(--ac)">'+esc(BTHEMES.find(t=>t[0]==aideThemeSel)[1])+'</span>':''}</h2>${aideThemeSel?'<button class="s" style="margin:0 0 10px" onclick="aideThemeSel=null;aideV()">Voir toutes les catégories</button>':'<p class="mu">Fais un bilan pour voir ici des catégories adaptées à ta situation, ou choisis directement ci-dessous.</p>'}
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
 <div style="flex:1 1 190px;min-width:160px"><label class="mu" style="display:block;font-size:.82rem">Je cherche</label><select id="plCat" onchange="catSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${CL.map(([n,q])=>`<option value="${esc(q)}" ${q===catSel?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
-<div style="flex:2 1 220px;min-width:180px"><label class="mu" style="display:block;font-size:.82rem">Ville ou code postal</label><div id="plWrap" style="position:relative"><input type="text" id="pl" value="${esc(place)}" placeholder="Ex. Bordeaux ou 40140" autocomplete="off" oninput="plSug()" onkeydown="if(event.key=='Enter'){plHide();aideSearch()}" style="margin:0"><div id="plList" style="position:absolute;z-index:30;left:0;right:0;top:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:230px;overflow:auto;display:none;box-shadow:0 10px 28px rgba(30,30,70,.14)"></div></div></div>
-<div style="flex:1 1 110px;min-width:100px"><label class="mu" style="display:block;font-size:.82rem">Rayon</label><select id="plKm" onchange="kmSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${[5,10,20,30,50,100].map(k=>`<option value="${k}" ${String(k)===String(kmSel)?'selected':''}>${k} km</option>`).join('')}</select></div>
+<div style="flex:2 1 220px;min-width:180px"><label class="mu" style="display:block;font-size:.82rem">Ville, village ou code postal</label><div id="plWrap" style="position:relative"><input type="text" id="pl" value="${esc(place)}" placeholder="Partout en France : Ex. Bordeaux ou 40140" autocomplete="off" oninput="plSug()" onkeydown="if(event.key=='Enter'){plHide();aideSearch()}" style="margin:0"><div id="plList" style="position:absolute;z-index:30;left:0;right:0;top:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:230px;overflow:auto;display:none;box-shadow:0 10px 28px rgba(30,30,70,.14)"></div></div></div>
 <div style="flex:0 0 auto"><button onclick="plHide();aideSearch()" style="margin:0">Chercher</button></div>
 </div>
-<p class="mu" style="margin-top:10px">La carte et les profils s’affichent juste en dessous. Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p><div id="mapWrap" class="hide" style="margin-top:12px"><div class="row"><div id="mapCat" class="mu"></div><button class="s" onclick="mapCur=null;document.getElementById('mapWrap').classList.add('hide')">Fermer la carte ✕</button></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px"><div id="mapListBox" style="flex:1 1 240px;max-height:360px;overflow:auto;border:1px solid var(--bd);border-radius:12px;padding:6px;background:var(--card)"></div><iframe id="mapFrame" style="flex:2 1 300px;min-width:260px;height:360px;border:1px solid var(--bd);border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div><div id="lk"></div></div>
+<p class="mu" style="margin-top:10px">Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p>
+<div id="resWrap" class="hide" style="margin-top:14px"><div class="row"><div id="resTitle" class="mu"></div><button class="s" onclick="document.getElementById('resWrap').classList.add('hide')">Fermer ✕</button></div>
+<p id="resEmpty" class="mu hide" style="padding:8px 0">Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.</p>
+<div id="resGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:6px"></div></div>
+<div id="lk"></div></div>
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
 <div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideSearch()}
 async function aideSearch(){place=$('pl').value.trim();if(!place)return;const sel=$('plCat');if(sel)catSel=sel.value;const CL=CATS[aideThemeSel]||CATS_DEFAULT;const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
 let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='';
-function kmZoom(km){km=+km||0;return km<=0?12:km<=5?14:km<=10?13:km<=20?12:km<=30?11:km<=50?10:9}
-async function osmSearch(lat,lon,km,term){const radius=Math.min(Math.max((+km||15)*1000,1500),60000);
+const SEARCH_KM=20;
+async function osmSearch(lat,lon,km,term){const radius=Math.min(Math.max((+km||SEARCH_KM)*1000,1500),60000);
 const safe=term.replace(/["\\]/g,'');
 const q='[out:json][timeout:20];(node["name"~"'+safe+'",i](around:'+radius+','+lat+','+lon+');way["name"~"'+safe+'",i](around:'+radius+','+lat+','+lon+'););out center 30;';
 try{const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});const j=await r.json();
 return (j.elements||[]).map(e=>{const t=e.tags||{},la=e.lat!=null?e.lat:(e.center?e.center.lat:null),lo=e.lon!=null?e.lon:(e.center?e.center.lon:null);
 const ad=[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),vil=[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' '),addr=[ad,vil].filter(Boolean).join(', ');
-return {name:t.name||'Établissement',addr,phone:t.phone||t['contact:phone']||'',site:t.website||t['contact:website']||'',lat:la,lon:lo}}).filter(x=>x.lat!=null&&x.lon!=null).slice(0,25)}catch(e){return []}}
-function renderOsmList(){const box=$('mapListBox');if(!box)return;
-if(!osmList.length){box.innerHTML='<p class="mu" style="padding:8px">Aucun établissement trouvé via OpenStreetMap pour cette recherche. Utilisez la carte ou <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.</p>';return}
-box.innerHTML=osmList.map((x,i)=>`<div class="s" style="padding:9px 10px;border-radius:10px;margin:0 0 6px;cursor:pointer" onclick="osmPick(${i})"><b>${esc(x.name)}</b>${x.addr?'<br><span class="mu">'+esc(x.addr)+'</span>':''}${x.phone?'<br><span class="mu">'+esc(x.phone)+'</span>':''}</div>`).join('')}
-function osmPick(i){const x=osmList[i];if(!x)return;$('mapFrame').src='https://www.google.com/maps?q='+x.lat+','+x.lon+'&output=embed&z=17';
-const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));
-$('mapCat').innerHTML='Carte : '+esc(x.name)+(x.site?' — <a href="'+esc(x.site)+'" target="_blank" rel="noopener">site</a>':'')+' — <a href="'+ext+'" target="_blank" rel="noopener" class="mu">ouvrir en plein écran ↗</a>'}
-async function mapPaint(){if(!mapCur||!place)return;const p=place,z=kmZoom(kmSel),emb=`https://www.google.com/maps?q=${encodeURIComponent(mapCur.t+' '+p)}&output=embed&z=${z}`,ext=`https://www.google.com/maps/search/${encodeURIComponent(mapCur.t+' '+p)}`;
-document.getElementById('mapCat').innerHTML='Carte : '+mapCur.label+' — <a href="'+ext+'" target="_blank" rel="noopener" class="mu">ouvrir en plein écran ↗</a>';document.getElementById('mapFrame').src=emb;document.getElementById('mapWrap').classList.remove('hide');
-const myGen=++osmGen;const box=$('mapListBox');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';
+return {name:t.name||'Établissement',addr,phone:t.phone||t['contact:phone']||'',site:t.website||t['contact:website']||'',lat:la,lon:lo}}).filter(x=>x.lat!=null&&x.lon!=null).slice(0,24)}catch(e){return []}}
+function catIcon(term){const t=(term||'').toLowerCase();
+if(t.includes('médico')||t.includes('cmp'))return'🏥';
+if(t.includes('psychiatr')||t.includes('psycholog')||t.includes('psychothérap'))return'🧠';
+if(t.includes('avocat'))return'⚖️';
+if(t.includes('hébergement'))return'🏠';
+if(t.includes('victime')||t.includes('cidff'))return'🤝';
+if(t.includes('médiation')||t.includes('scolaire')||t.includes('mineur'))return'🏫';
+if(t.includes('adolescent')||t.includes('jeune'))return'🎒';
+if(t.includes('harcèlement'))return'🚫';
+if(t.includes('csapa')||t.includes('addict')||t.includes('alcoolique'))return'🔗';
+if(t.includes('diététic'))return'🍎';
+if(t.includes('médecin'))return'🩺';
+if(t.includes('sophrolog'))return'🌿';
+if(t.includes('coach'))return'💪';
+if(t.includes('association')||t.includes('groupe de parole')||t.includes('quartier')||t.includes('loisirs'))return'🤝';
+return'📍'}
+function renderResults(){const box=$('resGrid'),empty=$('resEmpty');if(!box)return;
+if(!osmList.length){box.innerHTML='';if(empty)empty.classList.remove('hide');return}
+if(empty)empty.classList.add('hide');
+const ico=catIcon(mapCur?mapCur.t:'');
+box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));
+return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(mapCur.label)}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<span class="mu">☎️ ${esc(x.phone)}</span>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
+async function paintResults(){if(!mapCur||!place)return;
+document.getElementById('resTitle').innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »';
+document.getElementById('resWrap').classList.remove('hide');
+const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';
 const ref=await geoOf(place);if(myGen!==osmGen)return;
-osmList=ref?await osmSearch(ref.lat,ref.lon,kmSel==='0'?15:kmSel,mapCur.t):[];
-if(myGen!==osmGen)return;renderOsmList()}
-function showMap(label,t){mapCur={label,t};mapPaint();document.getElementById('mapWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
+osmList=ref?await osmSearch(ref.lat,ref.lon,SEARCH_KM,mapCur.t):[];
+if(myGen!==osmGen)return;renderResults()}
+function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[],plAbort=null,plCache={},plGen=0,kmSel='20',geoCache={};
 async function geoOf(q){q=(q||'').trim();if(!q)return null;if(geoCache[q]!==undefined)return geoCache[q];
 try{const r=await fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(q)+'&type=municipality&limit=1');const j=await r.json();const f=j.features&&j.features[0];
