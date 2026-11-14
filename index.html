@@ -173,6 +173,8 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
 <div style="flex:1 1 190px;min-width:160px"><label class="mu" style="display:block;font-size:.82rem">Je cherche</label><select id="plCat" onchange="catSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${CL.map(([n,q])=>`<option value="${esc(q)}" ${q===catSel?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
 <div style="flex:2 1 220px;min-width:180px"><label class="mu" style="display:block;font-size:.82rem">Ville, village ou code postal</label><div id="plWrap" style="position:relative"><input type="text" id="pl" value="${esc(place)}" placeholder="Partout en France : Ex. Bordeaux ou 40140" autocomplete="off" oninput="plSug()" onkeydown="if(event.key=='Enter'){plHide();aideSearch()}" style="margin:0"><div id="plList" style="position:absolute;z-index:30;left:0;right:0;top:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:230px;overflow:auto;display:none;box-shadow:0 10px 28px rgba(30,30,70,.14)"></div></div></div>
+<div style="flex:0 1 110px;min-width:100px"><label class="mu" style="display:block;font-size:.82rem" for="plKm">Rayon</label><select id="plKm" onchange="kmSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${KM_OPTS.map(k=>`<option value="${k}" ${String(k)===String(kmSel)?'selected':''}>${k} km</option>`).join('')}</select></div>
+<div style="flex:0 1 150px;min-width:130px"><label class="mu" style="display:block;font-size:.82rem" for="plSort">Trier par</label><select id="plSort" onchange="resSort=this.value;resortResults()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${SORT_OPTS.map(([k,l])=>`<option value="${k}" ${k===resSort?'selected':''}>${l}</option>`).join('')}</select></div>
 <div style="flex:0 0 auto"><button onclick="plHide();aideSearch()" style="margin:0">Chercher</button></div>
 </div>
 <p class="mu" style="margin-top:10px">Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p>
@@ -283,32 +285,40 @@ return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div>
 function renderResults(pending){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box)return;
 if(more)more.classList.toggle('hide',!pending);
 if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
-box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche répond lentement en ce moment. ':'Aucun résultat à proximité. ')+'<button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Chercher plus loin (jusqu’à 50 km)</button><br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
+box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche répond lentement en ce moment. ':'Aucun résultat à proximité. ')+(KM_OPTS.find(k=>k>curKm())?'<button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Élargir à '+KM_OPTS.find(k=>k>curKm())+' km</button>':'')+'<br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');const hasModes=osmList.some(x=>x.mode==='L')&&osmList.some(x=>x.mode&&x.mode!=='L');
 const L=resFiltered();
 const chips=hasModes?`<div class="res-chips" style="grid-column:1/-1">${RES_FILTERS.map(([k,l])=>`<button class="chip ${resFilter===k?'on':''}" onclick="resFilter='${k}';resShown=30;renderResults(false)">${l}</button>`).join('')}</div>`:'';
 box.innerHTML=chips+L.slice(0,resShown).map(x=>cardHtml(x,ico)).join('')+(L.length>resShown?`<button class="s" style="grid-column:1/-1;margin:4px 0" onclick="resShown+=30;renderResults(false)">Voir plus (${L.length-resShown} autres)</button>`:'')}
 const MODE_RANK={L:0,E:1,S:2,B:3};
-function sortRes(list){const pc=placeCity();return list.sort((a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.ville||'')===pc?0:1;return (sa-sb)||(Math.round(a.d*2)-Math.round(b.d*2))||((MODE_RANK[a.mode]??4)-(MODE_RANK[b.mode]??4))||((b.phone?1:0)-(a.phone?1:0))||a.name.localeCompare(b.name)})}
+const KM_OPTS=[5,10,20,30,50,100];
+const SORT_OPTS=[['dist','Les plus proches'],['tel','Avec téléphone d’abord'],['lib','Cabinets libéraux d’abord'],['name','Nom (A → Z)']];
+let resSort='dist';
+function sortRes(list){const pc=placeCity();
+const near=(a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.ville||'')===pc?0:1;return (sa-sb)||(Math.round(a.d*2)-Math.round(b.d*2))};
+const mode=(a,b)=>(MODE_RANK[a.mode]??4)-(MODE_RANK[b.mode]??4),tel=(a,b)=>(b.phone?1:0)-(a.phone?1:0),nm=(a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'});
+const by={dist:[near,mode,tel,nm],tel:[tel,near,mode,nm],lib:[mode,near,tel,nm],name:[nm,near]}[resSort]||[near,mode,tel,nm];
+return list.sort((a,b)=>{for(const f of by){const r=f(a,b);if(r)return r}return 0})}
+function resortResults(){if(resGroups){resGroups.forEach(g=>{if(g.list)sortRes(g.list)});renderGroups()}else if(osmList.length){sortRes(osmList);renderResults(false)}}
 let lastRef=null,resGroups=null,resOthers=[];
 function renderGroups(){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box||!resGroups)return;if(more)more.classList.add('hide');
 if(resGroups.every(g=>!g.list)){box.innerHTML='';if(empty){empty.innerHTML='Les annuaires officiels sont momentanément indisponibles. Choisis une catégorie précise dans la liste, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 box.innerHTML=resGroups.map(g=>{const ico=catIcon(g.t),n=g.list?g.list.length:0;const tq=g.t.replace(/'/g,"\\'");
-return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${n?n+' à moins de '+g.k+' km':'aucun à moins de '+g.k+' km'}</span></h3>${n?`<div class="grid">${g.list.slice(0,4).map(x=>cardHtml(x,ico)).join('')}</div>`:''}${n>4?`<button class="s" style="margin:8px 0 0" onclick="pickCat('${tq}')">Voir les ${n} ${esc(g.label.toLowerCase())} ▸</button>`:''}</div>`}).join('')
+return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${n?n+' à moins de '+g.k+' km':'aucun à moins de '+g.k+' km'+(KM_OPTS.find(k=>k>g.k)?' — <a href="#" onclick="widenSearch();return false">élargir</a>':'')}</span></h3>${n?`<div class="grid">${g.list.slice(0,4).map(x=>cardHtml(x,ico)).join('')}</div>`:''}${n>4?`<button class="s" style="margin:8px 0 0" onclick="pickCat('${tq}')">Voir les ${n} ${esc(g.label.toLowerCase())} ▸</button>`:''}</div>`}).join('')
 +(resOthers.length?`<div class="res-group"><h3>Autres aides (recherche OpenStreetMap)</h3><div style="display:flex;flex-wrap:wrap;gap:6px">${resOthers.map(([l,t])=>`<button class="chip" style="margin:0" onclick="pickCat('${t.replace(/'/g,"\\'")}')">${esc(l)}</button>`).join('')}</div></div>`:'')}
 function pickCat(t){catSel=t;const sel=$('plCat');if(sel)sel.value=t;aideSearch()}
 async function runSearch(km){if(!mapCur||!place)return;
 const myGen=++osmGen;resShown=30;resFilter='all';
-const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+(k>SEARCH_KM?' dans un rayon de '+k+' km':'')+'</span>'+updNote():'')};
+const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+' dans un rayon de '+k+' km'+'</span>'+updNote():'')};
 setTitle(km,null);$('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true);
 const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
 if(!ref){renderResults(false);return}lastRef={...ref,q:place};
 const term=mapCur.t,dcat=DATA_CAT[(term||'').toLowerCase()];
 if(term==='__all'){const base=(CATS[aideThemeSel]||CATS_DEFAULT);const seen=new Set();const jobs=[];
 for(const [label,t] of base){const dc=DATA_CAT[t.toLowerCase()];if(!dc||seen.has(dc))continue;seen.add(dc);
-jobs.push((async()=>{let k=km,l=await dataSearch(ref,k,dc);if(l&&l.length<3&&k<50){k=50;l=await dataSearch(ref,k,dc)}
+jobs.push((async()=>{let k=km,l=await dataSearch(ref,k,dc);
 if(l&&t.toLowerCase()==='avocat droit des mineurs'){const sp=l.filter(x=>/mineur|enfant|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)l=sp}
 return {label,t,k,list:l?sortRes(l):null}})())}
 const groups=await Promise.all(jobs);if(myGen!==osmGen)return;
@@ -316,7 +326,6 @@ resGroups=groups;resOthers=base.filter(c=>!DATA_CAT[c[1].toLowerCase()]);
 const tot=groups.reduce((a,g)=>a+(g.list?g.list.length:0),0);setTitle(km,tot);renderGroups();return}
 resGroups=null;
 if(dcat){let k=km,list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return;
-if(list&&list.length<5&&k<50){k=50;list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return}
 if(list&&term.toLowerCase()==='avocat droit des mineurs'){const sp=list.filter(x=>/mineur|enfant|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)list=sp}
 if(list){osmList=sortRes(list);setTitle(k,osmList.length);renderResults(false);return}}
 let ph=null,ov,ovDone=false;
@@ -325,8 +334,9 @@ ph=await photonSearch(ref.lat,ref.lon,km,term);if(myGen!==osmGen)return;
 osmList=mergeRes(ref,km,ph,ov);renderResults(!ovDone);
 await pOv;if(myGen!==osmGen)return;
 osmErr=(ph===null&&ov===null);osmList=mergeRes(ref,km,ph,ov);setTitle(km,osmList.length);renderResults(false)}
-function paintResults(){return runSearch(SEARCH_KM)}
-function widenSearch(){return runSearch(50)}
+function curKm(){const k=+kmSel;return KM_OPTS.includes(k)?k:SEARCH_KM}
+function paintResults(){return runSearch(curKm())}
+function widenSearch(){const n=KM_OPTS.find(k=>k>curKm());if(!n)return;kmSel=String(n);const e=$('plKm');if(e)e.value=kmSel;return runSearch(n)}
 function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[],plAbort=null,plCache={},plGen=0,kmSel='20',geoCache={};
 async function geoOf(q){q=(q||'').trim();if(!q)return null;if(geoCache[q]!==undefined)return geoCache[q];
