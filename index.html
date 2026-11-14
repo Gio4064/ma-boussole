@@ -178,7 +178,7 @@ ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
 <div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideSearch()}
 async function aideSearch(){place=$('pl').value.trim();if(!place)return;const sel=$('plCat');if(sel)catSel=sel.value;const CL=CATS[aideThemeSel]||CATS_DEFAULT;const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
-let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='';
+let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='',osmErr=false;
 const SEARCH_KM=20;
 const NAME_REGEX_OVERRIDE={
 "maison des adolescents":"maison des adolescents|point accueil jeunes",
@@ -206,18 +206,20 @@ const TAG_HINTS={
 "addictologue":[["healthcare","psychiatrist"],["amenity","doctors"]],
 "csapa addictologie":[["amenity","social_facility"]]
 };
-async function osmSearch(lat,lon,km,term){const radius=Math.min(Math.max((+km||SEARCH_KM)*1000,1500),110000);
+async function fetchWithTimeout(url,opts,ms){const ctrl=new AbortController();const tm=setTimeout(()=>ctrl.abort(),ms);
+try{const r=await fetch(url,{...opts,signal:ctrl.signal});clearTimeout(tm);return r}catch(e){clearTimeout(tm);throw e}}
+async function osmSearch(lat,lon,km,term){const radius=Math.min(Math.max((+km||SEARCH_KM)*1000,1500),80000);
 const key=(term||'').toLowerCase();
 const nameRx=(NAME_REGEX_OVERRIDE[key]||term).replace(/["\\]/g,'');
 const hints=TAG_HINTS[key]||[];
 const parts=['node["name"~"'+nameRx+'",i](around:'+radius+','+lat+','+lon+');','way["name"~"'+nameRx+'",i](around:'+radius+','+lat+','+lon+');'];
-hints.forEach(([k,rx])=>{parts.push('node["'+k+'"~"'+rx+'",i](around:'+radius+','+lat+','+lon+');');parts.push('way["'+k+'"~"'+rx+'",i](around:'+radius+','+lat+','+lon+');')});
-const q='[out:json][timeout:25];('+parts.join('')+');out center 40;';
-try{const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});const j=await r.json();
+hints.forEach(([k,rx])=>{parts.push('node["'+k+'"~"'+rx+'",i](around:'+radius+','+lat+','+lon+');')});
+const q='[out:json][timeout:12];('+parts.join('')+');out center 30;';
+try{const r=await fetchWithTimeout('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)},14000);const j=await r.json();
 const seen=new Set();
 return (j.elements||[]).map(e=>{const t=e.tags||{},la=e.lat!=null?e.lat:(e.center?e.center.lat:null),lo=e.lon!=null?e.lon:(e.center?e.center.lon:null);
 const ad=[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),vil=[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' '),addr=[ad,vil].filter(Boolean).join(', ');
-return {name:t.name||'Établissement',addr,phone:t.phone||t['contact:phone']||'',site:t.website||t['contact:website']||'',lat:la,lon:lo}}).filter(x=>{if(x.lat==null)return false;const k=x.name+'|'+x.lat.toFixed(4)+','+x.lon.toFixed(4);if(seen.has(k))return false;seen.add(k);return true}).slice(0,24)}catch(e){return []}}
+return {name:t.name||'Établissement',addr,phone:t.phone||t['contact:phone']||'',site:t.website||t['contact:website']||'',lat:la,lon:lo}}).filter(x=>{if(x.lat==null)return false;const k=x.name+'|'+x.lat.toFixed(4)+','+x.lon.toFixed(4);if(seen.has(k))return false;seen.add(k);return true}).slice(0,24)}catch(e){return null}}
 function catIcon(term){const t=(term||'').toLowerCase();
 if(t.includes('médico')||t.includes('cmp'))return'🏥';
 if(t.includes('psychiatr')||t.includes('psycholog')||t.includes('psychothérap'))return'🧠';
@@ -235,7 +237,8 @@ if(t.includes('coach'))return'💪';
 if(t.includes('association')||t.includes('groupe de parole')||t.includes('quartier')||t.includes('loisirs'))return'🤝';
 return'📍'}
 function renderResults(){const box=$('resGrid'),empty=$('resEmpty');if(!box)return;
-if(!osmList.length){box.innerHTML='';if(empty)empty.classList.remove('hide');return}
+if(osmErr){box.innerHTML='';if(empty){empty.innerHTML='Le service de recherche (OpenStreetMap) met trop de temps à répondre. Réessaie dans quelques instants, ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.';empty.classList.remove('hide')}return}
+if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');
 box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';
@@ -246,11 +249,11 @@ document.getElementById('resWrap').classList.remove('hide');
 const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';
 if($('resEmpty'))$('resEmpty').classList.add('hide');
 const ref=await geoOf(place);if(myGen!==osmGen)return;
-if(!ref){osmList=[];renderResults();return}
-let used=SEARCH_KM,list=[];
-for(const km of [SEARCH_KM,50,100]){list=await osmSearch(ref.lat,ref.lon,km,mapCur.t);if(myGen!==osmGen)return;used=km;if(list.length)break}
-osmList=list;
-const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(used>SEARCH_KM&&list.length?' <span class="mu">(recherche élargie à '+used+' km, environs inclus)</span>':'');
+if(!ref){osmList=[];osmErr=false;renderResults();return}
+let used=SEARCH_KM,list=null;
+for(const km of [SEARCH_KM,45]){list=await osmSearch(ref.lat,ref.lon,km,mapCur.t);if(myGen!==osmGen)return;used=km;if(list===null)break;if(list.length)break}
+osmErr=(list===null);osmList=list||[];
+const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(used>SEARCH_KM&&osmList.length?' <span class="mu">(recherche élargie à '+used+' km, environs inclus)</span>':'');
 renderResults()}
 function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[],plAbort=null,plCache={},plGen=0,kmSel='20',geoCache={};
