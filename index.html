@@ -60,6 +60,7 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 .place-card .body>span.mu{font-size:.8rem;line-height:1.3}
 .place-card a{font-size:.82rem;text-decoration:none}
 .place-card a.go{margin-top:4px;font-weight:600}
+.badge-off{display:inline-block;align-self:flex-start;font-size:.72rem;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:999px;padding:1px 8px;margin:2px 0}
 </style>
 </head>
 <body>
@@ -242,11 +243,37 @@ try{const r=await fetchWithTimeout('https://photon.komoot.io/api/?q='+encodeURIC
 return (j.features||[]).map(f=>{const p=f.properties||{},c=(f.geometry&&f.geometry.coordinates)||[];
 const ad=[p.housenumber,p.street].filter(Boolean).join(' '),vil=[p.postcode,p.city].filter(Boolean).join(' ');
 return {name:p.name||'',addr:[ad,vil].filter(Boolean).join(', '),phone:'',site:'',lat:c[1],lon:c[0],kind:p.osm_key}}).filter(x=>x.name&&x.lat!=null&&x.kind!=='place'&&x.kind!=='highway'&&x.kind!=='boundary')}catch(e){return null}}
+const AMELI_DS='https://opendata.koumoul.com/data-fair/api/v1/datasets/annuaire-sante-ameli';
+const AMELI_Q={"psychologue":"psychologue","psychologues":"psychologue","psychologue troubles alimentaires":"psychologue","psychiatre":"psychiatre","médecin généraliste":"généraliste","addictologue":"addictologie"};
+let ameliMeta=null;
+async function ameliInfo(){if(ameliMeta!==null)return ameliMeta;try{const r=await fetchWithTimeout(AMELI_DS,{},6000);ameliMeta=r.ok?await r.json():false}catch(e){ameliMeta=false}return ameliMeta}
+function kFind(o,rx,not){return Object.keys(o).filter(k=>rx.test(k)&&!(not&&not.test(k)))}
+function ameliRow(o){const v=k=>(o[k]==null?'':String(o[k]).trim());
+const nomK=kFind(o,/(^|_)nom($|_)/i,/commune|ville|voie|etab/i),preK=kFind(o,/pr[eé]nom/i),civK=kFind(o,/civilit/i);
+const profK=kFind(o,/profession|specialit|libelle_pro/i),telK=kFind(o,/t[eé]l/i,/fax/i);
+const adrK=kFind(o,/adresse|voie|ligne|lieu_dit/i),cpK=kFind(o,/code_?postal|^cp$/i),comK=kFind(o,/commune|ville|localit/i,/code/i);
+const name=[...civK,...preK,...nomK].map(v).filter(Boolean).join(' ');
+const cp=cpK.map(v).find(Boolean)||'',com=comK.map(v).find(Boolean)||'';
+const addr=[adrK.map(v).filter(Boolean).join(' '),[cp,com].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+let lat=null,lon=null;const gp=o._geopoint||o.geopoint;if(typeof gp==='string'&&gp.includes(',')){const a=gp.split(',');lat=+a[0];lon=+a[1]}
+const lk=kFind(o,/^lat/i)[0],lo=kFind(o,/^(lon|lng)/i)[0];if(lat==null&&lk&&lo){lat=+o[lk];lon=+o[lo]}
+return {name:name||profK.map(v).find(Boolean)||'Professionnel de santé',prof:profK.map(v).find(Boolean)||'',addr,cp,com,phone:telK.map(v).find(Boolean)||'',site:'',lat,lon,src:'ameli'}}
+async function ameliSearch(ref,km,term,placeTxt){const word=AMELI_Q[(term||'').toLowerCase()];if(!word)return [];
+try{const meta=await ameliInfo();const geo=!!(meta&&meta.bbox);
+let url=AMELI_DS+'/lines?size=60&q='+encodeURIComponent(word);
+if(geo)url+='&geo_distance='+encodeURIComponent(ref.lon+','+ref.lat+','+(km*1000))+'&sort='+encodeURIComponent('_geo_distance:'+ref.lon+':'+ref.lat);
+const cp=(placeTxt.match(/\b\d{5}\b/)||[''])[0],city=placeTxt.replace(/\b\d{5}\b/,'').trim();
+if(!geo)url+=encodeURIComponent(' '+(cp||city));
+const r=await fetchWithTimeout(url,{},8000);if(!r.ok)return null;const j=await r.json();
+let rows=(j.results||[]).map(ameliRow);
+if(!geo){const dep=cp.slice(0,2),cl=plNorm(city);rows=rows.filter(x=>(cp&&x.cp===cp)||(cl&&plNorm(x.com).includes(cl))||(dep&&x.cp.startsWith(dep)));
+for(const x of rows){if(x.lat==null){const ll=await geoOf(x.addr||((x.cp||'')+' '+(x.com||'')));if(ll){x.lat=ll.lat;x.lon=ll.lon}}}}
+return rows}catch(e){return null}}
 function mergeRes(ref,km,...lists){const out=[];
 for(const L of lists){if(!L)continue;for(const x of L){if(x.lat==null)continue;x.d=kmBetween(ref,{lat:x.lat,lon:x.lon});if(x.d>km)continue;
 const dup=out.find(y=>y.name.toLowerCase()===x.name.toLowerCase()&&Math.abs(y.lat-x.lat)<.003&&Math.abs(y.lon-x.lon)<.003);
-if(dup){if(!dup.phone&&x.phone)dup.phone=x.phone;if(!dup.site&&x.site)dup.site=x.site;if(!dup.addr&&x.addr)dup.addr=x.addr}else out.push({...x})}}
-return out.sort((a,b)=>a.d-b.d).slice(0,24)}
+if(dup){if(x.src==='ameli')dup.src='ameli';if(!dup.phone&&x.phone)dup.phone=x.phone;if(!dup.site&&x.site)dup.site=x.site;if(!dup.addr&&x.addr)dup.addr=x.addr}else out.push({...x})}}
+return out.sort((a,b)=>a.d-b.d).slice(0,40)}
 function renderResults(pending){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box)return;
 if(more)more.classList.toggle('hide',!pending);
 if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
@@ -254,7 +281,7 @@ box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche rép
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');
 box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';
-return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(mapCur.label)}${x.d!=null?' · à '+x.d.toFixed(1).replace('.',',')+' km':''}</span>`:''}${x.addr?`<span class="mu">📍 ${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
+return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(x.prof||mapCur.label)}${x.d!=null?' · à '+x.d.toFixed(1).replace('.',',')+' km':''}</span>`:''}${x.src==='ameli'?'<span class="badge-off">✔ Annuaire Assurance Maladie</span>':''}${x.addr?`<span class="mu">📍 ${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
 let lastRef=null;
 async function runSearch(km){if(!mapCur||!place)return;
 const myGen=++osmGen;
@@ -263,11 +290,13 @@ $('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true
 const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
 if(!ref){renderResults(false);return}lastRef={...ref,q:place};
 const term=mapCur.t;let ph=null,ov,ovDone=false;
-const pOv=osmSearch(ref.lat,ref.lon,km,term).then(r=>{ov=r;ovDone=true});
+let am=null,amDone=false;
+const pOv=osmSearch(ref.lat,ref.lon,km,term).then(r=>{ov=r;ovDone=true;if(myGen===osmGen){osmList=mergeRes(ref,km,am,ph,ov);renderResults(!(ovDone&&amDone))}});
+const pAm=ameliSearch(ref,km,term,place).then(r=>{am=r;amDone=true;if(myGen===osmGen){osmList=mergeRes(ref,km,am,ph,ov);renderResults(!(ovDone&&amDone))}});
 ph=await photonSearch(ref.lat,ref.lon,km,term);if(myGen!==osmGen)return;
-osmList=mergeRes(ref,km,ph,ov);renderResults(!ovDone);
-await pOv;if(myGen!==osmGen)return;
-osmErr=(ph===null&&ov===null);osmList=mergeRes(ref,km,ph,ov);renderResults(false)}
+osmList=mergeRes(ref,km,am,ph,ov);renderResults(!(ovDone&&amDone));
+await Promise.all([pOv,pAm]);if(myGen!==osmGen)return;
+osmErr=(ph===null&&ov===null&&am===null);osmList=mergeRes(ref,km,am,ph,ov);renderResults(false)}
 function paintResults(){return runSearch(SEARCH_KM)}
 function widenSearch(){return runSearch(50)}
 function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
