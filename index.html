@@ -96,10 +96,10 @@ function showMap(label,t){const p=place,emb=`https://www.google.com/maps?q=${enc
 document.getElementById('mapCat').innerHTML='Carte : '+label+' — <a href="'+ext+'" target="_blank" rel="noopener" class="mu">ouvrir en plein écran ↗</a>';document.getElementById('mapFrame').src=emb;document.getElementById('mapWrap').classList.remove('hide');document.getElementById('mapWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[];
 function plHide(){const L=$('plList');if(L){L.style.display='none'}}
-async function plSug(){clearTimeout(plTmr);const v=$('pl').value.trim();const L=$('plList');if(v.length<2){plHide();return}
-plTmr=setTimeout(async()=>{try{const r=await fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(v)+'&type=municipality&autocomplete=1&limit=8');const j=await r.json();plData=(j.features||[]);if(!plData.length){plHide();return}
+async function plSug(){clearTimeout(plTmr);const v=$('pl').value.trim();const L=$('plList');if(v.length<1){plHide();return}
+plTmr=setTimeout(async()=>{try{const r=await fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(v.toLowerCase())+'&type=municipality&autocomplete=1&limit=8');const j=await r.json();plData=(j.features||[]);if(!plData.length){plHide();return}
 L.innerHTML=plData.map((f,i)=>{const p=f.properties,nom=p.city||p.name||'',cp=p.postcode||'';return `<div class="plItem" data-i="${i}" style="padding:9px 12px;cursor:pointer;border-radius:8px">${esc(nom)}${cp?' <span class="mu">('+esc(cp)+')</span>':''}</div>`}).join('');
-L.style.display='block'}catch(e){plHide()}},250)}
+L.style.display='block'}catch(e){plHide()}},150)}
 function plPick(i){const f=plData[i];if(!f)return;const p=f.properties,nom=p.city||p.name||'',cp=p.postcode||'';$('pl').value=cp?nom+' '+cp:nom;plHide();aideL()}
 document.addEventListener('mousedown',e=>{const it=e.target.closest && e.target.closest('.plItem');if(it){plPick(+it.dataset.i);return}if(!e.target.closest || !e.target.closest('#plWrap'))plHide()});
 function aideL(){place=$('pl').value.trim();if(!place)return;const p=place;
