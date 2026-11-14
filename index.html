@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icons/icon-192.png"><meta name="theme-color" content="#5b6cd6">
+<title>Ma Boussole – Bilan et orientation</title>
+<style>
+:root{--bg:#f6f4fb;--card:#fff;--tx:#25242d;--mu:#6a6878;--ac:#5b6cd6;--ac2:#e8ebff;--bd:#e3e0ec;--wa:#fff1dc;--wt:#7a4b00;--ok:#2f9e6b;--md:#e0a030;--hi:#d9534f;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no-repeat;color:var(--tx);font:var(--fs,16px)/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px 16px 70px}
+h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.25rem;margin:.3em 0 .5em}h3{font-size:1rem;margin:1em 0 .3em;color:var(--ac)}
+.card{background:var(--card);box-shadow:0 6px 24px rgba(60,60,120,.08);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0}
+.mu{color:var(--mu);font-size:.9rem}.priv{background:var(--ac2);border-radius:12px;padding:10px 12px;font-size:.9rem}
+.warn{background:var(--wa);color:var(--wt);border-radius:12px;padding:12px 14px;margin:12px 0}
+nav{display:flex;gap:6px;overflow-x:auto;margin:8px 0}nav button{flex:none}
+button{font:600 .95rem system-ui,sans-serif;border:0;border-radius:12px;padding:11px 16px;cursor:pointer;background:var(--ac);color:#fff;margin:4px 6px 4px 0}
+button.s{background:var(--ac2);color:var(--ac)}button.on{outline:2px solid var(--ac)}
+input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;margin:4px 0 10px}
+.opt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.opt button{margin:0;background:var(--ac2);color:var(--tx);font-weight:500}.opt button:hover{background:var(--ac);color:#fff}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:4px 0 12px}.bar i{display:block;height:100%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:url(img/fond-sombre.svg)}}:root[data-theme="dark"] body{background-image:url(img/fond-sombre.svg)}.hide{display:none}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--ac);outline-offset:2px}.chip{background:var(--ac2);color:var(--tx);font-weight:500}.chip.on{background:var(--ac);color:#fff}a{color:var(--ac)}ul{padding-left:1.2em}li{margin:.3em 0}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.8rem;color:#fff}
+</style>
+</head>
+<body>
+<main>
+<h1><svg width="40" height="40" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
+<nav id="nav"></nav><button class="s" onclick="fz()" aria-label="Changer la taille du texte">A+ Taille du texte</button>
+<div id="v"></div>
+<p class="mu">Outil d’auto-évaluation et d’orientation. Il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. En danger immédiat : 112 ou 15. Besoin de parler : 3114 (24h/24, gratuit).</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={g(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},s(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},d(k){try{localStorage.removeItem(k)}catch(e){}}};
+let user=null,mem=[],ans=[],qi=0,res=null,place='';
+const SC=["Jamais","Parfois","Souvent","Presque toujours"];
+// d: domaine ; r: item positif (score inversé)
+const Q=[
+{d:"conf",r:1,t:"Je suis globalement satisfait·e de la personne que je suis."},
+{d:"conf",r:1,t:"J’ai le sentiment d’avoir des qualités."},
+{d:"conf",t:"J’ai le sentiment de ne servir à rien."},
+{d:"conf",t:"Je me sens moins bien que les autres."},
+{d:"diff",t:"Je me sens différent·e, à l’écart des autres."},
+{d:"diff",t:"Je n’ose pas montrer qui je suis vraiment."},
+{d:"hum",t:"J’ai peu d’intérêt ou de plaisir à faire les choses."},
+{d:"hum",t:"Je me sens triste, déprimé·e ou sans espoir."},
+{d:"anx",t:"Je me sens nerveux·se, anxieux·se ou à bout."},
+{d:"anx",t:"Je n’arrive pas à arrêter de m’inquiéter."},
+{d:"soc",t:"Je me sens seul·e."},
+{d:"soc",t:"Je n’ai personne à qui parler de ce que je vis."},
+{d:"sec",t:"J’ai des pensées de me faire du mal ou de ne plus vivre."}];
+const D={conf:["Confiance en soi",5],diff:["Sentiment d’être différent·e",2],hum:["Humeur",2],anx:["Anxiété",2],soc:["Isolement",2]};
+const MAXS={conf:15,diff:6,hum:6,anx:6,soc:6};
+const lvl=(k,v)=>{const p=v/MAXS[k];return p<.34?0:p<.6?1:2};
+const LV=[["Plutôt bien","var(--ok)"],["À surveiller","var(--md)"],["À accompagner","var(--hi)"]];
+const hash=async(p,s)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["compte",user?"👤 "+esc(user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
+$('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}
+function go(p){nav(p);window[p+'V']();window.scrollTo(0,0)}
+function homeV(){$('v').innerHTML=`<div class="card"><h2>Bienvenue</h2><p>En 3 minutes, fais le point sur ta confiance en toi, ton moral et ton entourage. Tu obtiens des repères, des conseils et des liens vers des professionnels près de toi.</p>
+<div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div>
+<h3>Je suis…</h3><div>${AGES.map(a=>`<button class="chip ${a[0]==age?'on':''}" onclick="age='${a[0]}';homeV()">${a[1]}</button>`).join('')}</div><button onclick="go('bilan')">Commencer mon bilan</button>${user?'':'<button class="s" onclick="go(\'compte\')">Créer un espace de suivi</button>'}</div>
+<div class="card"><h3>Comment ça marche</h3><ul><li>13 questions courtes inspirées d’échelles reconnues (estime de soi, PHQ-2, GAD-2).</li><li>Un profil par domaine : confiance, différence ressentie, humeur, anxiété, isolement.</li><li>Une orientation selon ton niveau et ton lieu de vie.</li></ul></div>`}
+function bilanV(){ans=[];qi=0;res=null;q()}
+function q(){if(qi>=Q.length)return fin();const x=Q[qi];
+$('v').innerHTML=`<div class="card"><div class="mu">Question ${qi+1} / ${Q.length}</div><div class="bar"><i style="width:${qi/Q.length*100}%;background:var(--ac)"></i></div><h2>${esc(x.t)}</h2><div class="mu">Ces deux dernières semaines…</div><div class="opt">${SC.map((s,i)=>`<button onclick="ans[${qi}]=${i};qi++;q()">${s}</button>`).join('')}</div>${qi?'<button class="s" onclick="qi--;q()">← Retour</button>':''}</div>`}
+function fin(){const sc={conf:0,diff:0,hum:0,anx:0,soc:0};
+Q.forEach((x,i)=>{if(x.d!='sec')sc[x.d]+=x.r?3-ans[i]:ans[i]});
+res={date:new Date().toLocaleDateString('fr-FR'),sc,sec:ans[12]>0,lv:{}};for(const k in sc)res.lv[k]=lvl(k,sc[k]);
+if(user){const h=store.g('mb_hist_'+user.name)||[];h.push({date:res.date,sc});store.s('mb_hist_'+user.name,h)}
+resV()}
+const ADV={conf:["Chaque soir, note 3 choses réussies, même petites.","Remplace « je suis nul·le » par un fait précis et une piste d’amélioration.","Un micro-défi par semaine, juste un peu inconfortable."],
+diff:["Identifie 3 traits qui te distinguent et une situation où ils sont une force.","Rejoins un groupe autour d’une passion : on s’y sent vite à sa place.","Évite de comparer tes coulisses aux vitrines des réseaux."],
+hum:["Garde un rythme : sommeil régulier, lumière du jour, 20 min de marche.","Planifie une activité plaisir par jour, même sans envie.","Si cela dure plus de 2 semaines, parles-en à ton médecin."],
+anx:["Respiration 4-6 (inspire 4 s, expire 6 s) pendant 3 minutes.","Note tes inquiétudes, puis sépare ce que tu peux agir de ce que tu ne contrôles pas.","Réduis caféine et écrans le soir."],
+soc:["Fixe un contact social par semaine, même court.","Commence par des liens à faible enjeu : voisins, associations, bénévolat.","Choisis une personne de confiance et dis-lui ce que tu traverses."]};
+function resV(){nav('');const r=res;const worst=Math.max(...Object.values(r.lv));
+let h='';if(r.sec)h+=`<div class="warn"><b>💛 Tu as indiqué des pensées de te faire du mal.</b> Tu n’as pas à porter cela seul·e. Appelle le <b>3114</b> (24h/24, gratuit) ou le <b>112</b> en cas de danger immédiat. Tu peux aussi contacter ton médecin aujourd’hui.</div>`;
+h+='<div class="card"><h2>Ton profil</h2>'+Object.keys(D).map(k=>{const L=LV[r.lv[k]];return`<div class="row"><span>${D[k][0]}</span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${r.sc[k]/MAXS[k]*100}%;background:${L[1]}"></i></div>`}).join('')+'<p class="mu">Repères indicatifs issus de tes réponses, pas un diagnostic.</p></div>';
+const pri=Object.keys(D).filter(k=>r.lv[k]>0);
+h+='<div class="card"><h2>Tes conseils</h2>'+(pri.length?pri:['conf']).map(k=>`<h3>${D[k][0]}</h3><ul>${ADV[k].map(a=>`<li>${a}</li>`).join('')}</ul>`).join('')+'</div>';
+h+=`<div class="card"><h2>Étape suivante</h2>${minorNote()}<p>${worst==2?"Tes réponses suggèrent qu’un accompagnement par un professionnel serait utile. Commence par ton médecin traitant ou un psychologue.":worst==1?"Un échange avec un psychologue ou une structure d’écoute peut t’aider, avant que les difficultés ne s’installent.":"Tu sembles plutôt bien. Continue tes bonnes habitudes et refais un bilan dans quelques semaines."}</p><button onclick="go('aide')">📍 Trouver de l’aide près de chez moi</button><button class="s" onclick="pdf()">📄 Mon PDF</button><label style="display:block;margin:8px 0" class="mu"><input type="checkbox" id="delAfter"> Supprimer ce bilan de mon historique après le téléchargement</label><button class="s" onclick="go('home')">Terminer</button><p class="mu" id="msg"></p></div>`;
+$('v').innerHTML=h}
+function aideV(){const w=res?Math.max(...Object.values(res.lv)):1;$('v').innerHTML=`<div class="card"><h2>Trouver de l’aide près de chez moi</h2><label class="mu">Ville ou code postal</label><input type="text" id="pl" value="${esc(place)}" placeholder="Ex. Bordeaux ou 40140" onkeydown="if(event.key=='Enter')aideL()"><button onclick="aideL()">Chercher</button><p class="mu">La carte s’affiche juste en dessous. Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p><div id="mapWrap" class="hide" style="margin-top:12px"><div class="row"><div id="mapCat" class="mu"></div><button class="s" onclick="document.getElementById('mapWrap').classList.add('hide')">Fermer la carte ✕</button></div><iframe id="mapFrame" style="width:100%;height:360px;border:1px solid var(--bd);border-radius:12px;margin-top:6px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div><div id="lk"></div></div>
+${ecoute()}
+<div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideL()}
+function showMap(label,t){const p=place,emb=`https://www.google.com/maps?q=${encodeURIComponent(t+' '+p)}&output=embed&z=12`,ext=`https://www.google.com/maps/search/${encodeURIComponent(t+' '+p)}`;
+document.getElementById('mapCat').innerHTML='Carte : '+label+' — <a href="'+ext+'" target="_blank" rel="noopener" class="mu">ouvrir en plein écran ↗</a>';document.getElementById('mapFrame').src=emb;document.getElementById('mapWrap').classList.remove('hide');document.getElementById('mapWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function aideL(){place=$('pl').value.trim();if(!place)return;const p=place;
+const L=[["Psychologues","psychologue"],["Psychothérapeutes","psychothérapeute"],["Centres médico-psychologiques (CMP, gratuits, sur secteur)","centre médico-psychologique"],["Maison des adolescents / point accueil jeunes","maison des adolescents"],["Associations d’entraide et groupes de parole","groupe de parole association"]];
+const pros=(store.g('mb_pros')||[]).filter(x=>x.ville.toLowerCase().includes(place.toLowerCase())||place.includes(x.cp));
+let h=pros.length?`<h3>Fiches validées près de « ${esc(place)} »</h3><ul>${pros.map(x=>`<li><b>${esc(x.nom)}</b> — ${esc(x.metier)}, ${esc(x.ville)} ${esc(x.cp)}${x.tel?' — '+esc(x.tel):''}${x.site?` — <a href="${esc(x.site)}" target="_blank" rel="noopener">site</a>`:''}</li>`).join('')}</ul>`:'';
+h+=`<h3>Voir sur la carte</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${L.map(([n,q])=>`<button class="s" onclick="showMap('${n.replace(/'/g,"\\'")}','${q}')">🗺️ ${n}</button>`).join('')}</div>`;
+h+='<p class="mu" style="margin-top:10px">Besoin d’un annuaire officiel plutôt qu’une carte ? <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a></p>';
+$('lk').innerHTML=h}
+function ressourcesV(){$('v').innerHTML=`<div class="card"><h2>Ressources et numéros</h2>${ecoute()}</div><div class="card"><h2>Numéros nationaux vérifiés, par thème</h2><p class="mu">Sources : Psycom, Service-public.fr, ARS, ministère des Solidarités. À jour au 14 novembre 2026.</p>${themesHtml()}<h3>S’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a></li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a></li><li><a href="https://annuaire.sante.fr" target="_blank" rel="noopener">Annuaire santé officiel</a></li></ul></div>
+<div class="card"><h3>Espace administration</h3><p class="mu">Réservé à la personne qui gère cette application (ajout de fiches professionnelles vérifiées). Stocké sur cet appareil.</p>
+<input type="password" id="adp" placeholder="Code admin"><button onclick="adminGo()">Entrer</button><div id="adz"></div></div>`}
+function adminGo(){if($('adp').value!==(store.g('mb_admin_pin')||'0000')){alert('Code incorrect.');return}
+const pros=store.g('mb_pros')||[];
+$('adz').innerHTML='<h4>Ajouter une fiche</h4><input type="text" id="pn" placeholder="Nom"><input type="text" id="pm" placeholder="Métier (psychologue, CMP...)"><input type="text" id="pv" placeholder="Ville"><input type="text" id="pc" placeholder="Code postal"><input type="text" id="pt" placeholder="Téléphone"><input type="text" id="ps" placeholder="Site (https://...)"><button onclick="addPro()">Ajouter</button><ul>'+pros.map((x,i)=>`<li>${esc(x.nom)} — ${esc(x.ville)} <button class="s" onclick="rmPro(${i})">Supprimer</button></li>`).join('')+'</ul>'}
+function addPro(){const pros=store.g('mb_pros')||[];const v=id=>$(id).value.trim();
+if(!v('pn')||!v('pv'))return;pros.push({nom:v('pn'),metier:v('pm'),ville:v('pv'),cp:v('pc'),tel:v('pt'),site:v('ps')});store.s('mb_pros',pros);adminGo()}
+function rmPro(i){const pros=store.g('mb_pros')||[];pros.splice(i,1);store.s('mb_pros',pros);adminGo()}
+function suiviV(){if(!user){$('v').innerHTML='<div class="card"><h2>Suivi</h2><p>Crée un espace de suivi sur cet appareil pour voir ton évolution bilan après bilan.</p><button onclick="go(\'compte\')">Créer mon espace</button></div>';return}
+const h=store.g('mb_hist_'+user.name)||[];$('v').innerHTML='<div class="card"><h2>Mon évolution</h2>'+(h.length?h.slice(-8).reverse().map(e=>`<div class="mu">${e.date}</div>`+Object.keys(D).map(k=>`<div class="row"><span class="mu">${D[k][0]}</span></div><div class="bar"><i style="width:${(e.sc[k]/MAXS[k]*100)}%;background:var(--ac)"></i></div>`).join('')).join('<hr>'):'<p>Aucun bilan pour l’instant.</p>')+'<p class="mu">Pour la confiance, une barre haute est bonne ; pour les autres domaines, une barre haute signale plus de difficulté.</p></div>'}
+function compteV(){if(user){const h=store.g('mb_hist_'+user.name)||[];$('v').innerHTML=`<div class="card"><h2>👤 ${esc(user.name)}</h2><p class="mu">Espace enregistré uniquement sur cet appareil (pas de serveur). ${h.length} bilan(s) enregistré(s).</p><button class="s" onclick="expData()">⬇️ Exporter mes données (JSON)</button><button class="s" onclick="user=null;go('home')">Se déconnecter</button><button class="s" onclick="if(confirm('Supprimer définitivement ton compte et ton historique ?'))delAcc()" style="background:var(--hi);color:#fff">🗑️ Supprimer mon espace et mes données</button></div>`;return}
+$('v').innerHTML=`<div class="card"><h2>Mon espace de suivi</h2><div class="priv">Le compte est protégé par un code et stocké <b>uniquement sur cet appareil</b> (pas de serveur). Si tu vides les données du navigateur, il disparaît.</div><label class="mu">Prénom ou pseudo</label><input type="text" id="un" maxlength="30" autocomplete="off"><label class="mu">Code secret (4 à 8 chiffres)</label><input type="password" id="up" inputmode="numeric" maxlength="8"><label style="display:block;margin:10px 0"><input type="checkbox" id="ck"> J’accepte que mes réponses (données de santé) soient enregistrées sur cet appareil pour suivre mon évolution. <a href="#" onclick="go('legal');return false">Lire les mentions</a>.</label><button onclick="reg()">Créer / me connecter</button><p class="mu" id="em"></p></div>`}
+async function reg(){const n=$('un').value.trim(),p=$('up').value,a2=store.g('mb_acc_'+n.toLowerCase());
+if(!n||!/^\d{4,8}$/.test(p)){$('em').textContent='Prénom + code de 4 à 8 chiffres.';return}
+if(!a2&&!$('ck').checked){$('em').textContent='Coche la case de consentement pour créer ton espace.';return}
+const a=a2,h=await hash(p,a?a.salt:(n+Math.random()));
+if(a){if(a.h!==h){$('em').textContent='Code incorrect.';return}}else{const salt=n+Math.random();const hh=await hash(p,salt);if(!store.s('mb_acc_'+n.toLowerCase(),{salt,h:hh})){$('em').textContent='Stockage indisponible sur cet appareil.';return}}
+user={name:n};go('home')}
+function delAcc(){const n=user.name.toLowerCase();store.d('mb_acc_'+n);store.d('mb_hist_'+user.name);user=null;res=null;go('home')}
+function expData(){const h=store.g('mb_hist_'+user.name)||[];const blob=new Blob([JSON.stringify({compte:user.name,historique:h},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mes-donnees.json';a.click();URL.revokeObjectURL(u)}
+function legalV(){$('v').innerHTML=`<div class="card"><h2>Mentions et confidentialité</h2>
+<h3>Qu’est-ce que Ma Boussole ?</h3><p>Un outil d’auto-évaluation et d’orientation. Il ne pose <b>aucun diagnostic</b> et ne remplace pas un professionnel de santé.</p>
+<h3>Tes données</h3><p>Sans compte, tes réponses ne sont jamais conservées. Avec un compte, ton prénom et ton historique de bilans sont stockés uniquement sur cet appareil (navigateur), jamais envoyés à un serveur. Tu peux les exporter ou les supprimer à tout moment dans l’onglet Compte.</p>
+<h3>Mineurs</h3><p>Avant 15 ans, la création d’un compte doit se faire avec l’accord d’un parent ou d’un adulte responsable.</p>
+<h3>Urgence</h3><p>Cet outil n’est pas un service d’urgence. En danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b> (24h/24, gratuit).</p>
+<h3>Responsabilité</h3><p>Les repères affichés sont indicatifs. Les liens vers des professionnels sont fournis à titre informatif ; vérifie toujours leur diplôme ou leur inscription à l’ordre.</p></div>`}
+async function pdf(){const m=$('msg');try{const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});let y=20;const L=18;
+const ln=(s,z,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(z);d.splitTextToSize(s,174).forEach(l=>{if(y>280){d.addPage();y=20}d.text(l,L,y);y+=z*.45+1.6})};
+ln('Ma Boussole - Mon bilan du '+res.date,17,1);y+=3;
+if(res.sec)ln('IMPORTANT : en cas de pensées de te faire du mal, appelle le 3114 (24h/24, gratuit) ou le 112.',11,1);
+Object.keys(D).forEach(k=>ln(D[k][0]+' : '+LV[res.lv[k]][0],11));y+=3;
+Object.keys(D).filter(k=>res.lv[k]>0).forEach(k=>{ln(D[k][0],13,1);ADV[k].forEach(a=>ln('- '+a,11));y+=2});
+ln('Ce bilan est indicatif et ne constitue pas un diagnostic.',9);
+if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:'mon-bilan.pdf',data:d.output('blob')})}else d.save('mon-bilan.pdf');m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(store.g('mb_hist_'+user.name)||[]).filter(e=>e.date!==res.date);store.s('mb_hist_'+user.name,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
+const AGES=[["enfant","Enfant (8-12)"],["ado","Ado (13-17)"],["adulte","Adulte (18-64)"],["senior","65 ans et +"]];
+let age='adulte';
+function ecoute(){const c={enfant:["<b>119</b> : Allô Enfance en danger, gratuit, 24h/24","<b>3020</b> : harcèlement à l’école","<b>3018</b> : cyberharcèlement et problèmes sur internet"],ado:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>Fil Santé Jeunes</b> (12-25 ans) : 0 800 235 236","<b>3018</b> : cyberharcèlement ; <b>3020</b> : harcèlement scolaire","<b>119</b> : si tu es en danger chez toi"],adulte:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme"],senior:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme","<b>3133</b> : maltraitance envers les personnes âgées ou handicapées (remplace le 3977 depuis 2026)"]}[age];return'<div class="card"><h3>Écoute immédiate (France)</h3><ul>'+c.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'}
+const THEMES=[
+["Détresse psychologique, idées suicidaires",[["3114","Prévention du suicide, 24h/24, gratuit"],["Suicide Écoute","01 45 39 40 00, 24h/24"],["SOS Amitié","09 72 39 40 50, écoute anonyme 24h/24"],["Croix-Rouge Écoute","0 800 858 858, solitude/dépression/addictions"]]],
+["Anxiété, mal-être, dépression",[["France Dépression","07 84 96 88 28, troubles dépressifs et bipolaires, par des pairs"],["SOS Dépression","01 40 47 95 95"],["Écoute Famille (Unafam)","01 42 63 03 03, pour les proches"]]],
+["Violences (conjugales, sexuelles, sexistes)",[["3919","Violences Femmes Info, 24h/24, gratuit, anonyme"],["116 006","France Victimes, toute infraction, 7j/7 9h-19h"],["Ligne Azur","0 810 20 30 40, violences liées à l’orientation sexuelle ou l’identité de genre"]]],
+["Harcèlement et violences chez les jeunes",[["3018","Cyberharcèlement, numéro unique"],["3020","Harcèlement scolaire"],["119","Allô Enfance en Danger, 24h/24"]]],
+["Addictions (alcool, drogues, jeu, tabac)",[["Alcool Info Service","0 980 980 930"],["Drogues Info Service","0 800 23 13 13"],["Joueurs Info Service","09 74 75 13 13"],["Tabac Info Service","3989"]]],
+["Troubles alimentaires",[["Fédération Française Anorexie Boulimie","09 69 325 900, lun-ven 16h-18h"],["Fil Santé Jeunes (12-25 ans)","0 800 235 236"]]],
+["Isolement, solitude",[["Croix-Rouge Écoute","0 800 858 858"],["SOS Amitié","09 72 39 40 50"]]],
+["Maltraitance d’un adulte vulnérable (âgé, handicap, précarité)",[["3133","Numéro national contre les maltraitances, 7j/7 9h-20h (remplace le 3977 depuis mars 2026)"]]],
+["Étudiants",[["Écoute étudiante nationale","3040, mal-être, violences, discriminations"],["Santé Psy Étudiant","consultations gratuites via le Crous, voir etudiant.gouv.fr"]]]];
+function themesHtml(){return THEMES.map(([t,items])=>`<h3>${t}</h3><ul>${items.map(([n,d])=>`<li><b>${n}</b> — ${d}</li>`).join('')}</ul>`).join('')}
+function minorNote(){return age=='enfant'||age=='ado'?'<div class="warn">Parle de ce bilan à un adulte en qui tu as confiance (parent, infirmier·e scolaire, professeur). Tu n’as pas à gérer ça seul·e.</div>':age=='senior'?'<p class="mu">Ton médecin traitant est un excellent premier interlocuteur : il connaît ton histoire et peut t’orienter.</p>':''}
+let fi=0;function fz(){fi=(fi+1)%3;document.documentElement.style.setProperty('--fs',['16px','19px','22px'][fi])}
+try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
+go('home');
+</script>
+</body>
+</html>
