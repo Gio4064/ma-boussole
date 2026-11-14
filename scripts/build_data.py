@@ -160,6 +160,23 @@ def add(cat, key, row, loc):
     STATS[cat] += 1
 
 
+# ---------------------------------------------------------------- Ameli (téléphones des libéraux conventionnés)
+log('== Ameli (téléphones)')
+AMELI_TEL = {}
+try:
+    am_url = dataset_resource('annuaire-sante-ameli', lambda r: (r.get('format') or '').lower() == 'csv' and (r.get('filesize') or 0) > 50_000_000)
+    am = fetch(am_url, os.path.join(WORK, 'ameli.csv'))
+    with open(am, encoding='utf-8-sig', errors='replace') as f:
+        for r in csv.DictReader(f, delimiter=';'):
+            t = (r.get('coordonnees_num_tel') or '').strip()
+            if not t:
+                continue
+            k = (norm(r.get('ps_activite_nom')), norm(r.get('ps_activite_prenom')), (r.get('coordonnees_code_postal') or '').strip())
+            AMELI_TEL.setdefault(k, tel(t))
+    log('  téléphones Ameli', len(AMELI_TEL))
+except Exception as e:
+    log('  Ameli indisponible', e)
+
 # ---------------------------------------------------------------- RPPS
 log('== RPPS')
 rpps_url = dataset_resource(
@@ -218,6 +235,10 @@ with open(rpps, encoding='utf-8', errors='replace') as f:
         mode = MODE.get(col(p, 'Code mode exercice'), '')
         secteur = col(p, "Libellé secteur d'activité")
         t = tel(col(p, 'Téléphone (coord. structure)') or col(p, 'Téléphone 2 (coord. structure)'))
+        if not t and AMELI_TEL:
+            t = AMELI_TEL.get((norm(col(p, "Nom d'exercice")), norm(col(p, "Prénom d'exercice")), cp), '')
+            if t:
+                STATS['tel_ameli'] += 1
         mail = col(p, 'Adresse e-mail (coord. structure)').lower()
         idpp = col(p, 'Identifiant PP')
         for cat, label in cats:
@@ -326,6 +347,8 @@ for code, (la, lo, dep, _) in COM.items():
     b[0], b[1], b[2], b[3] = min(b[0], la), min(b[1], lo), max(b[2], la), max(b[3], lo)
 cats = {}
 size = 0
+STATS_TEL = {c: sum(1 for d in v.values() for r in d if r[7]) for c, v in OUTD.items()}
+log('  lignes avec téléphone', STATS_TEL)
 for cat, deps in OUTD.items():
     os.makedirs(os.path.join(OUT, cat), exist_ok=True)
     cats[cat] = {}
