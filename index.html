@@ -6,12 +6,28 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/logo.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icons/icon-192.png"><meta name="theme-color" content="#5b6cd6">
 <title>Ma Boussole – Bilan et orientation</title>
 <style>
-:root{--bg:#f6f4fb;--card:#fff;--tx:#25242d;--mu:#6a6878;--ac:#5b6cd6;--ac2:#e8ebff;--bd:#e3e0ec;--wa:#fff1dc;--wt:#7a4b00;--ok:#2f9e6b;--md:#e0a030;--hi:#d9534f;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;color-scheme:dark}
+:root{--bg:#f6f4fb;--card:#fff;--tx:#25242d;--mu:#6a6878;--ac:#5b6cd6;--ac2:#e8ebff;--bd:#e3e0ec;--wa:#fff1dc;--wt:#7a4b00;--ok:#2f9e6b;--md:#e0a030;--hi:#d9534f;--accent:#e8914f;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;--accent:#ffb86b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;--accent:#ffb86b;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no-repeat;color:var(--tx);font:var(--fs,16px)/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
-main{max-width:720px;margin:0 auto;padding:16px 16px 70px}
+.shell{display:flex;max-width:1360px;margin:0 auto;min-height:100vh;align-items:flex-start}
+.content{flex:1;min-width:0;max-width:900px;margin:0 auto;width:100%;padding:16px 16px 90px}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sizebtn{margin-left:auto;flex:none}
+.side{display:none}
+.side .brand{display:flex;align-items:center;gap:9px;font:700 1.12rem/1.2 system-ui;margin:6px 8px 18px;color:var(--tx)}
+.side button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;color:var(--tx);font:500 .95rem system-ui;margin:1px 0}
+.side button:hover{background:var(--ac2)}
+.side button.on{background:var(--ac2);color:var(--ac);font-weight:700;box-shadow:inset 3px 0 0 0 var(--accent)}
+.side .bottom{margin-top:auto;font-size:.78rem;line-height:1.55;color:var(--mu);padding:12px;border-top:1px solid var(--bd)}
+@media(min-width:900px){
+.side{display:flex;flex-direction:column;width:232px;flex:none;padding:22px 12px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;border-right:1px solid var(--bd)}
+#nav,.mobile-brand{display:none}
+.content{padding:30px 40px 90px;max-width:960px}
+}
+.grid2{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.grid2{grid-template-columns:1.25fr 1fr;align-items:start}.grid2 .card{margin:0}}
 h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.25rem;margin:.3em 0 .5em}h3{font-size:1rem;margin:1em 0 .3em;color:var(--ac)}
 .card{background:var(--card);box-shadow:0 6px 24px rgba(60,60,120,.08);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0}
 .mu{color:var(--mu);font-size:.9rem}.priv{background:var(--ac2);border-radius:12px;padding:10px 12px;font-size:.9rem}
@@ -29,12 +45,15 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 </style>
 </head>
 <body>
-<main>
-<h1><svg width="40" height="40" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
-<nav id="nav"></nav><button class="s" onclick="fz()" aria-label="Changer la taille du texte">A+ Taille du texte</button>
+<div class="shell">
+<aside class="side"><div class="brand"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</div><div id="side"></div><div class="bottom">🔒 Vos réponses restent sur cet appareil.<br>Urgence immédiate : 112 ou 15<br>Besoin de parler : 3114 (24h/24, gratuit)</div></aside>
+<main class="content">
+<div class="topbar"><h1 class="mobile-brand"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
+<nav id="nav"></nav><button class="s sizebtn" onclick="fz()" aria-label="Changer la taille du texte">A+</button></div>
 <div id="v"></div>
-<p class="mu">Outil d’auto-évaluation et d’orientation. Il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. En danger immédiat : 112 ou 15. Besoin de parler : 3114 (24h/24, gratuit). <span style="opacity:.6">· v1.1</span></p>
+<p class="mu">Outil d’auto-évaluation et d’orientation. Il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. En danger immédiat : 112 ou 15. Besoin de parler : 3114 (24h/24, gratuit).</p>
 </main>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const $=id=>document.getElementById(id);
@@ -62,13 +81,15 @@ const MAXS={conf:15,diff:6,hum:6,anx:6,soc:6};
 const lvl=(k,v)=>{const p=v/MAXS[k];return p<.34?0:p<.6?1:2};
 const LV=[["Plutôt bien","var(--ok)"],["À surveiller","var(--md)"],["À accompagner","var(--hi)"]];
 const hash=async(p,s)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+const NAV_ICO={home:'🏠',bilan:'🧭',suivi:'📈',aide:'📍',compte:'👤',ressources:'📚',legal:'📄'};
 function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["compte",user?"👤 "+esc(user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
-$('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}
+$('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
+const sd=$('side');if(sd)sd.innerHTML=t.map(x=>{const ico=(x[0]==='compte'&&user)?'':NAV_ICO[x[0]]||'';return `<button class="${x[0]==on?'on':''}" onclick="go('${x[0]}')">${ico?`<span aria-hidden="true">${ico}</span>`:''}${x[1]}</button>`}).join('')}
 function go(p){nav(p);window[p+'V']();window.scrollTo(0,0)}
-function homeV(){$('v').innerHTML=`<div class="card"><h2>Bienvenue</h2><p>En 3 minutes, fais le point sur ta confiance en toi, ton moral et ton entourage. Tu obtiens des repères, des conseils et des liens vers des professionnels près de toi.</p>
+function homeV(){$('v').innerHTML=`<div class="grid2"><div class="card"><h2>Bienvenue</h2><p>En 3 minutes, fais le point sur ta confiance en toi, ton moral et ton entourage. Tu obtiens des repères, des conseils et des liens vers des professionnels près de toi.</p>
 <div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div>
 <h3>Je suis…</h3><div>${AGES.map(a=>`<button class="chip ${a[0]==age?'on':''}" onclick="age='${a[0]}';homeV()">${a[1]}</button>`).join('')}</div><button onclick="go('bilan')">Commencer mon bilan</button>${user?'':'<button class="s" onclick="go(\'compte\')">Créer un espace de suivi</button>'}</div>
-<div class="card"><h3>Comment ça marche</h3><ul><li>13 questions courtes inspirées d’échelles reconnues (estime de soi, PHQ-2, GAD-2).</li><li>Un profil par domaine : confiance, différence ressentie, humeur, anxiété, isolement.</li><li>Une orientation selon ton niveau et ton lieu de vie.</li></ul></div>`}
+<div class="card"><h3>Comment ça marche</h3><ul><li>13 questions courtes inspirées d’échelles reconnues (estime de soi, PHQ-2, GAD-2).</li><li>Un profil par domaine : confiance, différence ressentie, humeur, anxiété, isolement.</li><li>Une orientation selon ton niveau et ton lieu de vie.</li></ul></div></div>`}
 function bilanV(){ans=[];qi=0;res=null;q()}
 function q(){if(qi>=Q.length)return fin();const x=Q[qi];
 $('v').innerHTML=`<div class="card"><div class="mu">Question ${qi+1} / ${Q.length}</div><div class="bar"><i style="width:${qi/Q.length*100}%;background:var(--ac)"></i></div><h2>${esc(x.t)}</h2><div class="mu">Ces deux dernières semaines…</div><div class="opt">${SC.map((s,i)=>`<button onclick="ans[${qi}]=${i};qi++;q()">${s}</button>`).join('')}</div>${qi?'<button class="s" onclick="qi--;q()">← Retour</button>':''}</div>`}
