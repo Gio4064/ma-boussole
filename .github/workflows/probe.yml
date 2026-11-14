@@ -1,0 +1,32 @@
+name: probe-sources
+on:
+  push:
+    paths: ['.github/workflows/probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: RPPS extraction
+        run: |
+          set -x
+          curl -sSL -o rpps.zip "https://service.annuaire.sante.fr/annuaire-sante-webservices/V300/services/extraction/PS_LibreAcces" || true
+          ls -la rpps.zip; unzip -l rpps.zip || true
+          unzip -o -q rpps.zip || true
+          for f in PS_LibreAcces_Personne_activite*.txt; do echo "== $f"; head -c 1500 "$f"; echo; wc -l "$f";
+            echo "-- professions"; cut -d'|' -f8 "$f" | sort | uniq -c | sort -rn | head -40; done
+      - name: FINESS
+        run: |
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/finess-extraction-du-fichier-des-etablissements/" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(r['title'],r['url'],r.get('filesize')) for r in d['resources']]"
+      - name: Ameli
+        run: |
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/432983b9-2e6f-473a-b35a-20403c300a5f" | head -c 3000; echo
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/767470ac-dcf9-4110-97b6-cb2be3b59ba2" | head -c 2000; echo
+      - name: Communes
+        run: |
+          curl -sSL "https://geo.api.gouv.fr/communes?fields=nom,code,codesPostaux,centre,codeDepartement&format=json" | head -c 600; echo
+      - name: Avocats search
+        run: |
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=annuaire%20avocats&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug'],[ (r['title'],r['url']) for r in x['resources']][:3]) for x in d['data']]"
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=france%20victimes%20associations%20aide%20aux%20victimes&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=maisons%20des%20adolescents&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=CIDFF&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
