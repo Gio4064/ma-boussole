@@ -214,8 +214,8 @@ const nameRx=(NAME_REGEX_OVERRIDE[key]||term).replace(/["\\]/g,'');
 const hints=TAG_HINTS[key]||[];
 const parts=['node["name"~"'+nameRx+'",i](around:'+radius+','+lat+','+lon+');','way["name"~"'+nameRx+'",i](around:'+radius+','+lat+','+lon+');'];
 hints.forEach(([k,rx])=>{parts.push('node["'+k+'"~"'+rx+'",i](around:'+radius+','+lat+','+lon+');')});
-const q='[out:json][timeout:12];('+parts.join('')+');out center 30;';
-try{const r=await fetchWithTimeout('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)},14000);const j=await r.json();
+const q='[out:json][timeout:8];('+parts.join('')+');out center 25;';
+try{const r=await fetchWithTimeout('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)},9000);const j=await r.json();
 const seen=new Set();
 return (j.elements||[]).map(e=>{const t=e.tags||{},la=e.lat!=null?e.lat:(e.center?e.center.lat:null),lo=e.lon!=null?e.lon:(e.center?e.center.lon:null);
 const ad=[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),vil=[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' '),addr=[ad,vil].filter(Boolean).join(', ');
@@ -238,22 +238,28 @@ if(t.includes('association')||t.includes('groupe de parole')||t.includes('quarti
 return'📍'}
 function renderResults(){const box=$('resGrid'),empty=$('resEmpty');if(!box)return;
 if(osmErr){box.innerHTML='';if(empty){empty.innerHTML='Le service de recherche (OpenStreetMap) met trop de temps à répondre. Réessaie dans quelques instants, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
-if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
+if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap à proximité. <button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Chercher plus loin (jusqu’à 50 km)</button><br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');
 box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';
 return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(mapCur.label)}</span>`:''}${x.addr?`<span class="mu">📍 ${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
+let lastRef=null;
 async function paintResults(){if(!mapCur||!place)return;
 document.getElementById('resTitle').innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »';
 document.getElementById('resWrap').classList.remove('hide');
 const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';
 if($('resEmpty'))$('resEmpty').classList.add('hide');
-const ref=await geoOf(place);if(myGen!==osmGen)return;
+const ref=await geoOf(place);lastRef=ref;if(myGen!==osmGen)return;
 if(!ref){osmList=[];osmErr=false;renderResults();return}
-let used=SEARCH_KM,list=null;
-for(const km of [SEARCH_KM,45]){list=await osmSearch(ref.lat,ref.lon,km,mapCur.t);if(myGen!==osmGen)return;used=km;if(list===null)break;if(list.length)break}
+const list=await osmSearch(ref.lat,ref.lon,SEARCH_KM,mapCur.t);if(myGen!==osmGen)return;
 osmErr=(list===null);osmList=list||[];
-const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(used>SEARCH_KM&&osmList.length?' <span class="mu">(recherche élargie à '+used+' km, environs inclus)</span>':'');
+renderResults()}
+async function widenSearch(){if(!lastRef||!mapCur)return;
+const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche élargie…</p>';
+if($('resEmpty'))$('resEmpty').classList.add('hide');
+const list=await osmSearch(lastRef.lat,lastRef.lon,50,mapCur.t);if(myGen!==osmGen)return;
+osmErr=(list===null);osmList=list||[];
+const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(osmList.length?' <span class="mu">(recherche élargie à 50 km)</span>':'');
 renderResults()}
 function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[],plAbort=null,plCache={},plGen=0,kmSel='20',geoCache={};
