@@ -172,7 +172,7 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 <p class="mu" style="margin-top:10px">Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p>
 <div id="resWrap" class="hide" style="margin-top:14px"><div class="row"><div id="resTitle" class="mu"></div><button class="s" onclick="document.getElementById('resWrap').classList.add('hide')">Fermer ✕</button></div>
 <p id="resEmpty" class="mu hide" style="padding:8px 0">Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.</p>
-<div id="resGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:6px"></div></div>
+<div id="resGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:6px"></div><p id="resMore" class="mu hide" style="margin:8px 0 0">⏳ Recherche complémentaire en cours…</p></div>
 <div id="lk"></div></div>
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
@@ -236,31 +236,40 @@ if(t.includes('sophrolog'))return'🌿';
 if(t.includes('coach'))return'💪';
 if(t.includes('association')||t.includes('groupe de parole')||t.includes('quartier')||t.includes('loisirs'))return'🤝';
 return'📍'}
-function renderResults(){const box=$('resGrid'),empty=$('resEmpty');if(!box)return;
-if(osmErr){box.innerHTML='';if(empty){empty.innerHTML='Le service de recherche (OpenStreetMap) met trop de temps à répondre. Réessaie dans quelques instants, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
-if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap à proximité. <button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Chercher plus loin (jusqu’à 50 km)</button><br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
+async function photonSearch(lat,lon,km,term){
+const q=(term||'').replace(/\s+/g,' ').trim();
+try{const r=await fetchWithTimeout('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&lat='+lat+'&lon='+lon+'&limit=40&lang=fr',{},6000);const j=await r.json();
+return (j.features||[]).map(f=>{const p=f.properties||{},c=(f.geometry&&f.geometry.coordinates)||[];
+const ad=[p.housenumber,p.street].filter(Boolean).join(' '),vil=[p.postcode,p.city].filter(Boolean).join(' ');
+return {name:p.name||'',addr:[ad,vil].filter(Boolean).join(', '),phone:'',site:'',lat:c[1],lon:c[0],kind:p.osm_key}}).filter(x=>x.name&&x.lat!=null&&x.kind!=='place'&&x.kind!=='highway'&&x.kind!=='boundary')}catch(e){return null}}
+function mergeRes(ref,km,...lists){const out=[];
+for(const L of lists){if(!L)continue;for(const x of L){if(x.lat==null)continue;x.d=kmBetween(ref,{lat:x.lat,lon:x.lon});if(x.d>km)continue;
+const dup=out.find(y=>y.name.toLowerCase()===x.name.toLowerCase()&&Math.abs(y.lat-x.lat)<.003&&Math.abs(y.lon-x.lon)<.003);
+if(dup){if(!dup.phone&&x.phone)dup.phone=x.phone;if(!dup.site&&x.site)dup.site=x.site;if(!dup.addr&&x.addr)dup.addr=x.addr}else out.push({...x})}}
+return out.sort((a,b)=>a.d-b.d).slice(0,24)}
+function renderResults(pending){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box)return;
+if(more)more.classList.toggle('hide',!pending);
+if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
+box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche répond lentement en ce moment. ':'Aucun établissement trouvé à proximité. ')+'<button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Chercher plus loin (jusqu’à 50 km)</button><br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');
 box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';
-return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(mapCur.label)}</span>`:''}${x.addr?`<span class="mu">📍 ${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
+return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b>${mapCur?`<span class="mu">${esc(mapCur.label)}${x.d!=null?' · à '+x.d.toFixed(1).replace('.',',')+' km':''}</span>`:''}${x.addr?`<span class="mu">📍 ${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}).join('')}
 let lastRef=null;
-async function paintResults(){if(!mapCur||!place)return;
-document.getElementById('resTitle').innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »';
-document.getElementById('resWrap').classList.remove('hide');
-const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';
-if($('resEmpty'))$('resEmpty').classList.add('hide');
-const ref=await geoOf(place);lastRef=ref;if(myGen!==osmGen)return;
-if(!ref){osmList=[];osmErr=false;renderResults();return}
-const list=await osmSearch(ref.lat,ref.lon,SEARCH_KM,mapCur.t);if(myGen!==osmGen)return;
-osmErr=(list===null);osmList=list||[];
-renderResults()}
-async function widenSearch(){if(!lastRef||!mapCur)return;
-const myGen=++osmGen;const box=$('resGrid');if(box)box.innerHTML='<p class="mu" style="padding:8px">Recherche élargie…</p>';
-if($('resEmpty'))$('resEmpty').classList.add('hide');
-const list=await osmSearch(lastRef.lat,lastRef.lon,50,mapCur.t);if(myGen!==osmGen)return;
-osmErr=(list===null);osmList=list||[];
-const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(osmList.length?' <span class="mu">(recherche élargie à 50 km)</span>':'');
-renderResults()}
+async function runSearch(km){if(!mapCur||!place)return;
+const myGen=++osmGen;
+const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(km>SEARCH_KM?' <span class="mu">(jusqu’à '+km+' km)</span>':'');
+$('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true);
+const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
+if(!ref){renderResults(false);return}lastRef={...ref,q:place};
+const term=mapCur.t;let ph=null,ov,ovDone=false;
+const pOv=osmSearch(ref.lat,ref.lon,km,term).then(r=>{ov=r;ovDone=true});
+ph=await photonSearch(ref.lat,ref.lon,km,term);if(myGen!==osmGen)return;
+osmList=mergeRes(ref,km,ph,ov);renderResults(!ovDone);
+await pOv;if(myGen!==osmGen)return;
+osmErr=(ph===null&&ov===null);osmList=mergeRes(ref,km,ph,ov);renderResults(false)}
+function paintResults(){return runSearch(SEARCH_KM)}
+function widenSearch(){return runSearch(50)}
 function showMap(label,t){mapCur={label,t};paintResults();document.getElementById('resWrap').scrollIntoView({behavior:'smooth',block:'nearest'})}
 let plTmr,plData=[],plAbort=null,plCache={},plGen=0,kmSel='20',geoCache={};
 async function geoOf(q){q=(q||'').trim();if(!q)return null;if(geoCache[q]!==undefined)return geoCache[q];
