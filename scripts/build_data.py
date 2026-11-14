@@ -316,7 +316,7 @@ raw = fetch(av_url)
 try:
     txt = raw.decode('utf-8')
 except UnicodeDecodeError:
-    txt = raw.decode('cp1252')
+    txt = raw.decode('latin-1')
 SP = collections.Counter()
 for r in csv.DictReader(io.StringIO(txt), delimiter=';'):
     cp = (r.get('cbCp') or '').strip()
