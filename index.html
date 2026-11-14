@@ -253,12 +253,12 @@ const THEMES=[
 function themesHtml(){return THEMES.map(([t,items])=>`<h3>${t}</h3><ul>${items.map(([n,d])=>`<li><b>${n}</b> — ${d}</li>`).join('')}</ul>`).join('')}
 function minorNote(){return age=='enfant'||age=='ado'?'<div class="warn">Parle de ce bilan à un adulte en qui tu as confiance (parent, infirmier·e scolaire, professeur). Tu n’as pas à gérer ça seul·e.</div>':age=='senior'?'<p class="mu">Ton médecin traitant est un excellent premier interlocuteur : il connaît ton histoire et peut t’orienter.</p>':''}
 let fi=0;function fz(){fi=(fi+1)%3;document.documentElement.style.setProperty('--fs',['16px','19px','22px'][fi])}
-const EMAILJS_SERVICE_ID='',EMAILJS_TEMPLATE_ID='',EMAILJS_PUBLIC_KEY='';
+const EMAILJS_SERVICE_ID='service_i0qrszm',EMAILJS_TEMPLATE_ID='template_swl649m',EMAILJS_PUBLIC_KEY='EPyeADkMdskOhrDR7';
 let qaMode='login',pendingAuth=null;
 const EMAIL_RX=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function genCode(){return String(Math.floor(100000+Math.random()*900000))}
 async function sendCode(email,code,prenom){
-if(EMAILJS_SERVICE_ID&&EMAILJS_TEMPLATE_ID&&EMAILJS_PUBLIC_KEY){try{await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EMAILJS_SERVICE_ID,template_id:EMAILJS_TEMPLATE_ID,user_id:EMAILJS_PUBLIC_KEY,template_params:{to_email:email,code,prenom:prenom||''}})});return true}catch(e){return false}}
+if(EMAILJS_SERVICE_ID&&EMAILJS_TEMPLATE_ID&&EMAILJS_PUBLIC_KEY){try{const r=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EMAILJS_SERVICE_ID,template_id:EMAILJS_TEMPLATE_ID,user_id:EMAILJS_PUBLIC_KEY,template_params:{email,passcode:code,time:new Date(Date.now()+10*60000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),prenom:prenom||''}})});return r.ok}catch(e){return false}}
 return false}
 function qaClose(){const p=$('qaPanel');if(p)p.classList.add('hide')}
 function qaOpen(mode){qaMode=mode||'login';qaRender();const p=$('qaPanel');if(p)p.classList.remove('hide')}
