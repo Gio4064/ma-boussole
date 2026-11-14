@@ -84,7 +84,7 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 <h3 style="margin-top:0">Ressources rapides</h3>
 <a class="qlink" href="https://www.psycom.org" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">📘</span><span><b>Psycom</b><small>Comprendre la santé mentale, en clair</small></span></a>
 <a class="qlink" href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">💬</span><span><b>Mon soutien psy</b><small>Séances remboursées avec un psychologue partenaire</small></span></a>
-<a class="qlink" href="https://annuaire.sante.fr" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">🗂️</span><span><b>Annuaire santé officiel</b><small>Trouver un professionnel vérifié près de chez soi</small></span></a>
+<a class="qlink" href="https://www.sante.fr" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">🗂️</span><span><b>Annuaire santé officiel</b><small>Trouver un professionnel vérifié près de chez soi</small></span></a>
 </div>
 <div class="card">
 <h3 style="margin-top:0">En cas d’urgence</h3>
@@ -171,7 +171,7 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 </div>
 <p class="mu" style="margin-top:10px">Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p>
 <div id="resWrap" class="hide" style="margin-top:14px"><div class="row"><div id="resTitle" class="mu"></div><button class="s" onclick="document.getElementById('resWrap').classList.add('hide')">Fermer ✕</button></div>
-<p id="resEmpty" class="mu hide" style="padding:8px 0">Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.</p>
+<p id="resEmpty" class="mu hide" style="padding:8px 0">Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.</p>
 <div id="resGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:6px"></div></div>
 <div id="lk"></div></div>
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
@@ -237,8 +237,8 @@ if(t.includes('coach'))return'💪';
 if(t.includes('association')||t.includes('groupe de parole')||t.includes('quartier')||t.includes('loisirs'))return'🤝';
 return'📍'}
 function renderResults(){const box=$('resGrid'),empty=$('resEmpty');if(!box)return;
-if(osmErr){box.innerHTML='';if(empty){empty.innerHTML='Le service de recherche (OpenStreetMap) met trop de temps à répondre. Réessaie dans quelques instants, ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.';empty.classList.remove('hide')}return}
-if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a>.';empty.classList.remove('hide')}return}
+if(osmErr){box.innerHTML='';if(empty){empty.innerHTML='Le service de recherche (OpenStreetMap) met trop de temps à répondre. Réessaie dans quelques instants, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
+if(!osmList.length){box.innerHTML='';if(empty){empty.innerHTML='Aucun établissement trouvé via OpenStreetMap pour cette recherche. Essaie une autre catégorie ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');
 box.innerHTML=osmList.map(x=>{const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';
@@ -288,9 +288,9 @@ if(changed)store.s('mb_pros',pros);
 pros=pros.filter(x=>{if(x.lat==null)return false;const d=kmBetween(ref,{lat:x.lat,lon:x.lon});if(d<=km){distTxt[x.nom+x.ville]=d.toFixed(1)+' km';return true}return false}).sort((a,b)=>(+distTxt[a.nom+a.ville])-(+distTxt[b.nom+b.ville]))}
 else{pros=pros.filter(x=>x.ville.toLowerCase().includes(place.toLowerCase())||place.includes(x.cp))}
 let h=pros.length?`<h3>Fiches validées près de « ${esc(place)} » (≤ ${km} km)</h3><ul>${pros.map(x=>`<li><b>${esc(x.nom)}</b> — ${esc(x.metier)}, ${esc(x.ville)} ${esc(x.cp)}${distTxt[x.nom+x.ville]?' — <b>'+distTxt[x.nom+x.ville]+'</b>':''}${x.tel?' — '+esc(x.tel):''}${x.site?` — <a href="${esc(x.site)}" target="_blank" rel="noopener">site</a>`:''}</li>`).join('')}</ul>`:'';
-h+='<p class="mu" style="margin-top:10px">Besoin d’un annuaire officiel plutôt qu’une carte ? <a href="https://annuaire.sante.fr" target="_blank" rel="noopener">annuaire.sante.fr</a></p>';
+h+='<p class="mu" style="margin-top:10px">Besoin d’un annuaire officiel plutôt qu’une carte ? <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a></p>';
 $('lk').innerHTML=h}
-function ressourcesV(){$('v').innerHTML=`<div class="card"><h2>Ressources et numéros</h2>${ecoute()}</div><div class="card" id="res-numeros"><h2>Numéros nationaux vérifiés, par thème</h2><p class="mu">Sources : Psycom, Service-public.fr, ARS, ministère des Solidarités. À jour au 14 novembre 2026.</p>${themesHtml()}<h3>S’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a></li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a></li><li><a href="https://annuaire.sante.fr" target="_blank" rel="noopener">Annuaire santé officiel</a></li></ul></div>
+function ressourcesV(){$('v').innerHTML=`<div class="card"><h2>Ressources et numéros</h2>${ecoute()}</div><div class="card" id="res-numeros"><h2>Numéros nationaux vérifiés, par thème</h2><p class="mu">Sources : Psycom, Service-public.fr, ARS, ministère des Solidarités. À jour au 14 novembre 2026.</p>${themesHtml()}<h3>S’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a></li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a></li><li><a href="https://www.sante.fr" target="_blank" rel="noopener">Annuaire santé officiel</a></li></ul></div>
 <div class="card" id="res-admin"><h3>Espace administration</h3><p class="mu">Réservé à la personne qui gère cette application (ajout de fiches professionnelles vérifiées). Stocké sur cet appareil.</p>
 <input type="password" id="adp" placeholder="Code admin"><button onclick="adminGo()">Entrer</button><div id="adz"></div></div>`}
 function adminGo(){if($('adp').value!==(store.g('mb_admin_pin')||'0000')){alert('Code incorrect.');return}
