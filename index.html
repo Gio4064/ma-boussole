@@ -105,8 +105,12 @@ async function plSug(){clearTimeout(plTmr);if(plAbort)plAbort.abort();const myGe
 const local=PL_CITIES.filter(c=>plNorm(c[0]).startsWith(nv)||c[1].startsWith(v)).slice(0,8).map(c=>({nom:c[0],cp:c[1]}));
 plRender(local);
 if(plCache[vl]){plRender(plCache[vl]);return}
-plTmr=setTimeout(async()=>{plAbort=new AbortController();try{const r=await fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(vl)+'&type=municipality&autocomplete=1&limit=12',{signal:plAbort.signal});const j=await r.json();
-const items=(j.features||[]).map(f=>({nom:f.properties.city||f.properties.name||'',cp:f.properties.postcode||''}));
+const isCp=/^\d{5}$/.test(v);
+plTmr=setTimeout(async()=>{plAbort=new AbortController();try{let items=[];
+if(isCp){const r=await fetch('https://geo.api.gouv.fr/communes?codePostal='+v+'&fields=nom,codesPostaux&limit=30',{signal:plAbort.signal});const j=await r.json();
+items=(j||[]).map(c=>({nom:c.nom,cp:v}))}
+else{const r=await fetch('https://api-adresse.data.gouv.fr/search/?q='+encodeURIComponent(vl)+'&type=municipality&autocomplete=1&limit=12',{signal:plAbort.signal});const j=await r.json();
+items=(j.features||[]).map(f=>({nom:f.properties.city||f.properties.name||'',cp:f.properties.postcode||''}))}
 plCache[vl]=items;if(myGen!==plGen||$('pl').value.trim().toLowerCase()!==vl)return;plRender(items.length?items:local)}catch(e){}},60)}
 function plPick(i){const it=plData[i];if(!it)return;$('pl').value=it.cp?it.nom+' '+it.cp:it.nom;plHide();aideL()}
 document.addEventListener('mousedown',e=>{const it=e.target.closest && e.target.closest('.plItem');if(it){plPick(+it.dataset.i);return}if(!e.target.closest || !e.target.closest('#plWrap'))plHide()});
