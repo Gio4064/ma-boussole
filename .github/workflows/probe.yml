@@ -6,37 +6,46 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Search datasets
+      - name: RPPS
         continue-on-error: true
         run: |
-          for q in "extraction annuaire sante libre acces RPPS" "personne activite RPPS" "psychologues RPPS" "FINESS extraction etablissements" "annuaire avocats" "aide aux victimes" "CIDFF" "maisons des adolescents" "CSAPA" "points accueil ecoute jeunes" "france services centres sociaux" "centres sociaux"; do
-            echo "### $q"
-            curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$q")&page_size=6" | python3 -c "
-          import sys,json
-          d=json.load(sys.stdin)
-          for x in d['data']:
-            print('-',x['title'],'|',x['slug'],'|',(x.get('organization') or {}).get('name'))
-            for r in x['resources'][:4]: print('    ',r['format'],r.get('filesize'),r['title'][:70],r['url'])
-          "
-          done
-      - name: Ameli heads
-        continue-on-error: true
-        run: |
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/432983b9-2e6f-473a-b35a-20403c300a5f" -o ameli.csv; ls -la ameli.csv; file ameli.csv; head -c 2500 ameli.csv; echo
+          U="https://static.data.gouv.fr/resources/annuaire-sante-extractions-des-donnees-en-libre-acces-des-professionnels-intervenant-dans-le-systeme-de-sante-rpps/20261114-134353/ps-libreacces-personne-activite.txt"
+          curl -sSL "$U" -o rpps.txt; ls -la rpps.txt; file rpps.txt
+          head -3 rpps.txt
           python3 - <<'PY'
-          import csv,collections,io
-          raw=open('ameli.csv','rb').read()
-          for enc in ('utf-8','latin-1'):
-            try: txt=raw.decode(enc); break
-            except: pass
-          first=txt.split('\n',1)[0]; sep=';' if first.count(';')>first.count(',') else ','
-          r=csv.reader(io.StringIO(txt),delimiter=sep); h=next(r); print('HEADER',h)
-          c=collections.Counter(); n=0
-          rows=list(r)
-          for row in rows:
-            n+=1
-            for i,col in enumerate(h):
-              if 'rofession' in col or 'pecialit' in col.lower(): c[(col,row[i] if i<len(row) else '')]+=1
-          print('ROWS',n); [print(k,v) for k,v in c.most_common(80)]
-          print('SAMPLE PSY',[row for row in rows if 'sycholog' in ';'.join(row)][:3])
+          import collections
+          f=open('rpps.txt',encoding='utf-8',errors='replace')
+          h=f.readline().rstrip('\n').split('|'); print(list(enumerate(h)))
+          c=collections.Counter(); cs=collections.Counter(); n=0; psy=[]
+          ip=[i for i,x in enumerate(h) if x.startswith('Libellé profession')][0]
+          isf=[i for i,x in enumerate(h) if x.startswith('Libellé savoir-faire')][0]
+          for line in f:
+            p=line.rstrip('\n').split('|'); n+=1
+            if len(p)<=max(ip,isf): continue
+            c[p[ip]]+=1
+            if p[ip] in ('Médecin',): cs[p[isf]]+=1
+            if 'sycholog' in p[ip] and len(psy)<3: psy.append(list(zip(h,p)))
+          print('ROWS',n); print(c.most_common(40)); print('MED SPEC',cs.most_common(30)); print('PSY SAMPLE',psy)
           PY
+      - name: FINESS
+        continue-on-error: true
+        run: |
+          curl -sSL "https://static.data.gouv.fr/resources/finess-extraction-du-fichier-des-etablissements/20260512-091152/etalab-cs1100507-stock-20260512-0339.csv" -o finess.csv; ls -la finess.csv; file finess.csv
+          head -4 finess.csv | iconv -f latin1 -t utf-8
+          grep -a '^geolocalisation' finess.csv | head -3 | iconv -f latin1 -t utf-8
+          python3 - <<'PY'
+          import collections
+          c=collections.Counter()
+          for line in open('finess.csv',encoding='latin-1'):
+            p=line.rstrip('\n').split(';')
+            if p[0]=='structureet' and len(p)>20: c[(p[18],p[19])]+=1
+          for k,v in sorted(c.items()): print(k,v)
+          PY
+      - name: Avocats
+        continue-on-error: true
+        run: |
+          curl -sSL "https://static.data.gouv.fr/resources/annuaire-des-avocats-de-france/20261019-072056/annuaire-avocats-20261019.csv" | head -4
+      - name: Communes
+        continue-on-error: true
+        run: |
+          curl -sSL "https://geo.api.gouv.fr/communes?fields=nom,code,codesPostaux,centre,codeDepartement&format=json" -o communes.json; ls -la communes.json; head -c 400 communes.json
