@@ -61,6 +61,8 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 .place-card a{font-size:.82rem;text-decoration:none}
 .place-card a.go{margin-top:4px;font-weight:600}
 .res-chips{display:flex;flex-wrap:wrap;gap:6px}.res-chips .chip{margin:0;font-size:.85rem;padding:8px 12px}
+.pc-links{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}.pc-links a{font-weight:600}
+.res-group{grid-column:1/-1;margin:6px 0 10px}.res-group h3{display:flex;align-items:center;gap:8px;margin:6px 0 8px}.res-group .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .pc-dist{font-size:.8rem;font-weight:600;color:var(--ac)}
 .badge-off{display:inline-block;align-self:flex-start;font-size:.72rem;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:999px;padding:1px 8px;margin:2px 0}
 </style>
@@ -165,7 +167,8 @@ h+=`<div class="card"><h2>${esc(r.label)}</h2><div class="row"><span>Résultat</
 h+=`<div class="card"><h2>Conseils</h2><ul>${(BADV[r.theme]||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
 h+=`<div class="card"><h2>Étape suivante</h2>${minorNote()}<p>${r.lv==2?"Tes réponses suggèrent qu’un accompagnement par un professionnel ou une structure spécialisée serait utile.":r.lv==1?"Un échange avec un professionnel ou une ligne d’écoute peut t’aider, avant que la situation ne s’installe.":"Tu sembles plutôt bien sur ce thème. Refais ce bilan si la situation change."}</p><button onclick="go('aide')">📍 Trouver de l’aide près de chez moi</button><button class="s" onclick="pdf()">📄 Mon PDF</button><button class="s" onclick="go('bilan')">🧭 Faire un autre thème</button>${user?'<label style="display:block;margin:8px 0" class="mu"><input type="checkbox" id="delAfter"> Supprimer ce bilan de mon historique après le téléchargement</label>':''}<p class="mu" id="msg"></p></div>`;
 $('v').innerHTML=h}
-function aideV(){const CL=CATS[aideThemeSel]||CATS_DEFAULT;if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
+function catList(){return [['Toutes les catégories','__all'],...(CATS[aideThemeSel]||CATS_DEFAULT)]}
+function aideV(){const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
 $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide près de chez moi${aideThemeSel?' — <span style="color:var(--ac)">'+esc(BTHEMES.find(t=>t[0]==aideThemeSel)[1])+'</span>':''}</h2>${aideThemeSel?'<button class="s" style="margin:0 0 10px" onclick="aideThemeSel=null;aideV()">Voir toutes les catégories</button>':'<p class="mu">Fais un bilan pour voir ici des catégories adaptées à ta situation, ou choisis directement ci-dessous.</p>'}
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
 <div style="flex:1 1 190px;min-width:160px"><label class="mu" style="display:block;font-size:.82rem">Je cherche</label><select id="plCat" onchange="catSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${CL.map(([n,q])=>`<option value="${esc(q)}" ${q===catSel?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
@@ -180,7 +183,7 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
 <div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideSearch()}
-async function aideSearch(){place=$('pl').value.trim();if(!place)return;const sel=$('plCat');if(sel)catSel=sel.value;const CL=CATS[aideThemeSel]||CATS_DEFAULT;const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
+async function aideSearch(){place=$('pl').value.trim();if(!place)return;const sel=$('plCat');if(sel)catSel=sel.value;const CL=catList();const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
 let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='',osmErr=false;
 const SEARCH_KM=20;
 const NAME_REGEX_OVERRIDE={
@@ -252,7 +255,9 @@ const DATA_SRC={psy:"RPPS",psyth:"RPPS",psychiatre:"RPPS",mg:"RPPS",diet:"RPPS",
 const DATA_BASES=['https://raw.githubusercontent.com/Gio4064/ma-boussole/data/','https://cdn.jsdelivr.net/gh/Gio4064/ma-boussole@data/'];
 let dataIdx=null;const dataCache={};
 async function dataGet(path){for(const b of DATA_BASES){try{const r=await fetchWithTimeout(b+path,{},10000);if(r.ok)return await r.json()}catch(e){}}return null}
-async function dataIndex(){if(!dataIdx)dataIdx=dataGet('index.json');const v=await dataIdx;if(!v)dataIdx=null;return v}
+let dataUpdated='';
+async function dataIndex(){if(!dataIdx)dataIdx=dataGet('index.json');const v=await dataIdx;if(!v)dataIdx=null;else if(v.updated)dataUpdated=v.updated.split('-').reverse().join('/');return v}
+function updNote(){return dataUpdated?'<div class="mu" style="font-size:.8rem;margin-top:2px">✔ Annuaires officiels mis à jour le '+dataUpdated+' · uniquement les professionnels et établissements en activité</div>':''}
 function bboxKm(ref,b){return kmBetween(ref,{lat:Math.min(Math.max(ref.lat,b[0]),b[2]),lon:Math.min(Math.max(ref.lon,b[1]),b[3])})}
 async function dataSearch(ref,km,cat){const idx=await dataIndex();if(!idx||!idx.cats||!idx.cats[cat])return null;
 const deps=Object.keys(idx.cats[cat]).filter(d=>idx.deps[d]&&bboxKm(ref,idx.deps[d])<=km+3);
@@ -270,11 +275,11 @@ function resFiltered(){return resFilter==='all'?osmList:osmList.filter(x=>resFil
 const MODE_LBL={L:'Libéral · indépendant',S:'Salarié·e',B:'Bénévole',E:'Établissement'};
 const SRC_LBL={RPPS:'Annuaire Santé officiel (RPPS)',FINESS:'Établissement référencé (FINESS)',CNB:'Annuaire des avocats (CNB)'};
 function placeCity(){return plNorm((place||'').replace(/\b\d{5}\b/g,'').trim())}
-function cardHtml(x,ico){const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));
+function cardHtml(x,ico){const ext='https://www.google.com/maps/search/'+encodeURIComponent(x.name+' '+(x.addr||place));const dir='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent((x.addr||x.name+' '+place));
 const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';const findTel='https://www.google.com/search?q='+encodeURIComponent([x.name,x.prof&&x.prof.split(' — ')[0],x.ville].filter(Boolean).join(' '));
 const same=x.ville&&placeCity()&&plNorm(x.ville)===placeCity();
 const dist=same?'à '+esc(x.ville):(x.d!=null?(x.mode&&x.mode!=='E'&&x.src!=='osm'?'≈ ':'à ')+x.d.toFixed(1).replace('.',',')+' km':'');
-return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b><span class="mu">${esc(x.prof||(mapCur?mapCur.label:''))}</span>${dist?`<span class="pc-dist">📍 ${dist}</span>`:''}${x.mode?`<span class="mu">${esc(MODE_LBL[x.mode]||'')}${x.struct?' — '+esc(x.struct):''}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:`<a href="${findTel}" target="_blank" rel="noopener">☎️ Trouver le numéro ↗</a>`}${x.mail?`<a href="mailto:${esc(x.mail)}">✉️ ${esc(x.mail)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}${SRC_LBL[x.src]?`<span class="badge-off">✔ ${SRC_LBL[x.src]}</span>`:''}<a class="go" href="${ext}" target="_blank" rel="noopener">Itinéraire ↗</a></div></div>`}
+return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b><span class="mu">${esc(x.prof||(mapCur?mapCur.label:''))}</span>${dist?`<span class="pc-dist">📍 ${dist}</span>`:''}${x.mode?`<span class="mu">${esc(MODE_LBL[x.mode]||'')}${x.struct?' — '+esc(x.struct):''}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:`<a href="${findTel}" target="_blank" rel="noopener">☎️ Trouver le numéro ↗</a>`}${x.mail?`<a href="mailto:${esc(x.mail)}">✉️ ${esc(x.mail)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}${SRC_LBL[x.src]?`<span class="badge-off">✔ ${SRC_LBL[x.src]}</span>`:''}<span class="pc-links"><a href="${ext}" target="_blank" rel="noopener">⭐ Avis Google ↗</a><a href="${dir}" target="_blank" rel="noopener">🧭 Itinéraire ↗</a></span></div></div>`}
 function renderResults(pending){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box)return;
 if(more)more.classList.toggle('hide',!pending);
 if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
@@ -286,14 +291,30 @@ const chips=hasModes?`<div class="res-chips" style="grid-column:1/-1">${RES_FILT
 box.innerHTML=chips+L.slice(0,resShown).map(x=>cardHtml(x,ico)).join('')+(L.length>resShown?`<button class="s" style="grid-column:1/-1;margin:4px 0" onclick="resShown+=30;renderResults(false)">Voir plus (${L.length-resShown} autres)</button>`:'')}
 const MODE_RANK={L:0,E:1,S:2,B:3};
 function sortRes(list){const pc=placeCity();return list.sort((a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.ville||'')===pc?0:1;return (sa-sb)||(Math.round(a.d*2)-Math.round(b.d*2))||((MODE_RANK[a.mode]??4)-(MODE_RANK[b.mode]??4))||((b.phone?1:0)-(a.phone?1:0))||a.name.localeCompare(b.name)})}
-let lastRef=null;
+let lastRef=null,resGroups=null,resOthers=[];
+function renderGroups(){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box||!resGroups)return;if(more)more.classList.add('hide');
+if(resGroups.every(g=>!g.list)){box.innerHTML='';if(empty){empty.innerHTML='Les annuaires officiels sont momentanément indisponibles. Choisis une catégorie précise dans la liste, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
+if(empty)empty.classList.add('hide');
+box.innerHTML=resGroups.map(g=>{const ico=catIcon(g.t),n=g.list?g.list.length:0;const tq=g.t.replace(/'/g,"\\'");
+return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${n?n+' à moins de '+g.k+' km':'aucun à moins de '+g.k+' km'}</span></h3>${n?`<div class="grid">${g.list.slice(0,4).map(x=>cardHtml(x,ico)).join('')}</div>`:''}${n>4?`<button class="s" style="margin:8px 0 0" onclick="pickCat('${tq}')">Voir les ${n} ${esc(g.label.toLowerCase())} ▸</button>`:''}</div>`}).join('')
++(resOthers.length?`<div class="res-group"><h3>Autres aides (recherche OpenStreetMap)</h3><div style="display:flex;flex-wrap:wrap;gap:6px">${resOthers.map(([l,t])=>`<button class="chip" style="margin:0" onclick="pickCat('${t.replace(/'/g,"\\'")}')">${esc(l)}</button>`).join('')}</div></div>`:'')}
+function pickCat(t){catSel=t;const sel=$('plCat');if(sel)sel.value=t;aideSearch()}
 async function runSearch(km){if(!mapCur||!place)return;
 const myGen=++osmGen;resShown=30;resFilter='all';
-const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+(k>SEARCH_KM?' dans un rayon de '+k+' km':'')+'</span>':'')};
+const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+(k>SEARCH_KM?' dans un rayon de '+k+' km':'')+'</span>'+updNote():'')};
 setTitle(km,null);$('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true);
 const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
 if(!ref){renderResults(false);return}lastRef={...ref,q:place};
 const term=mapCur.t,dcat=DATA_CAT[(term||'').toLowerCase()];
+if(term==='__all'){const base=(CATS[aideThemeSel]||CATS_DEFAULT);const seen=new Set();const jobs=[];
+for(const [label,t] of base){const dc=DATA_CAT[t.toLowerCase()];if(!dc||seen.has(dc))continue;seen.add(dc);
+jobs.push((async()=>{let k=km,l=await dataSearch(ref,k,dc);if(l&&l.length<3&&k<50){k=50;l=await dataSearch(ref,k,dc)}
+if(l&&t.toLowerCase()==='avocat droit des mineurs'){const sp=l.filter(x=>/mineur|enfant|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)l=sp}
+return {label,t,k,list:l?sortRes(l):null}})())}
+const groups=await Promise.all(jobs);if(myGen!==osmGen)return;
+resGroups=groups;resOthers=base.filter(c=>!DATA_CAT[c[1].toLowerCase()]);
+const tot=groups.reduce((a,g)=>a+(g.list?g.list.length:0),0);setTitle(km,tot);renderGroups();return}
+resGroups=null;
 if(dcat){let k=km,list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return;
 if(list&&list.length<5&&k<50){k=50;list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return}
 if(list&&term.toLowerCase()==='avocat droit des mineurs'){const sp=list.filter(x=>/mineur|enfant|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)list=sp}

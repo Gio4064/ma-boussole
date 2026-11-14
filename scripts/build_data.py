@@ -203,6 +203,8 @@ rpps_url = dataset_resource(
 rpps = fetch(rpps_url, os.path.join(WORK, 'rpps.txt'))
 MODE = {'L': 'L', 'S': 'S', 'B': 'B'}
 SF = collections.Counter()
+GR = collections.Counter()
+DROP = collections.Counter()
 with open(rpps, encoding='utf-8', errors='replace') as f:
     h = f.readline().rstrip('\n').split('|')
     ix = {name: i for i, name in enumerate(h)}
@@ -234,6 +236,16 @@ with open(rpps, encoding='utf-8', errors='replace') as f:
                 cats.append(('addicto', 'Médecin addictologue'))
         if not cats:
             continue
+        genre = col(p, 'Libellé genre activité')
+        role = col(p, 'Libellé rôle')
+        GR[(genre, role)] += 1
+        # Seules les activités de soin en cours, avec un lieu d'exercice propre (pas les remplacements)
+        if genre and not genre.startswith('Activité standard'):
+            DROP['genre'] += 1
+            continue
+        if 'emplaç' in role:
+            DROP['remplacant'] += 1
+            continue
         cp = col(p, 'Code postal (coord. structure)')
         insee = col(p, 'Code commune (coord. structure)')
         ville = col(p, 'Libellé commune (coord. structure)')
@@ -263,6 +275,8 @@ with open(rpps, encoding='utf-8', errors='replace') as f:
             row = [nom, label, title(adr), cp, title(ville), 0, 0, t, mail, mode, title(struct) + (' · ' + secteur if secteur and secteur not in ('Cabinet individuel',) else '')]
             add(cat, (idpp, cp, adr.upper()), row, loc)
 log('  savoir-faire médecins (top):', SF.most_common(12))
+log('  genre/rôle (top):', GR.most_common(25))
+log('  écartés (inactifs / remplacements):', dict(DROP))
 
 # ---------------------------------------------------------------- FINESS
 log('== FINESS')
