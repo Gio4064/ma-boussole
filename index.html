@@ -131,7 +131,7 @@ $('v').innerHTML=`<div class="card"><div class="mu">Question ${qi+1} / ${Q.lengt
 function fin(){const sc={conf:0,diff:0,hum:0,anx:0,soc:0};
 Q.forEach((x,i)=>{if(x.d!='sec')sc[x.d]+=x.r?3-ans[i]:ans[i]});
 res={date:new Date().toLocaleDateString('fr-FR'),sc,sec:ans[12]>0,lv:{}};for(const k in sc)res.lv[k]=lvl(k,sc[k]);
-if(user){const h=store.g('mb_hist_'+user.name)||[];h.push({date:res.date,sc});store.s('mb_hist_'+user.name,h)}
+if(user){hGet(user.name,'mb_hist_'+user.hash,[]).then(h=>{h.push({date:res.date,sc});hSet(user.name,'mb_hist_'+user.hash,h)})}
 resV()}
 const ADV={conf:["Chaque soir, note 3 choses réussies, même petites.","Remplace « je suis nul·le » par un fait précis et une piste d’amélioration.","Un micro-défi par semaine, juste un peu inconfortable."],
 diff:["Identifie 3 traits qui te distinguent et une situation où ils sont une force.","Rejoins un groupe autour d’une passion : on s’y sent vite à sa place.","Évite de comparer tes coulisses aux vitrines des réseaux."],
@@ -217,15 +217,15 @@ async function addPro(){const pros=store.g('mb_pros')||[];const v=id=>$(id).valu
 if(!v('pn')||!v('pv'))return;const ll=await geoOf(v('pv')+' '+v('pc'));
 pros.push({nom:v('pn'),metier:v('pm'),ville:v('pv'),cp:v('pc'),tel:v('pt'),site:v('ps'),lat:ll?ll.lat:null,lon:ll?ll.lon:null});store.s('mb_pros',pros);adminGo()}
 function rmPro(i){const pros=store.g('mb_pros')||[];pros.splice(i,1);store.s('mb_pros',pros);adminGo()}
-function suiviV(){if(!user){$('v').innerHTML='<div class="card"><h2>Suivi</h2><p>Crée un espace de suivi sur cet appareil pour voir ton évolution bilan après bilan.</p><button onclick="go(\'compte\')">Créer mon espace</button></div>';return}
-const h=store.g('mb_hist_'+user.name)||[];$('v').innerHTML='<div class="card"><h2>Mon évolution</h2>'+(h.length?h.slice(-8).reverse().map(e=>`<div class="mu">${e.date}</div>`+Object.keys(D).map(k=>`<div class="row"><span class="mu">${D[k][0]}</span></div><div class="bar"><i style="width:${(e.sc[k]/MAXS[k]*100)}%;background:var(--ac)"></i></div>`).join('')).join('<hr>'):'<p>Aucun bilan pour l’instant.</p>')+'<p class="mu">Pour la confiance, une barre haute est bonne ; pour les autres domaines, une barre haute signale plus de difficulté.</p></div>'}
-function compteV(){if(user){const h=store.g('mb_hist_'+user.name)||[];$('v').innerHTML=`<div class="card"><h2>👤 ${esc(user.prenom?(user.prenom+' '+(user.nom||'')).trim():user.name)}</h2><p class="mu">${esc(user.name)} — espace enregistré uniquement sur cet appareil (pas de serveur). ${h.length} bilan(s) enregistré(s).</p><button class="s" onclick="expData()">⬇️ Exporter mes données (JSON)</button><button class="s" onclick="user=null;go('home')">Se déconnecter</button><button class="s" onclick="if(confirm('Supprimer définitivement ton compte et ton historique ?'))delAcc()" style="background:var(--hi);color:#fff">🗑️ Supprimer mon espace et mes données</button></div>`;return}
-$('v').innerHTML=`<div class="card"><h2>Mon espace de suivi</h2><p>Connecte-toi ou inscris-toi en un instant grâce à l’icône 👤 en haut de la page : une adresse e-mail et un code à 6 chiffres suffisent, pas de mot de passe à retenir.</p><div class="priv">🔒 Tout reste enregistré uniquement sur cet appareil, jamais sur un serveur.</div><button onclick="qaOpen('login')">👤 Se connecter / s’inscrire</button></div>`}
-function delAcc(){const n=user.name.toLowerCase();store.d('mb_acc_'+n);store.d('mb_hist_'+user.name);user=null;res=null;go('home')}
-function expData(){const h=store.g('mb_hist_'+user.name)||[];const blob=new Blob([JSON.stringify({compte:user.name,historique:h},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mes-donnees.json';a.click();URL.revokeObjectURL(u)}
+async function suiviV(){if(!user){$('v').innerHTML='<div class="card"><h2>Suivi</h2><p>Crée un espace de suivi sur cet appareil pour voir ton évolution bilan après bilan.</p><button onclick="go(\'compte\')">Créer mon espace</button></div>';return}
+const h=await hGet(user.name,'mb_hist_'+user.hash,[]);$('v').innerHTML='<div class="card"><h2>Mon évolution</h2>'+(h.length?h.slice(-8).reverse().map(e=>`<div class="mu">${e.date}</div>`+Object.keys(D).map(k=>`<div class="row"><span class="mu">${D[k][0]}</span></div><div class="bar"><i style="width:${(e.sc[k]/MAXS[k]*100)}%;background:var(--ac)"></i></div>`).join('')).join('<hr>'):'<p>Aucun bilan pour l’instant.</p>')+'<p class="mu">Pour la confiance, une barre haute est bonne ; pour les autres domaines, une barre haute signale plus de difficulté.</p></div>'}
+async function compteV(){if(user){const h=await hGet(user.name,'mb_hist_'+user.hash,[]);$('v').innerHTML=`<div class="card"><h2>👤 ${esc(user.prenom?(user.prenom+' '+(user.nom||'')).trim():user.name)}</h2><p class="mu">${esc(user.name)} — espace enregistré uniquement sur cet appareil (pas de serveur), <b>chiffré</b> avec une clé dérivée de ton adresse e-mail. ${h.length} bilan(s) enregistré(s).</p><button class="s" onclick="expData()">⬇️ Exporter mes données (JSON)</button><button class="s" onclick="user=null;go('home')">Se déconnecter</button><button class="s" onclick="if(confirm('Supprimer définitivement ton compte et ton historique ?'))delAcc()" style="background:var(--hi);color:#fff">🗑️ Supprimer mon espace et mes données</button></div>`;return}
+$('v').innerHTML=`<div class="card"><h2>Mon espace de suivi</h2><p>Connecte-toi ou inscris-toi en un instant grâce à l’icône 👤 en haut de la page : une adresse e-mail et un code à 6 chiffres suffisent, pas de mot de passe à retenir.</p><div class="priv">🔒 Tout reste chiffré et enregistré uniquement sur cet appareil, jamais sur un serveur.</div><button onclick="qaOpen('login')">👤 Se connecter / s’inscrire</button></div>`}
+async function delAcc(){store.d('mb_acc_'+user.hash);store.d('mb_hist_'+user.hash);user=null;res=null;go('home')}
+async function expData(){const h=await hGet(user.name,'mb_hist_'+user.hash,[]);const blob=new Blob([JSON.stringify({compte:user.name,historique:h},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mes-donnees.json';a.click();URL.revokeObjectURL(u)}
 function legalV(){$('v').innerHTML=`<div class="card"><h2>Mentions et confidentialité</h2>
 <h3>Qu’est-ce que Ma Boussole ?</h3><p>Un outil d’auto-évaluation et d’orientation. Il ne pose <b>aucun diagnostic</b> et ne remplace pas un professionnel de santé.</p>
-<h3>Tes données</h3><p>Sans compte, tes réponses ne sont jamais conservées. Avec un compte, ton prénom et ton historique de bilans sont stockés uniquement sur cet appareil (navigateur), jamais envoyés à un serveur. Tu peux les exporter ou les supprimer à tout moment dans l’onglet Compte.</p>
+<h3>Tes données</h3><p>Sans compte, tes réponses ne sont jamais conservées. Avec un compte, ton nom, ton prénom et ton historique de bilans sont <b>chiffrés</b> (AES-256, avec une clé dérivée de ton adresse e-mail et jamais stockée telle quelle) puis enregistrés uniquement sur cet appareil (navigateur), jamais envoyés à un serveur. La connexion se fait par un code à usage unique envoyé par e-mail (aucun mot de passe stocké). Tu peux les exporter ou les supprimer à tout moment dans l’onglet Compte.</p>
 <h3>Mineurs</h3><p>Avant 15 ans, la création d’un compte doit se faire avec l’accord d’un parent ou d’un adulte responsable.</p>
 <h3>Urgence</h3><p>Cet outil n’est pas un service d’urgence. En danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b> (24h/24, gratuit).</p>
 <h3>Responsabilité</h3><p>Les repères affichés sont indicatifs. Les liens vers des professionnels sont fournis à titre informatif ; vérifie toujours leur diplôme ou leur inscription à l’ordre.</p></div>`}
@@ -236,7 +236,7 @@ if(res.sec)ln('IMPORTANT : en cas de pensées de te faire du mal, appelle le 311
 Object.keys(D).forEach(k=>ln(D[k][0]+' : '+LV[res.lv[k]][0],11));y+=3;
 Object.keys(D).filter(k=>res.lv[k]>0).forEach(k=>{ln(D[k][0],13,1);ADV[k].forEach(a=>ln('- '+a,11));y+=2});
 ln('Ce bilan est indicatif et ne constitue pas un diagnostic.',9);
-if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:'mon-bilan.pdf',data:d.output('blob')})}else d.save('mon-bilan.pdf');m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(store.g('mb_hist_'+user.name)||[]).filter(e=>e.date!==res.date);store.s('mb_hist_'+user.name,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
+if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:'mon-bilan.pdf',data:d.output('blob')})}else d.save('mon-bilan.pdf');m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(await hGet(user.name,'mb_hist_'+user.hash,[])).filter(e=>e.date!==res.date);await hSet(user.name,'mb_hist_'+user.hash,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
 const AGES=[["enfant","Enfant (8-12)"],["ado","Ado (13-17)"],["adulte","Adulte (18-64)"],["senior","65 ans et +"]];
 let age='adulte';
 function ecoute(){const c={enfant:["<b>119</b> : Allô Enfance en danger, gratuit, 24h/24","<b>3020</b> : harcèlement à l’école","<b>3018</b> : cyberharcèlement et problèmes sur internet"],ado:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>Fil Santé Jeunes</b> (12-25 ans) : 0 800 235 236","<b>3018</b> : cyberharcèlement ; <b>3020</b> : harcèlement scolaire","<b>119</b> : si tu es en danger chez toi"],adulte:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme"],senior:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme","<b>3133</b> : maltraitance envers les personnes âgées ou handicapées (remplace le 3977 depuis 2026)"]}[age];return'<div class="card"><h3>Écoute immédiate (France)</h3><ul>'+c.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'}
@@ -253,6 +253,14 @@ const THEMES=[
 function themesHtml(){return THEMES.map(([t,items])=>`<h3>${t}</h3><ul>${items.map(([n,d])=>`<li><b>${n}</b> — ${d}</li>`).join('')}</ul>`).join('')}
 function minorNote(){return age=='enfant'||age=='ado'?'<div class="warn">Parle de ce bilan à un adulte en qui tu as confiance (parent, infirmier·e scolaire, professeur). Tu n’as pas à gérer ça seul·e.</div>':age=='senior'?'<p class="mu">Ton médecin traitant est un excellent premier interlocuteur : il connaît ton histoire et peut t’orienter.</p>':''}
 let fi=0;function fz(){fi=(fi+1)%3;document.documentElement.style.setProperty('--fs',['16px','19px','22px'][fi])}
+async function emailHashHex(email){const enc=new TextEncoder().encode((email||'').trim().toLowerCase());const buf=await crypto.subtle.digest('SHA-256',enc);return[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('')}
+async function aesKeyFromEmail(email){const enc=new TextEncoder().encode((email||'').trim().toLowerCase());const raw=await crypto.subtle.digest('SHA-256',enc);return crypto.subtle.importKey('raw',raw,{name:'AES-GCM'},false,['encrypt','decrypt'])}
+function b64e(buf){return btoa(String.fromCharCode(...new Uint8Array(buf)))}
+function b64d(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
+async function encBlob(email,obj){const key=await aesKeyFromEmail(email);const iv=crypto.getRandomValues(new Uint8Array(12));const data=new TextEncoder().encode(JSON.stringify(obj));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,data);return{iv:b64e(iv),ct:b64e(ct)}}
+async function decBlob(email,rec){if(!rec||!rec.ct||!rec.iv)return null;try{const key=await aesKeyFromEmail(email);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(rec.iv)},key,b64d(rec.ct));return JSON.parse(new TextDecoder().decode(pt))}catch(e){return null}}
+async function hGet(email,k,def){const rec=store.g(k);if(!rec)return def;const v=await decBlob(email,rec);return v==null?def:v}
+async function hSet(email,k,v){store.s(k,await encBlob(email,v))}
 const EMAILJS_SERVICE_ID='service_i0qrszm',EMAILJS_TEMPLATE_ID='template_swl649m',EMAILJS_PUBLIC_KEY='EPyeADkMdskOhrDR7';
 let qaMode='login',pendingAuth=null;
 const EMAIL_RX=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -270,26 +278,29 @@ if(qaMode==='verify'&&pendingAuth){p.innerHTML=`<p style="margin:0 0 8px;font-si
 p.innerHTML=`<label class="mu" style="display:block;font-size:.82rem">Adresse e-mail</label><input type="text" id="qEm" placeholder="prenom@exemple.fr" autocomplete="off" onkeydown="if(event.key=='Enter')qaLogin()"><button style="width:100%" onclick="qaLogin()">Recevoir un code de connexion</button><p class="mu" id="qaErr" style="margin:6px 0 0;font-size:.82rem"></p><p class="mu" style="margin-top:10px;font-size:.8rem">Pas encore de compte ? <a href="#" onclick="qaOpen('signup');return false">Inscription</a></p>`}
 async function qaLogin(){const em=$('qEm').value.trim(),er=$('qaErr');er.innerHTML='';
 if(!EMAIL_RX.test(em)){er.textContent='Adresse e-mail invalide.';return}
-const a=store.g('mb_acc_'+em.toLowerCase());
-if(!a){er.innerHTML='Aucun espace pour cette adresse. <a href="#" onclick="qaOpen(\'signup\');return false">S’inscrire</a>';return}
-const code=genCode();pendingAuth={email:em,nom:a.nom,prenom:a.prenom,code,exp:Date.now()+10*60000,isNew:false};
+const h=await emailHashHex(em),rec=store.g('mb_acc_'+h);
+if(!rec){er.innerHTML='Aucun espace pour cette adresse. <a href="#" onclick="qaOpen(\'signup\');return false">S’inscrire</a>';return}
+const a=await decBlob(em,rec);
+if(!a){er.textContent='Espace introuvable ou illisible sur cet appareil.';return}
+const code=genCode();pendingAuth={email:em,hash:h,nom:a.nom,prenom:a.prenom,code,exp:Date.now()+10*60000,isNew:false};
 const ok=await sendCode(em,code,a.prenom);qaMode='verify';qaRender();
 if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.'}
-function qaSendSignup(){const nom=$('qNom').value.trim(),pre=$('qPre').value.trim(),em=$('qEm2').value.trim(),er=$('qaErr');er.innerHTML='';
+async function qaSendSignup(){const nom=$('qNom').value.trim(),pre=$('qPre').value.trim(),em=$('qEm2').value.trim(),er=$('qaErr');er.innerHTML='';
 if(!nom||!pre){er.textContent='Nom et prénom requis.';return}
 if(!EMAIL_RX.test(em)){er.textContent='Adresse e-mail invalide.';return}
-if(store.g('mb_acc_'+em.toLowerCase())){er.innerHTML='Un espace existe déjà pour cette adresse. <a href="#" onclick="qaOpen(\'login\');return false">Se connecter</a>';return}
+const h=await emailHashHex(em);
+if(store.g('mb_acc_'+h)){er.innerHTML='Un espace existe déjà pour cette adresse. <a href="#" onclick="qaOpen(\'login\');return false">Se connecter</a>';return}
 if(!$('qCk').checked){er.textContent='Coche la case de consentement pour créer ton espace.';return}
-const code=genCode();pendingAuth={email:em,nom,prenom:pre,code,exp:Date.now()+10*60000,isNew:true};
+const code=genCode();pendingAuth={email:em,hash:h,nom,prenom:pre,code,exp:Date.now()+10*60000,isNew:true};
 sendCode(em,code,pre).then(ok=>{qaMode='verify';qaRender();if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.'})}
 async function qaResend(){if(!pendingAuth)return;const code=genCode();pendingAuth.code=code;pendingAuth.exp=Date.now()+10*60000;
 const ok=await sendCode(pendingAuth.email,code,pendingAuth.prenom);qaRender();
 if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.';else $('qaErr').textContent='Nouveau code envoyé.'}
-function qaVerify(){const v=$('qCode').value.trim(),er=$('qaErr');if(!pendingAuth){qaOpen('login');return}
+async function qaVerify(){const v=$('qCode').value.trim(),er=$('qaErr');if(!pendingAuth){qaOpen('login');return}
 if(Date.now()>pendingAuth.exp){er.textContent='Code expiré, redemande-en un.';return}
 if(v!==pendingAuth.code){er.textContent='Code incorrect.';return}
-if(pendingAuth.isNew)store.s('mb_acc_'+pendingAuth.email.toLowerCase(),{nom:pendingAuth.nom,prenom:pendingAuth.prenom,email:pendingAuth.email});
-user={name:pendingAuth.email,email:pendingAuth.email,nom:pendingAuth.nom,prenom:pendingAuth.prenom};pendingAuth=null;qaMode='login';qaClose();go('compte')}
+if(pendingAuth.isNew)await hSet(pendingAuth.email,'mb_acc_'+pendingAuth.hash,{nom:pendingAuth.nom,prenom:pendingAuth.prenom,email:pendingAuth.email});
+user={name:pendingAuth.email,email:pendingAuth.email,hash:pendingAuth.hash,nom:pendingAuth.nom,prenom:pendingAuth.prenom};pendingAuth=null;qaMode='login';qaClose();go('compte')}
 document.addEventListener('mousedown',e=>{const w=$('qaWrap');if(w&&!w.contains(e.target))qaClose()});
 try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
 go('home');
