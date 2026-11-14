@@ -60,6 +60,7 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 .place-card .body>span.mu{font-size:.8rem;line-height:1.3}
 .place-card a{font-size:.82rem;text-decoration:none}
 .place-card a.go{margin-top:4px;font-weight:600}
+.res-chips{display:flex;flex-wrap:wrap;gap:6px}.res-chips .chip{margin:0;font-size:.85rem;padding:8px 12px}
 .pc-dist{font-size:.8rem;font-weight:600;color:var(--ac)}
 .badge-off{display:inline-block;align-self:flex-start;font-size:.72rem;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:999px;padding:1px 8px;margin:2px 0}
 </style>
@@ -263,7 +264,9 @@ for(const L of lists){if(!L)continue;for(const x of L){if(x.lat==null)continue;x
 const dup=out.find(y=>y.name.toLowerCase()===x.name.toLowerCase()&&Math.abs(y.lat-x.lat)<.003&&Math.abs(y.lon-x.lon)<.003);
 if(dup){if(x.src==='ameli')dup.src='ameli';if(!dup.phone&&x.phone)dup.phone=x.phone;if(!dup.site&&x.site)dup.site=x.site;if(!dup.addr&&x.addr)dup.addr=x.addr}else out.push({...x})}}
 return out.sort((a,b)=>a.d-b.d).slice(0,40)}
-let resShown=30;
+let resShown=30,resFilter='all';
+const RES_FILTERS=[['all','Tous'],['L','Cabinets libéraux'],['pub','Structures (hôpital, centre, association)']];
+function resFiltered(){return resFilter==='all'?osmList:osmList.filter(x=>resFilter==='L'?x.mode==='L':(x.mode==='S'||x.mode==='E'||x.mode==='B'))}
 const MODE_LBL={L:'Libéral · indépendant',S:'Salarié·e',B:'Bénévole',E:'Établissement'};
 const SRC_LBL={RPPS:'Annuaire Santé officiel (RPPS)',FINESS:'Établissement référencé (FINESS)',CNB:'Annuaire des avocats (CNB)'};
 function placeCity(){return plNorm((place||'').replace(/\b\d{5}\b/g,'').trim())}
@@ -277,12 +280,15 @@ if(more)more.classList.toggle('hide',!pending);
 if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
 box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche répond lentement en ce moment. ':'Aucun résultat à proximité. ')+'<button class="s" style="margin:8px 0 2px" onclick="widenSearch()">🔎 Chercher plus loin (jusqu’à 50 km)</button><br>Ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
 if(empty)empty.classList.add('hide');
-const ico=catIcon(mapCur?mapCur.t:'');
-box.innerHTML=osmList.slice(0,resShown).map(x=>cardHtml(x,ico)).join('')+(osmList.length>resShown?`<button class="s" style="grid-column:1/-1;margin:4px 0" onclick="resShown+=30;renderResults(false)">Voir plus (${osmList.length-resShown} autres)</button>`:'')}
-function sortRes(list){const pc=placeCity();return list.sort((a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.ville||'')===pc?0:1;return (a.d-b.d)||(sa-sb)||((b.phone?1:0)-(a.phone?1:0))||a.name.localeCompare(b.name)})}
+const ico=catIcon(mapCur?mapCur.t:'');const hasModes=osmList.some(x=>x.mode==='L')&&osmList.some(x=>x.mode&&x.mode!=='L');
+const L=resFiltered();
+const chips=hasModes?`<div class="res-chips" style="grid-column:1/-1">${RES_FILTERS.map(([k,l])=>`<button class="chip ${resFilter===k?'on':''}" onclick="resFilter='${k}';resShown=30;renderResults(false)">${l}</button>`).join('')}</div>`:'';
+box.innerHTML=chips+L.slice(0,resShown).map(x=>cardHtml(x,ico)).join('')+(L.length>resShown?`<button class="s" style="grid-column:1/-1;margin:4px 0" onclick="resShown+=30;renderResults(false)">Voir plus (${L.length-resShown} autres)</button>`:'')}
+const MODE_RANK={L:0,E:1,S:2,B:3};
+function sortRes(list){const pc=placeCity();return list.sort((a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.ville||'')===pc?0:1;return (sa-sb)||(Math.round(a.d*2)-Math.round(b.d*2))||((MODE_RANK[a.mode]??4)-(MODE_RANK[b.mode]??4))||((b.phone?1:0)-(a.phone?1:0))||a.name.localeCompare(b.name)})}
 let lastRef=null;
 async function runSearch(km){if(!mapCur||!place)return;
-const myGen=++osmGen;resShown=30;
+const myGen=++osmGen;resShown=30;resFilter='all';
 const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+(k>SEARCH_KM?' dans un rayon de '+k+' km':'')+'</span>':'')};
 setTitle(km,null);$('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true);
 const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
@@ -290,7 +296,7 @@ if(!ref){renderResults(false);return}lastRef={...ref,q:place};
 const term=mapCur.t,dcat=DATA_CAT[(term||'').toLowerCase()];
 if(dcat){let k=km,list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return;
 if(list&&list.length<5&&k<50){k=50;list=await dataSearch(ref,k,dcat);if(myGen!==osmGen)return}
-if(list&&term.toLowerCase()==='avocat droit des mineurs'){const sp=list.filter(x=>/mineur|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)list=sp}
+if(list&&term.toLowerCase()==='avocat droit des mineurs'){const sp=list.filter(x=>/mineur|enfant|famille|p[ée]nal|victime|dommage/i.test(x.prof));if(sp.length>=3)list=sp}
 if(list){osmList=sortRes(list);setTitle(k,osmList.length);renderResults(false);return}}
 let ph=null,ov,ovDone=false;
 const pOv=osmSearch(ref.lat,ref.lon,km,term).then(r=>{ov=r;ovDone=true;if(myGen===osmGen){osmList=mergeRes(ref,km,ph,ov);renderResults(!ovDone)}});
@@ -384,8 +390,8 @@ function themeHotlineCard(k){const idx=THEME_HOTLINE_IDX[k];if(idx==null)return'
 const CATS_DEFAULT=[["Psychologues","psychologue"],["Psychiatres","psychiatre"],["Psychothérapeutes","psychothérapeute"],["Centres médico-psychologiques (CMP, CMPP, gratuits)","centre médico-psychologique"],["Médecins généralistes","médecin généraliste"],["Addictologie (CSAPA, CAARUD)","CSAPA addictologie"],["Assistant·es de service social","assistant service social"],["Centres de santé sexuelle (EVARS)","santé sexuelle"],["Hébergement d’urgence et d’accueil","hébergement urgence"],["Avocats","avocat"],["Diététicien·nes","diététicien"],["Maison des adolescents / point accueil jeunes","maison des adolescents"],["Associations d’entraide et groupes de parole","groupe de parole association"]];
 const CATS={
 conf:[["Psychologues","psychologue"],["Psychothérapeutes","psychothérapeute"],["Centres médico-psychologiques (CMP, gratuits)","centre médico-psychologique"],["Coachs et développement personnel","coach de vie"],["Associations d’écoute et de soutien","association écoute soutien"]],
-harc:[["Psychologues","psychologue"],["Centres médico-psychologiques (CMP, CMPP)","centre médico-psychologique"],["Assistant·es de service social","assistant service social"],["Avocats (famille, mineurs, pénal)","avocat droit des mineurs"],["Points accueil écoute jeunes","point accueil écoute jeunes"],["Médiation scolaire","médiation scolaire"],["Associations contre le harcèlement","association harcèlement"]],
-viol:[["Hébergement d’urgence et d’accueil","hébergement urgence"],["Centres de santé sexuelle (EVARS)","santé sexuelle"],["Assistant·es de service social","assistant service social"],["Psychologues","psychologue"],["Avocats (famille, pénal)","avocat droit des mineurs"],["Associations d’aide aux victimes","aide aux victimes"],["CIDFF (droits des femmes et des familles)","CIDFF"]],
+harc:[["Psychologues","psychologue"],["Centres médico-psychologiques (CMP, CMPP)","centre médico-psychologique"],["Assistant·es de service social","assistant service social"],["Avocats (droit de la famille, des enfants, pénal)","avocat droit des mineurs"],["Points accueil écoute jeunes","point accueil écoute jeunes"],["Médiation scolaire","médiation scolaire"],["Associations contre le harcèlement","association harcèlement"]],
+viol:[["Hébergement d’urgence et d’accueil","hébergement urgence"],["Centres de santé sexuelle (EVARS)","santé sexuelle"],["Assistant·es de service social","assistant service social"],["Psychologues","psychologue"],["Avocats (droit de la famille, pénal)","avocat droit des mineurs"],["Associations d’aide aux victimes","aide aux victimes"],["CIDFF (droits des femmes et des familles)","CIDFF"]],
 anx:[["Psychologues","psychologue"],["Psychiatres","psychiatre"],["Centres médico-psychologiques (CMP, gratuits)","centre médico-psychologique"],["Médecins généralistes","médecin généraliste"],["Psychothérapeutes","psychothérapeute"],["Sophrologues","sophrologue"]],
 hum:[["Psychologues","psychologue"],["Psychiatres","psychiatre"],["Centres médico-psychologiques (CMP, gratuits)","centre médico-psychologique"],["Médecins généralistes","médecin généraliste"],["Psychothérapeutes","psychothérapeute"]],
 soc:[["Assistant·es de service social","assistant service social"],["Psychologues","psychologue"],["Associations d’entraide et groupes de parole","groupe de parole association"],["Maisons de quartier et centres sociaux","maison de quartier centre social"],["Clubs et associations locales","association loisirs"]],

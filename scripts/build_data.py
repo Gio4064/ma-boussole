@@ -76,18 +76,36 @@ def norm(s):
 KEEP_UP = {'CH', 'CHU', 'CHS', 'CMP', 'CMPP', 'CSAPA', 'CAARUD', 'CHRS', 'EVARS', 'BAPU', 'SAS', 'SARL', 'SCP', 'SELARL', 'SELAS', 'SCM', 'EHPAD', 'ARS', 'CCAS', 'II', 'III'}
 
 
+SMALL = {'DE', 'DU', 'DES', 'LA', 'LE', 'LES', 'D', 'L', 'ET', 'AU', 'AUX', 'EN', 'SUR', 'SOUS'}
+
+
 def title(s):
     s = (s or '').strip()
-    if not s or not s.isupper():
+    if not s:
         return s
-    return re.sub(r"[A-ZÀ-ÖØ-Ý]+", lambda m: m.group(0) if m.group(0) in KEEP_UP else m.group(0).capitalize(), s)
+
+    def fix(m):
+        w = m.group(0)
+        if not w.isupper() or len(w) == 1 and w not in ('D', 'L'):
+            return w
+        if w in KEEP_UP:
+            return w
+        if w in SMALL and m.start() > 0:
+            return w.lower()
+        return w.capitalize()
+    out = re.sub(r"[A-Za-zÀ-ÖØ-öø-ÿ]+", fix, s)
+    return re.sub(r"\b([dl]) ", r"\1'", out)
 
 
 def tel(s):
     d = re.sub(r'\D', '', s or '')
-    if d.startswith('33') and len(d) == 11:
-        d = '0' + d[2:]
-    if len(d) == 10:
+    if d.startswith('0033'):
+        d = d[4:]
+    elif d.startswith('33') and len(d) in (11, 12):
+        d = d[2:]
+    if len(d) == 9 and d[0] in '123456789':
+        d = '0' + d
+    if len(d) == 10 and d[0] == '0':
         return ' '.join(d[i:i + 2] for i in range(0, 10, 2))
     return (s or '').strip()
 
