@@ -62,6 +62,7 @@ input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px so
 .place-card a.go{margin-top:4px;font-weight:600}
 .res-chips{display:flex;flex-wrap:wrap;gap:6px}.res-chips .chip{margin:0;font-size:.85rem;padding:8px 12px}
 .pc-links{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}.pc-links a{font-weight:600}
+.near-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
 .res-group{grid-column:1/-1;margin:6px 0 10px}.res-group h3{display:flex;align-items:center;gap:8px;margin:6px 0 8px}.res-group .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .pc-dist{font-size:.8rem;font-weight:600;color:var(--ac)}
 .badge-off{display:inline-block;align-self:flex-start;font-size:.72rem;font-weight:600;color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:999px;padding:1px 8px;margin:2px 0}
@@ -143,11 +144,11 @@ $('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x
 const sd=$('side');if(sd)sd.innerHTML=t.map(x=>{const ico=(x[0]==='compte'&&user)?'':NAV_ICO[x[0]]||'';const subs=SUB[x[0]];
 const subHtml=subs?('<div style="margin:0 0 4px 28px;display:flex;flex-direction:column;gap:1px">'+subs.map(s=>`<button class="sub" onclick="goSub('${x[0]}','${s[1]}')">${s[0]}</button>`).join('')+'</div>'):'';
 return `<button class="${x[0]==on?'on':''}" onclick="go('${x[0]}')">${ico?`<span aria-hidden="true">${ico}</span>`:''}${x[1]}</button>${subHtml}`}).join('')}
-function go(p){nav(p);window[p+'V']();window.scrollTo(0,0)}
+function go(p){nearSlots=[];nav(p);window[p+'V']();window.scrollTo(0,0)}
 function homeV(){$('v').innerHTML=`<div class="grid2"><div class="card"><h2>Bienvenue</h2><p>En 3 minutes, choisis un thème (confiance, harcèlement, violence, anxiété, humeur, isolement, addictions, alimentation…) et fais le point. Tu obtiens des repères, des conseils et des liens vers des professionnels près de toi.</p>
 <div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div>
 <h3>Je suis…</h3><div>${AGES.map(a=>`<button class="chip ${a[0]==age?'on':''}" onclick="age='${a[0]}';homeV()">${a[1]}</button>`).join('')}</div><button onclick="go('bilan')">Commencer mon bilan</button>${user?'':'<button class="s" onclick="go(\'compte\')">Créer un espace de suivi</button>'}</div>
-<div class="card"><h3>Comment ça marche</h3><ul><li>8 thèmes, 20 questions concrètes chacun, inspirées d’échelles reconnues.</li><li>Un résultat clair par thème, avec des conseils adaptés.</li><li>Une orientation selon ton niveau et ton lieu de vie.</li></ul></div></div>`}
+<div class="card"><h3>Comment ça marche</h3><ul><li>8 thèmes, 20 questions concrètes chacun, inspirées d’échelles reconnues.</li><li>Un résultat clair par thème, avec des conseils adaptés.</li><li>Une orientation selon ton niveau et ton lieu de vie.</li></ul></div></div>${nearCard('nearHome',CATS_DEFAULT,'📍 Près de chez toi')}`}
 function bilanV(){themeCur=null;$('v').innerHTML=`<div class="card"><h2>Fais le point, par thème</h2><p>Choisis un thème : une série de 20 questions concrètes, 3 minutes, pour obtenir des repères clairs et une orientation adaptée à ta situation.</p><div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div></div><div class="grid2" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px">${BTHEMES.map(x=>`<button class="s" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:16px;text-align:left;width:100%;margin:0" onclick="startTheme('${x[0]}')"><span style="font-size:1.7rem">${x[2]}</span><b style="font-size:1rem;color:var(--tx)">${x[1]}</b><span class="mu" style="font-size:.82rem">${x[3]}</span></button>`).join('')}</div>`}
 function startTheme(k){themeCur=k;ans=[];qi=0;res=null;q()}
 function q(){const Q=BQ[themeCur];if(qi>=Q.length)return fin();const x=Q[qi];const lbl=BTHEMES.find(t=>t[0]==themeCur)[1];
@@ -166,6 +167,7 @@ const L=LV[r.lv];
 h+=`<div class="card"><h2>${esc(r.label)}</h2><div class="row"><span>Résultat</span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${r.sc/r.max*100}%;background:${L[1]}"></i></div><p class="mu">Repère indicatif issu de tes réponses, pas un diagnostic.</p></div>`;
 h+=`<div class="card"><h2>Conseils</h2><ul>${(BADV[r.theme]||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
 h+=`<div class="card"><h2>Étape suivante</h2>${minorNote()}<p>${r.lv==2?"Tes réponses suggèrent qu’un accompagnement par un professionnel ou une structure spécialisée serait utile.":r.lv==1?"Un échange avec un professionnel ou une ligne d’écoute peut t’aider, avant que la situation ne s’installe.":"Tu sembles plutôt bien sur ce thème. Refais ce bilan si la situation change."}</p><button onclick="go('aide')">📍 Trouver de l’aide près de chez moi</button><button class="s" onclick="pdf()">📄 Mon PDF</button><button class="s" onclick="go('bilan')">🧭 Faire un autre thème</button>${user?'<label style="display:block;margin:8px 0" class="mu"><input type="checkbox" id="delAfter"> Supprimer ce bilan de mon historique après le téléchargement</label>':''}<p class="mu" id="msg"></p></div>`;
+h+=nearCard('nearRes',CATS[r.theme]||CATS_DEFAULT,'📍 Près de chez toi — '+esc(r.label));
 $('v').innerHTML=h}
 function catList(){return [['Toutes les catégories','__all'],...(CATS[aideThemeSel]||CATS_DEFAULT)]}
 function aideV(){const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
@@ -174,7 +176,7 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 <div style="flex:1 1 190px;min-width:160px"><label class="mu" style="display:block;font-size:.82rem">Je cherche</label><select id="plCat" onchange="catSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${CL.map(([n,q])=>`<option value="${esc(q)}" ${q===catSel?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
 <div style="flex:2 1 220px;min-width:180px"><label class="mu" style="display:block;font-size:.82rem">Ville, village ou code postal</label><div id="plWrap" style="position:relative"><input type="text" id="pl" value="${esc(place)}" placeholder="Partout en France : Ex. Bordeaux ou 40140" autocomplete="off" oninput="plSug()" onkeydown="if(event.key=='Enter'){plHide();aideSearch()}" style="margin:0"><div id="plList" style="position:absolute;z-index:30;left:0;right:0;top:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;max-height:230px;overflow:auto;display:none;box-shadow:0 10px 28px rgba(30,30,70,.14)"></div></div></div>
 <div style="flex:0 1 110px;min-width:100px"><label class="mu" style="display:block;font-size:.82rem" for="plKm">Rayon</label><select id="plKm" onchange="kmSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${KM_OPTS.map(k=>`<option value="${k}" ${String(k)===String(kmSel)?'selected':''}>${k} km</option>`).join('')}</select></div>
-<div style="flex:0 1 150px;min-width:130px"><label class="mu" style="display:block;font-size:.82rem" for="plSort">Trier par</label><select id="plSort" onchange="resSort=this.value;resortResults()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${SORT_OPTS.map(([k,l])=>`<option value="${k}" ${k===resSort?'selected':''}>${l}</option>`).join('')}</select></div>
+<div style="flex:0 1 150px;min-width:130px"><label class="mu" style="display:block;font-size:.82rem" for="plSort">Trier par</label><select id="plSort" onchange="resSort=this.value;savePrefs();resortResults()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${SORT_OPTS.map(([k,l])=>`<option value="${k}" ${k===resSort?'selected':''}>${l}</option>`).join('')}</select></div>
 <div style="flex:0 0 auto"><button onclick="plHide();aideSearch()" style="margin:0">Chercher</button></div>
 </div>
 <p class="mu" style="margin-top:10px">Vérifie toujours le diplôme (psychologue) ou l’inscription à l’ordre (médecin).</p>
@@ -185,7 +187,7 @@ $('v').innerHTML=`<div class="card" id="aide-recherche"><h2>Trouver de l’aide 
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
 <div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideSearch()}
-async function aideSearch(){place=$('pl').value.trim();if(!place)return;const sel=$('plCat');if(sel)catSel=sel.value;const CL=catList();const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
+async function aideSearch(){place=$('pl').value.trim();if(!place)return;savePrefs();const sel=$('plCat');if(sel)catSel=sel.value;const CL=catList();const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
 let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='',osmErr=false;
 const SEARCH_KM=20;
 const NAME_REGEX_OVERRIDE={
@@ -300,6 +302,23 @@ const near=(a,b)=>{const sa=pc&&plNorm(a.ville||'')===pc?0:1,sb=pc&&plNorm(b.vil
 const mode=(a,b)=>(MODE_RANK[a.mode]??4)-(MODE_RANK[b.mode]??4),tel=(a,b)=>(b.phone?1:0)-(a.phone?1:0),nm=(a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'});
 const by={dist:[near,mode,tel,nm],tel:[tel,near,mode,nm],lib:[mode,near,tel,nm],name:[nm,near]}[resSort]||[near,mode,tel,nm];
 return list.sort((a,b)=>{for(const f of by){const r=f(a,b);if(r)return r}return 0})}
+function savePrefs(){store.s('mb_pref',{place,km:kmSel,sort:resSort})}
+let nearSlots=[];
+function nearCard(id,cats,heading){const list=cats.filter(c=>DATA_CAT[c[1].toLowerCase()]).slice(0,3);nearSlots.push({id,cats:list});setTimeout(()=>fillNear(id,list),0);
+const sel='padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit';
+return `<div class="card near" id="${id}"><h2>${heading}</h2><form class="near-form" onsubmit="event.preventDefault();const v=this.q.value.trim();if(v){place=v;savePrefs();refreshNear()}"><input name="q" type="text" aria-label="Ville ou code postal" placeholder="Ta ville ou ton code postal" value="${esc(place)}" style="margin:0;flex:1 1 180px"><select name="km" aria-label="Rayon" style="${sel}" onchange="kmSel=this.value;savePrefs();refreshNear()">${KM_OPTS.map(k=>`<option value="${k}" ${String(k)===String(kmSel)?'selected':''}>${k} km</option>`).join('')}</select><select name="tri" aria-label="Trier par" style="${sel}" onchange="resSort=this.value;savePrefs();refreshNear()">${SORT_OPTS.map(([k,l])=>`<option value="${k}" ${k===resSort?'selected':''}>${l}</option>`).join('')}</select><button style="margin:0">Voir</button></form><div class="near-body"></div></div>`}
+function refreshNear(){nearSlots=nearSlots.filter(x=>$(x.id));nearSlots.forEach(x=>fillNear(x.id,x.cats))}
+async function fillNear(id,cats){const el=$(id);if(!el||!el.querySelector)return;const body=el.querySelector('.near-body');
+el.querySelectorAll('select[name=km]').forEach(e=>e.value=String(kmSel));el.querySelectorAll('select[name=tri]').forEach(e=>e.value=resSort);el.querySelectorAll('input[name=q]').forEach(e=>{if(document.activeElement!==e)e.value=place});
+if(!place){body.innerHTML='<p class="mu">Indique ta ville, ton village ou ton code postal pour voir les professionnels et lieux d’aide les plus proches.</p>';return}
+body.innerHTML='<p class="mu">Recherche près de « '+esc(place)+' »…</p>';
+const ref=await geoOf(place);if(!ref){body.innerHTML='<p class="mu">Ville introuvable. Vérifie l’orthographe ou essaie le code postal.</p>';return}
+const km=curKm();const res=await Promise.all(cats.map(async([label,t])=>({label,t,list:await dataSearch(ref,km,DATA_CAT[t.toLowerCase()])})));
+if(!$(id))return;
+if(res.every(g=>!g.list)){body.innerHTML='<p class="mu">Les annuaires sont momentanément indisponibles. <a href="#" onclick="go(\'aide\');return false">Ouvrir la recherche complète</a></p>';return}
+body.innerHTML=res.map(g=>{const ico=catIcon(g.t),L=g.list?sortRes(g.list):[];const tq=g.t.replace(/'/g,"\\'");
+return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${L.length?L.length+' à moins de '+km+' km':'aucun à moins de '+km+' km'}</span></h3>${L.length?`<div class="grid">${L.slice(0,3).map(x=>cardHtml(x,ico)).join('')}</div>`:''}<button class="s" style="margin:8px 0 0" onclick="openAide('${tq}')">${L.length>3?'Voir les '+L.length+' ▸':'Chercher plus loin ▸'}</button></div>`}).join('')+updNote()}
+function openAide(t){if(!catList().some(c=>c[1]===t))aideThemeSel=null;catSel=t;go('aide')}
 function resortResults(){if(resGroups){resGroups.forEach(g=>{if(g.list)sortRes(g.list)});renderGroups()}else if(osmList.length){sortRes(osmList);renderResults(false)}}
 let lastRef=null,resGroups=null,resOthers=[];
 function renderGroups(){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box||!resGroups)return;if(more)more.classList.add('hide');
@@ -372,7 +391,7 @@ else{pros=pros.filter(x=>x.ville.toLowerCase().includes(place.toLowerCase())||pl
 let h=pros.length?`<h3>Fiches validées près de « ${esc(place)} » (≤ ${km} km)</h3><ul>${pros.map(x=>`<li><b>${esc(x.nom)}</b> — ${esc(x.metier)}, ${esc(x.ville)} ${esc(x.cp)}${distTxt[x.nom+x.ville]?' — <b>'+distTxt[x.nom+x.ville]+'</b>':''}${x.tel?' — '+esc(x.tel):''}${x.site?` — <a href="${esc(x.site)}" target="_blank" rel="noopener">site</a>`:''}</li>`).join('')}</ul>`:'';
 h+='<p class="mu" style="margin-top:10px">Besoin d’un annuaire officiel plutôt qu’une carte ? <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a></p>';
 $('lk').innerHTML=h}
-function ressourcesV(){$('v').innerHTML=`<div class="card"><h2>Ressources et numéros</h2>${ecoute()}</div><div class="card" id="res-numeros"><h2>Numéros nationaux vérifiés, par thème</h2><p class="mu">Sources : Psycom, Service-public.fr, ARS, ministère des Solidarités. À jour au 14 novembre 2026.</p>${themesHtml()}<h3>S’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a></li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a></li><li><a href="https://www.sante.fr" target="_blank" rel="noopener">Annuaire santé officiel</a></li></ul></div>
+function ressourcesV(){$('v').innerHTML=`<div class="card"><h2>Ressources et numéros</h2>${ecoute()}</div>${nearCard('nearRes2',CATS_DEFAULT,'📍 Professionnels près de chez toi')}<div class="card" id="res-numeros"><h2>Numéros nationaux vérifiés, par thème</h2><p class="mu">Sources : Psycom, Service-public.fr, ARS, ministère des Solidarités. À jour au 14 novembre 2026.</p>${themesHtml()}<h3>S’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a></li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a></li><li><a href="https://www.sante.fr" target="_blank" rel="noopener">Annuaire santé officiel</a></li></ul></div>
 <div class="card" id="res-admin"><h3>Espace administration</h3><p class="mu">Réservé à la personne qui gère cette application (ajout de fiches professionnelles vérifiées). Stocké sur cet appareil.</p>
 <input type="password" id="adp" placeholder="Code admin"><button onclick="adminGo()">Entrer</button><div id="adz"></div></div>`}
 function adminGo(){if($('adp').value!==(store.g('mb_admin_pin')||'0000')){alert('Code incorrect.');return}
@@ -390,7 +409,7 @@ async function delAcc(){store.d('mb_acc_'+user.hash);store.d('mb_hist_'+user.has
 async function expData(){const h=await hGet(user.name,'mb_hist_'+user.hash,[]);const blob=new Blob([JSON.stringify({compte:user.name,historique:h},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mes-donnees.json';a.click();URL.revokeObjectURL(u)}
 function legalV(){$('v').innerHTML=`<div class="card"><h2>Mentions et confidentialité</h2>
 <h3>Qu’est-ce que Ma Boussole ?</h3><p>Un outil d’auto-évaluation et d’orientation. Il ne pose <b>aucun diagnostic</b> et ne remplace pas un professionnel de santé.</p>
-<h3>Tes données</h3><p>Sans compte, tes réponses ne sont jamais conservées. Avec un compte, ton nom, ton prénom et ton historique de bilans sont <b>chiffrés</b> (AES-256, avec une clé dérivée de ton adresse e-mail et jamais stockée telle quelle) puis enregistrés uniquement sur cet appareil (navigateur), jamais envoyés à un serveur. La connexion se fait par un code à usage unique envoyé par e-mail (aucun mot de passe stocké). Tu peux les exporter ou les supprimer à tout moment dans l’onglet Compte.</p>
+<h3>Tes données</h3><p>Sans compte, tes réponses ne sont jamais conservées. Avec un compte, ton nom, ton prénom et ton historique de bilans sont <b>chiffrés</b> (AES-256, avec une clé dérivée de ton adresse e-mail et jamais stockée telle quelle) puis enregistrés uniquement sur cet appareil (navigateur), jamais envoyés à un serveur. Ta ville et tes réglages de recherche (rayon, tri) sont mémorisés sur cet appareil uniquement, pour ne pas avoir à les retaper. La connexion se fait par un code à usage unique envoyé par e-mail (aucun mot de passe stocké). Tu peux les exporter ou les supprimer à tout moment dans l’onglet Compte.</p>
 <h3>Mineurs</h3><p>Avant 15 ans, la création d’un compte doit se faire avec l’accord d’un parent ou d’un adulte responsable.</p>
 <h3>Urgence</h3><p>Cet outil n’est pas un service d’urgence. En danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b> (24h/24, gratuit).</p>
 <h3>Responsabilité</h3><p>Les repères affichés sont indicatifs. Les liens vers des professionnels sont fournis à titre informatif ; vérifie toujours leur diplôme ou leur inscription à l’ordre.</p></div>`}
@@ -481,6 +500,7 @@ if(pendingAuth.isNew)await hSet(pendingAuth.email,'mb_acc_'+pendingAuth.hash,{no
 user={name:pendingAuth.email,email:pendingAuth.email,hash:pendingAuth.hash,nom:pendingAuth.nom,prenom:pendingAuth.prenom};pendingAuth=null;qaMode='login';qaClose();go('compte')}
 document.addEventListener('mousedown',e=>{const w=$('qaWrap');if(w&&!w.contains(e.target))qaClose()});
 try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
+try{const pf=store.g('mb_pref');if(pf){place=pf.place||'';if(pf.km)kmSel=String(pf.km);if(pf.sort)resSort=pf.sort}}catch(e){}
 go('home');
 </script>
 </body>
