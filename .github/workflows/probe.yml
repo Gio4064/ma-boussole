@@ -10,7 +10,7 @@ jobs:
         continue-on-error: true
         run: |
           U="https://static.data.gouv.fr/resources/annuaire-sante-extractions-des-donnees-en-libre-acces-des-professionnels-intervenant-dans-le-systeme-de-sante-rpps/20261114-134353/ps-libreacces-personne-activite.txt"
-          curl -sSL "$U" -o rpps.txt; ls -la rpps.txt; file rpps.txt
+          for k in 1 2 3 4 5; do curl -sSL --retry 5 --retry-all-errors --retry-delay 5 -C - "$U" -o rpps.txt && break; sleep 10; done; ls -la rpps.txt; file rpps.txt
           head -3 rpps.txt
           python3 - <<'PY'
           import collections
@@ -30,7 +30,7 @@ jobs:
       - name: FINESS
         continue-on-error: true
         run: |
-          curl -sSL "https://static.data.gouv.fr/resources/finess-extraction-du-fichier-des-etablissements/20260512-091152/etalab-cs1100507-stock-20260512-0339.csv" -o finess.csv; ls -la finess.csv; file finess.csv
+          for k in 1 2 3 4 5; do curl -sSL --retry 5 --retry-all-errors --retry-delay 5 -C - "https://static.data.gouv.fr/resources/finess-extraction-du-fichier-des-etablissements/20260512-091152/etalab-cs1100507-stock-20260512-0339.csv" -o finess.csv && break; sleep 10; done; ls -la finess.csv; file finess.csv
           head -4 finess.csv | iconv -f latin1 -t utf-8
           grep -a '^geolocalisation' finess.csv | head -3 | iconv -f latin1 -t utf-8
           python3 - <<'PY'
@@ -42,10 +42,12 @@ jobs:
           for k,v in sorted(c.items()): print(k,v)
           PY
       - name: Avocats
+        if: false
         continue-on-error: true
         run: |
           curl -sSL "https://static.data.gouv.fr/resources/annuaire-des-avocats-de-france/20261019-072056/annuaire-avocats-20261019.csv" | head -4
       - name: Communes
+        if: false
         continue-on-error: true
         run: |
           curl -sSL "https://geo.api.gouv.fr/communes?fields=nom,code,codesPostaux,centre,codeDepartement&format=json" -o communes.json; ls -la communes.json; head -c 400 communes.json
