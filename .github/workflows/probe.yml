@@ -6,27 +6,37 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: RPPS extraction
+      - name: Search datasets
+        continue-on-error: true
         run: |
-          set -x
-          curl -sSL -o rpps.zip "https://service.annuaire.sante.fr/annuaire-sante-webservices/V300/services/extraction/PS_LibreAcces" || true
-          ls -la rpps.zip; unzip -l rpps.zip || true
-          unzip -o -q rpps.zip || true
-          for f in PS_LibreAcces_Personne_activite*.txt; do echo "== $f"; head -c 1500 "$f"; echo; wc -l "$f";
-            echo "-- professions"; cut -d'|' -f8 "$f" | sort | uniq -c | sort -rn | head -40; done
-      - name: FINESS
+          for q in "extraction annuaire sante libre acces RPPS" "personne activite RPPS" "psychologues RPPS" "FINESS extraction etablissements" "annuaire avocats" "aide aux victimes" "CIDFF" "maisons des adolescents" "CSAPA" "points accueil ecoute jeunes" "france services centres sociaux" "centres sociaux"; do
+            echo "### $q"
+            curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$q")&page_size=6" | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          for x in d['data']:
+            print('-',x['title'],'|',x['slug'],'|',(x.get('organization') or {}).get('name'))
+            for r in x['resources'][:4]: print('    ',r['format'],r.get('filesize'),r['title'][:70],r['url'])
+          "
+          done
+      - name: Ameli heads
+        continue-on-error: true
         run: |
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/finess-extraction-du-fichier-des-etablissements/" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(r['title'],r['url'],r.get('filesize')) for r in d['resources']]"
-      - name: Ameli
-        run: |
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/432983b9-2e6f-473a-b35a-20403c300a5f" | head -c 3000; echo
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/767470ac-dcf9-4110-97b6-cb2be3b59ba2" | head -c 2000; echo
-      - name: Communes
-        run: |
-          curl -sSL "https://geo.api.gouv.fr/communes?fields=nom,code,codesPostaux,centre,codeDepartement&format=json" | head -c 600; echo
-      - name: Avocats search
-        run: |
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=annuaire%20avocats&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug'],[ (r['title'],r['url']) for r in x['resources']][:3]) for x in d['data']]"
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=france%20victimes%20associations%20aide%20aux%20victimes&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=maisons%20des%20adolescents&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
-          curl -sSL "https://www.data.gouv.fr/api/1/datasets/?q=CIDFF&page_size=5" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x['title'],x['slug']) for x in d['data']]"
+          curl -sSL "https://www.data.gouv.fr/api/1/datasets/r/432983b9-2e6f-473a-b35a-20403c300a5f" -o ameli.csv; ls -la ameli.csv; file ameli.csv; head -c 2500 ameli.csv; echo
+          python3 - <<'PY'
+          import csv,collections,io
+          raw=open('ameli.csv','rb').read()
+          for enc in ('utf-8','latin-1'):
+            try: txt=raw.decode(enc); break
+            except: pass
+          first=txt.split('\n',1)[0]; sep=';' if first.count(';')>first.count(',') else ','
+          r=csv.reader(io.StringIO(txt),delimiter=sep); h=next(r); print('HEADER',h)
+          c=collections.Counter(); n=0
+          rows=list(r)
+          for row in rows:
+            n+=1
+            for i,col in enumerate(h):
+              if 'rofession' in col or 'pecialit' in col.lower(): c[(col,row[i] if i<len(row) else '')]+=1
+          print('ROWS',n); [print(k,v) for k,v in c.most_common(80)]
+          print('SAMPLE PSY',[row for row in rows if 'sycholog' in ';'.join(row)][:3])
+          PY
