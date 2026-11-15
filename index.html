@@ -12,7 +12,7 @@
 :root[data-theme="dark"]{--bg:#15141b;--card:#201f28;--tx:#ecebf2;--mu:#a29fb0;--ac:#8d9bff;--ac2:#2b2e50;--bd:#34323f;--wa:#3a2e18;--wt:#ffd89b;--accent:#ffb86b;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
 body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no-repeat;color:var(--tx);font:var(--fs,16px)/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
-.shell{display:flex;max-width:1600px;margin:0 auto;min-height:100vh;align-items:flex-start}
+.shell{display:flex;max-width:1640px;margin:0 auto;min-height:100vh;align-items:flex-start}
 .content{flex:1;min-width:0;max-width:820px;margin:0;width:100%;padding:16px 16px 90px}
 .topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sizebtn{margin-left:auto;flex:none}
@@ -33,7 +33,7 @@ body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no
 @media(min-width:900px){
 .side{display:flex;flex-direction:column;width:232px;flex:none;padding:22px 12px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;border-right:1px solid var(--bd)}
 #nav,.mobile-brand{display:none}
-.content{padding:30px 36px 90px;max-width:820px;margin:0}
+.content{padding:30px 36px 90px;max-width:1000px;margin:0 auto}
 }
 @media(min-width:1200px){
 .rail{display:flex;flex-direction:column;gap:14px;width:290px;flex:none;padding:30px 24px 30px 6px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto}
@@ -212,32 +212,71 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}.foot-links a{color:var(--tx);font-size:.88rem;font-weight:600;text-decoration:none}.foot-links a:hover{color:var(--ac);text-decoration:underline}
 .foot-note{margin:0;font-size:.8rem;color:var(--mu);max-width:80ch}
 
-.mz{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 54px);z-index:59;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-.mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 6px;border-radius:999px;background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:0 10px 26px -10px rgba(30,30,70,.35);font:650 .88rem system-ui,sans-serif;transition:transform .15s,box-shadow .2s}
-.mz-bubble:hover{transform:translateY(-1px);box-shadow:0 14px 30px -10px rgba(30,30,70,.45)}.mz-bubble:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.mz-ico{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 55%,var(--accent)));color:#fff;font-size:1rem}
-.mz-bars{display:none;align-items:flex-end;gap:2px;height:16px}.mz-bars i{width:3px;border-radius:2px;background:var(--ac);animation:mzb 1.1s ease-in-out infinite}.mz-bars i:nth-child(2){animation-delay:.25s}.mz-bars i:nth-child(3){animation-delay:.5s}
+.topbar{gap:10px}.topbar .mz{margin-left:auto}
+.mz{position:relative}
+.mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 16px 0 6px;border-radius:999px;background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:0 6px 18px -10px rgba(30,30,70,.35);font:650 .9rem system-ui,sans-serif;transition:border-color .2s,box-shadow .2s}
+.mz-bubble:hover{border-color:var(--ac)}.mz-bubble:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-ico{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 50%,var(--accent)));color:#fff}
+.mz-bars{display:none;align-items:flex-end;gap:2px;height:16px;width:32px;justify-content:center}.mz-bars i{width:3px;border-radius:2px;background:var(--ac);animation:mzb 1.1s ease-in-out infinite}.mz-bars i:nth-child(2){animation-delay:.2s}.mz-bars i:nth-child(3){animation-delay:.45s}.mz-bars i:nth-child(4){animation-delay:.7s}
 .mz.on .mz-bars{display:inline-flex}.mz.on .mz-ico{display:none}
 @keyframes mzb{0%,100%{height:4px}50%{height:16px}}
-.mz-lbl{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mz-panel{width:min(300px,calc(100vw - 32px));background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:16px;box-shadow:0 24px 48px -16px rgba(30,30,70,.4)}
+.mz-lbl{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mz-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:70;width:min(340px,calc(100vw - 32px));background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:22px;padding:14px;box-shadow:0 30px 60px -20px rgba(30,30,70,.45)}
 .mz-panel[hidden]{display:none}
-.mz-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mz-title{display:block;font:700 1.05rem "Bricolage Grotesque",system-ui,sans-serif}.mz-sub{color:var(--mu);font-size:.78rem}
-.mz-x{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--mu)}.mz-x:hover{background:var(--ac2);color:var(--tx)}
-.mz-viz{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:42px;margin:12px 0 6px}.mz-viz i{width:6px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--ac) 55%,var(--accent))}
-.mz.on .mz-viz i{animation:mzb 1.6s ease-in-out infinite}.mz.on .mz-viz i:nth-child(2n){animation-duration:1.2s}.mz.on .mz-viz i:nth-child(3n){animation-duration:2s;animation-delay:.3s}
-.mz-ctl{display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 10px}
-.mz-c{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--tx);font-size:.95rem}.mz-c:hover{background:var(--ac2)}
-.mz-play{all:unset;cursor:pointer;width:56px;height:56px;display:grid;place-items:center;border-radius:50%;background:var(--tx);color:var(--card);font-size:1.05rem;box-shadow:0 10px 20px -10px rgba(0,0,0,.5)}
-.mz-c:focus-visible,.mz-play:focus-visible,.mz-x:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.mz-vol{display:flex;align-items:center;gap:8px;font-size:.85rem}.mz-vol input{flex:1;accent-color:var(--ac);margin:0}
-.mz-list{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px}.mz-list button{width:auto!important;margin:0!important;padding:6px 10px!important;border-radius:999px!important;background:var(--ac2)!important;color:var(--tx)!important;font:600 .76rem system-ui,sans-serif!important;border:1px solid transparent}
-.mz-list button.sel{background:var(--tx)!important;color:var(--card)!important}
-.mz-timer{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--mu);border-top:1px solid var(--bd);padding-top:10px}.mz-timer select{padding:5px 8px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit}
-@media (max-width:520px){.mz-lbl{display:none}.mz-bubble{padding:0 6px}}
-@media (prefers-reduced-motion:reduce){.mz-bars i,.mz.on .mz-viz i{animation:none;height:10px}}
+.mz-art{height:92px;border-radius:16px;margin-bottom:12px;background:radial-gradient(120% 120% at 0% 0%,color-mix(in srgb,var(--accent) 55%,transparent),transparent 55%),radial-gradient(120% 120% at 100% 100%,color-mix(in srgb,var(--ac) 70%,transparent),transparent 60%),var(--ac2);display:grid;place-items:center;overflow:hidden}
+.mz-disc{width:64px;height:64px;border-radius:50%;background:repeating-radial-gradient(circle,rgba(0,0,0,.55) 0 2px,rgba(0,0,0,.42) 2px 4px);box-shadow:0 8px 20px rgba(0,0,0,.25);position:relative}
+.mz-disc::after{content:"";position:absolute;inset:24px;border-radius:50%;background:var(--accent)}
+.mz.on .mz-disc{animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.mz-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mz-kick{display:block;font-size:.72rem;color:var(--ac);font-weight:700}
+.mz-title{display:block;font:700 1.15rem "Bricolage Grotesque",system-ui,sans-serif;margin:1px 0}.mz-sub{color:var(--mu);font-size:.8rem}
+.mz-x{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--mu);flex:none}.mz-x:hover{background:var(--ac2);color:var(--tx)}
+.mz-prog{height:4px;border-radius:2px;background:var(--ac2);margin:12px 0 6px;overflow:hidden}.mz-prog i{display:block;height:100%;width:0;background:var(--ac);transition:width .5s linear}
+.mz-ctl{display:flex;justify-content:space-between;align-items:center;gap:6px;margin:6px 0 8px}
+.mz-c{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--tx)}.mz-c:hover{background:var(--ac2)}.mz-c.act{color:var(--ac)}
+.mz-play{all:unset;cursor:pointer;width:58px;height:58px;display:grid;place-items:center;border-radius:50%;background:var(--tx);color:var(--card);box-shadow:0 10px 22px -10px rgba(0,0,0,.55)}
+.mz-c:focus-visible,.mz-play:focus-visible,.mz-x:focus-visible,.mz-list button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-tim{border:1px solid var(--bd);border-radius:999px;background:var(--card);color:var(--mu);font:600 .74rem system-ui,sans-serif;padding:6px 6px;max-width:80px}
+.mz-vol{display:flex;align-items:center;gap:8px;color:var(--mu)}.mz-vol input{flex:1;accent-color:var(--ac);margin:0}
+.mz-list{display:flex;flex-direction:column;gap:2px;margin:10px 0 6px;max-height:220px;overflow:auto}
+.mz-list button{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:12px}
+.mz-list button:hover{background:var(--ac2)}.mz-list button.sel{background:color-mix(in srgb,var(--ac) 10%,transparent)}
+.mz-n{width:22px;text-align:center;font:600 .78rem ui-monospace,system-ui;color:var(--mu)}.mz-list .sel .mz-n{color:var(--ac)}
+.mz-tt{display:flex;flex-direction:column;font:600 .88rem system-ui,sans-serif;min-width:0}.mz-tt small{font-weight:400;color:var(--mu);font-size:.74rem}
+.mz-eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px}.mz-eq i{width:3px;background:var(--ac);border-radius:1px;animation:mzb .9s ease-in-out infinite}.mz-eq i:nth-child(2){animation-delay:.25s}.mz-eq i:nth-child(3){animation-delay:.5s}
+.mz-note{margin:6px 2px 0;font-size:.7rem;color:var(--mu)}
+@media (max-width:640px){.mz-lbl{display:none}.mz-bubble{padding:0 6px}.mz-panel{position:fixed;left:16px;right:16px;top:auto;bottom:max(16px,env(safe-area-inset-bottom,0px));width:auto}}
+@media (prefers-reduced-motion:reduce){.mz-bars i,.mz-eq i{animation:none;height:10px}.mz.on .mz-disc{animation:none}}
 .opt-yn{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px}.opt-yn button{justify-content:center;font-size:1.05rem;min-height:52px}
 .opt button.on{outline:2px solid var(--ac);outline-offset:1px}
+
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 4px 12px}.sec-h h2,.sec-h2{font:800 1.35rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.01em;margin:0;color:var(--tx)}.sec-h a{color:var(--ac);font-weight:600;font-size:.9rem}
+.sec-h2{margin:26px 4px 12px}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tb{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--bd);box-shadow:0 6px 20px -14px rgba(30,30,70,.3);transition:transform .15s,border-color .2s,box-shadow .2s}
+.tb:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--ac) 45%,var(--bd));box-shadow:0 14px 28px -16px color-mix(in srgb,var(--ac) 60%,transparent)}.tb:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.tb-i{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,var(--ac2),color-mix(in srgb,var(--accent) 22%,var(--card)))}
+.tb-t{display:flex;flex-direction:column;min-width:0}.tb-t b{font-size:.98rem;color:var(--tx)}.tb-t small{color:var(--mu);font-size:.8rem;line-height:1.35}
+.tb-big .tb{padding:20px}
+.faq details{background:var(--card);border:1px solid var(--bd);border-radius:14px;margin:0 0 8px;padding:0 16px;transition:box-shadow .2s}
+.faq details[open]{box-shadow:0 10px 24px -18px rgba(30,30,70,.4)}
+.faq summary{cursor:pointer;list-style:none;padding:15px 30px 15px 0;font-weight:650;position:relative}.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:0;top:50%;translate:0 -50%;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--ac2);color:var(--ac);font-weight:800;transition:rotate .2s}
+.faq details[open] summary::after{rotate:45deg}.faq p{margin:0 0 15px;color:var(--mu);line-height:1.55}
+.faq summary:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:6px}
+.modal{position:fixed;inset:0;z-index:90;background:rgba(14,14,32,.45);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px}.modal[hidden]{display:none}
+.dlg{position:relative;width:min(440px,100%);background:var(--card);color:var(--tx);border-radius:24px;padding:28px 24px 22px;box-shadow:0 30px 70px -20px rgba(0,0,0,.5)}
+.dlg h2{text-align:center;margin:0 0 6px}.dlg .next-actions{justify-content:center}
+.dlg-x{all:unset;cursor:pointer;position:absolute;right:12px;top:12px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:var(--mu)}.dlg-x:hover{background:var(--ac2)}
+.anc-dots{display:flex;justify-content:center;gap:6px;margin-bottom:10px}.anc-dots i{width:28px;height:5px;border-radius:3px;background:var(--ac2)}.anc-dots i.on{background:var(--ac)}
+.anc-big{font-size:3rem;text-align:center;margin:8px 0}
+.anc-n{text-align:center;font:700 1.3rem "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 6px}.anc-n b{font-size:2.4rem;color:var(--ac);margin-right:6px;vertical-align:-4px}
+.plan{list-style:none;padding:0;margin:14px 0;display:flex;flex-direction:column;gap:10px;counter-reset:none}
+.plan li{display:flex;gap:14px;align-items:flex-start;margin:0}
+.plan-n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#fff;font:800 .95rem "Bricolage Grotesque",system-ui,sans-serif}
+.plan-b{flex:1;min-width:0}.plan-b label{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}.plan-b small{font-size:.82rem}
+.plan-b textarea{width:100%;box-sizing:border-box;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;background:var(--card);color:var(--tx);resize:vertical;min-height:72px}
+.plan-b textarea:focus{outline:2px solid var(--ac);border-color:transparent}
+.plan-hero h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 8px}
 </style>
 </head>
 <body>
@@ -245,21 +284,21 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <aside class="side"><div class="brand"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</div><div id="side"></div><div class="bottom">🔒 Vos réponses restent sur cet appareil.<br>Urgence immédiate : 112 ou 15<br>Besoin de parler : 3114 (24h/24, gratuit)</div></aside>
 <main class="content">
 <div class="topbar"><h1 class="mobile-brand"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
-<nav id="nav"></nav><div class="qa" id="qaWrap" style="position:relative;margin-left:auto"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="hide" style="position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(30,30,70,.16);padding:14px;z-index:40"></div></div></div>
+<nav id="nav"></nav><div class="mz" id="mz">
+<button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel"><span class="mz-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-2-2.45V5.5l11-2v11a2.5 2.5 0 1 1-2-2.45V7.1l-7 1.3z"/></svg></span><span class="mz-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mz-lbl">Musique apaisante</span></button>
+<div class="mz-panel" id="mzPanel" role="dialog" aria-label="Musique apaisante" hidden>
+<div class="mz-art" aria-hidden="true"><div class="mz-disc"></div></div>
+<div class="mz-top"><div style="min-width:0"><small class="mz-kick">Playlist chill · composée en direct</small><b class="mz-title" id="mzTitle">Matin calme</b><small class="mz-sub" id="mzSub"></small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur">✕</button></div>
+<div class="mz-prog" aria-hidden="true"><i id="mzProg"></i></div>
+<div class="mz-ctl"><button class="mz-c" id="mzShuf" onclick="mzShuffle()" aria-pressed="true" aria-label="Lecture aléatoire" title="Lecture aléatoire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><button class="mz-c" onclick="mzStep(-1)" aria-label="Morceau précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button><button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture"><svg id="mzPI" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></button><button class="mz-c" onclick="mzStep(1)" aria-label="Morceau suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button><select id="mzTimer" class="mz-tim" onchange="mzSetTimer(this.value)" aria-label="Arrêt automatique" title="Arrêt automatique"><option value="0">⏱ Off</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 h</option></select></div>
+<label class="mz-vol"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/></svg><input type="range" min="0" max="100" value="55" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"></label>
+<div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux"></div>
+<p class="mz-note">Musique générée par ton navigateur : libre de droits, rien n’est téléchargé.</p>
+</div></div>
+<div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="hide" style="position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(30,30,70,.16);padding:14px;z-index:40"></div></div></div>
 <div id="v"></div>
 <footer class="foot"><div class="foot-brand"><b>Ma Boussole</b><span>Bilan et orientation en santé mentale, gratuit et confidentiel.</span></div><nav class="foot-links" aria-label="Pied de page"><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="go('themes');return false">Numéros vérifiés</a><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a></nav><p class="foot-note">Outil d’auto-évaluation et d’orientation : il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. Danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b>, 24h/24, gratuit.</p></footer>
 </main>
-<div class="mz" id="mz">
-<div class="mz-panel" id="mzPanel" role="dialog" aria-label="Musique apaisante" hidden>
-<div class="mz-top"><div><b class="mz-title" id="mzTitle">Pluie douce</b><small class="mz-sub" id="mzSub">Ambiance générée en direct, sans droits d’auteur</small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur">✕</button></div>
-<div class="mz-viz" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-<div class="mz-ctl"><button class="mz-c" onclick="mzStep(-1)" aria-label="Ambiance précédente">⏮</button><button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture">▶</button><button class="mz-c" onclick="mzStep(1)" aria-label="Ambiance suivante">⏭</button></div>
-<label class="mz-vol"><span aria-hidden="true">🔈</span><input type="range" min="0" max="100" value="60" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"><span aria-hidden="true">🔊</span></label>
-<div class="mz-list" id="mzList" role="listbox" aria-label="Ambiances"></div>
-<div class="mz-timer"><span>Arrêt auto</span><select id="mzTimer" onchange="mzSetTimer(this.value)" aria-label="Arrêt automatique"><option value="0">Jamais</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 h</option></select></div>
-</div>
-<button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel" aria-label="Musique apaisante"><span class="mz-ico" aria-hidden="true">♪</span><span class="mz-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="mz-lbl">Musique</span></button>
-</div>
 <button id="quickExit" type="button" onclick="quickExit()" title="Quitter immédiatement le site (ou appuie deux fois sur Échap)">✕ Quitter vite</button>
 <aside class="rail" aria-label="Outils et ressources">
 <section class="card w-breath"><div class="w-head"><h3>Respire avec moi</h3><span class="w-tag">1 min</span></div><p class="mu w-sub">Cohérence cardiaque : 5 secondes pour inspirer, 5 pour expirer. Ça calme le cœur et les pensées.</p><div class="br-stage"><div class="br-orb"><span class="br-txt">Prêt·e ?</span></div></div><div class="br-row"><button class="w-btn br-btn" onclick="breathToggle(this)">Commencer</button><span class="mu br-left" aria-live="polite"></span></div></section>
@@ -339,17 +378,17 @@ add:["Note ce qui déclenche l’envie de consommer : ennui, stress, habitude so
 ali:["Ce questionnaire ne remplace pas un avis médical : un médecin ou un·e diététicien·ne peut faire un bilan complet.","La Fédération Française Anorexie Boulimie propose une écoute par des personnes formées, sans jugement.","Limite la comparaison avec les réseaux sociaux : les images y sont souvent retouchées."]
 };
 const hash=async(p,s)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
-const NAV_ICO={home:'🏠',bilan:'🧭',suivi:'📈',aide:'📍',compte:'👤',ressources:'📚',legal:'📄'};
-const SUB={aide:[['Rechercher une ville','aide-recherche'],['Résultats','resWrap']],ressources:[['Numéros vérifiés','res-numeros'],['Espace admin','res-admin']]};
-function goSub(parent,anchor){go(parent);setTimeout(()=>{const el=document.getElementById(anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},60)}
-function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["compte",user?"👤 "+esc(user.prenom||user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
+const NAV_ICO={home:'🏠',bilan:'🧭',suivi:'📈',aide:'📍',outils:'🧰',compte:'👤',ressources:'📚',legal:'📄'};
+const SUB={outils:[['Mon plan de sécurité','plan'],['Ancrage 5-4-3-2-1','ancrage']],aide:[['Rechercher une ville','aide-recherche'],['Résultats','resWrap']],ressources:[['Numéros vérifiés','res-numeros'],['Espace admin','res-admin']]};
+function goSub(parent,anchor){if(anchor==='plan'){go('plan');return}if(anchor==='ancrage'){ancrageOpen();return}go(parent);setTimeout(()=>{const el=document.getElementById(anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["outils","Boîte à outils"],["compte",user?"👤 "+esc(user.prenom||user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
 $('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
 const sd=$('side');if(sd)sd.innerHTML=t.map(x=>{const ico=(x[0]==='compte'&&user)?'':NAV_ICO[x[0]]||'';const subs=SUB[x[0]];
 const subHtml=subs?('<div style="margin:0 0 4px 28px;display:flex;flex-direction:column;gap:1px">'+subs.map(s=>`<button class="sub" onclick="goSub('${x[0]}','${s[1]}')">${s[0]}</button>`).join('')+'</div>'):'';
 return `<button class="${x[0]==on?'on':''}" onclick="go('${x[0]}')">${ico?`<span aria-hidden="true">${ico}</span>`:''}${x[1]}</button>${subHtml}`}).join('')}
 function quickExit(){try{if(window.mzStop)mzStop(true);}catch(e){}try{document.body.innerHTML='';document.title='Météo'}catch(e){}window.location.replace('https://www.google.com/search?q=m%C3%A9t%C3%A9o')}
 document.addEventListener('keydown',e=>{const t=e.target;if(!t||t.getAttribute('role')!=='tab')return;const ks=['point','aide','lire','espace'];const i=ks.indexOf(homeTab);if(e.key==='ArrowRight'){e.preventDefault();setHomeTab(ks[(i+1)%4])}else if(e.key==='ArrowLeft'){e.preventDefault();setHomeTab(ks[(i+3)%4])}});
-let escAt=0;document.addEventListener('keydown',e=>{if(e.key==='Escape'){const n=Date.now();if(n-escAt<600)quickExit();escAt=n}});
+let escAt=0;document.addEventListener('keydown',e=>{if(e.key==='Escape'){const md=document.getElementById('modal'),mp=document.getElementById('mzPanel'),qp=document.getElementById('qaPanel'),rm=document.getElementById('rdvModal');if((md&&!md.hidden)||(mp&&!mp.hidden)||(qp&&!qp.classList.contains('hide')&&qp.offsetParent)){escAt=0;return}const n=Date.now();if(n-escAt<600)quickExit();escAt=n}});
 const EXIT_TIP='<div class="exit-tip">🔒 Besoin de partir vite ? Le bouton <b>« ✕ Quitter vite »</b> en bas à droite (ou deux fois la touche Échap) remplace le site par une page météo. Pour ne pas laisser de trace, utilise la navigation privée.</div>';
 function qaLabel(){const l=$('qaLbl');if(l)l.textContent=user?(user.prenom||'Mon espace'):'Se connecter'}
 function go(p){nearSlots=[];nav(p);qaLabel();window[p+'V']();window.scrollTo(0,0)}
@@ -412,7 +451,7 @@ $('v').innerHTML=`<section class="card hero2" aria-labelledby="heroT"><div class
 </div>
 <p class="hero2-sos" style="grid-area:s">Besoin de parler maintenant&nbsp;? <b>3114</b>, 24h/24, gratuit. Danger immédiat&nbsp;: <b>112</b>.</p>
 </div></section>
-<section class="card" id="homeTabs"><div class="tabs" role="tablist" aria-label="Accueil">${tabs.map(([k,i,l])=>`<button role="tab" id="tab-${k}" aria-selected="${homeTab===k}" aria-controls="tabpanel" tabindex="${homeTab===k?0:-1}" onclick="setHomeTab('${k}')"><span aria-hidden="true">${i}</span> ${l}</button>`).join('')}</div><div id="tabpanel" role="tabpanel" aria-labelledby="tab-${homeTab}" class="tabpanel">${homeTabBody()}</div></section>${careHtml()}`;setTimeout(()=>{moodRender();tipShow()},0)}
+<section class="card" id="homeTabs"><div class="tabs" role="tablist" aria-label="Accueil">${tabs.map(([k,i,l])=>`<button role="tab" id="tab-${k}" aria-selected="${homeTab===k}" aria-controls="tabpanel" tabindex="${homeTab===k?0:-1}" onclick="setHomeTab('${k}')"><span aria-hidden="true">${i}</span> ${l}</button>`).join('')}</div><div id="tabpanel" role="tabpanel" aria-labelledby="tab-${homeTab}" class="tabpanel">${homeTabBody()}</div></section>${careHtml()}${toolboxHtml()}${faqHtml()}`;setTimeout(()=>{moodRender();tipShow()},0)}
 function lireV(){const x=ARTICLES.find(a=>a.id===curArt)||ARTICLES[0];
 $('v').innerHTML=`<article class="card art-page"><button class="s" onclick="homeTab='lire';go('home')">‹ Tous les articles</button><div class="ico" aria-hidden="true" style="font-size:2.2rem;margin-top:12px">${x.ico}</div><h2>${x.t}</h2>${x.c}${x.cta||x.theme?`<div class="hero-cta" style="margin-top:16px">${x.cta?`<button onclick="openAide('${x.cta[1]}')">${x.cta[0]}</button>`:''}${x.theme?`<button class="s" onclick="startTheme('${x.theme}')">Faire le point sur ce thème</button>`:''}</div>`:''}${x.src?`<p class="mu" style="font-size:.8rem;margin-top:18px">Sources : ${x.src.map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`).join(' · ')}</p>`:''}</article><div class="card"><h3 style="margin-top:0">À lire aussi</h3><div class="tiles art">${ARTICLES.filter(a=>a.id!==x.id).slice(0,3).map(a=>`<button class="tile" onclick="readArt('${a.id}')"><span class="ico" aria-hidden="true">${a.ico}</span><b>${a.t}</b><span class="tile-more">Lire ›</span></button>`).join('')}</div></div>`}
 function bilanV(){themeCur=null;$('v').innerHTML=`<div class="card"><h2>Fais le point, par thème</h2><p>Choisis un thème : une série de 20 questions concrètes, 3 minutes, pour obtenir des repères clairs et une orientation adaptée à ta situation.</p><div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div><div style="margin-top:12px"><span class="mu" style="font-size:.9rem;margin-right:6px">Je suis :</span>${AGES.map(a=>`<button class="chip ${a[0]==age?'on':''}" aria-pressed="${a[0]==age}" onclick="setAge('${a[0]}');bilanV()">${a[1]}</button>`).join('')}<p class="mu" style="margin:6px 0 0;font-size:.85rem">Les questions sont adaptées à ton âge.</p></div></div><div class="grid2" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px">${BTHEMES.map(x=>`<button class="s" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:16px;text-align:left;width:100%;margin:0" onclick="startTheme('${x[0]}')"><span style="font-size:1.7rem">${x[2]}</span><b style="font-size:1rem;color:var(--tx)">${x[1]}</b><span class="mu" style="font-size:.82rem">${x[3]}</span></button>`).join('')}</div>`}
@@ -991,7 +1030,6 @@ user={name:pendingAuth.email,email:pendingAuth.email,hash:pendingAuth.hash,nom:p
 document.addEventListener('mousedown',e=>{const w=$('qaWrap');if(w&&!w.contains(e.target))qaClose()});
 try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
 try{const pf=store.g('mb_pref');if(pf){place=pf.place||'';if(pf.km)kmSel=String(pf.km);if(pf.sort)resSort=pf.sort}}catch(e){}
-go('home');
 
 /* ===== Rail : respiration, météo intérieure, idée du jour ===== */
 let brT=null,brEnd=0,brBox=null;
@@ -1016,47 +1054,114 @@ function tipNext(){tipI=((tipI??0)+1)%TIPS.length;tipShow()}
 function careHtml(){return`<section class="home-care" aria-label="Prendre soin de toi"><h2 class="care-h">Prendre soin de toi, maintenant</h2><div class="care-grid">${document.querySelector('.rail .w-breath')?.outerHTML||''}${document.querySelector('.rail .w-mood')?.outerHTML||''}${document.querySelector('.rail .w-tip')?.outerHTML||''}</div></section>`}
 document.addEventListener('DOMContentLoaded',()=>{moodRender();tipShow()});if(document.readyState!=='loading'){setTimeout(()=>{moodRender();tipShow()},0)}
 
-/* ===== Musique apaisante : ambiances générées (Web Audio), sans fichier ni droits ===== */
-const MZ=[['Pluie douce','Pluie légère sur le toit','rain'],['Vagues','Le ressac, lent et régulier','waves'],['Nappe apaisante','Accords doux et lents','pad'],['Bols chantants','Résonances calmes, espacées','bowls'],['Bruit doux','Un fond feutré pour dormir ou se concentrer','brown']];
-let mzI=0,mzCtx=null,mzMaster=null,mzNodes=[],mzTimers=[],mzOn=false,mzStopAt=0,mzStopTmr=null,mzRev=null;
-function mzEnsure(){if(mzCtx)return;const C=window.AudioContext||window.webkitAudioContext;if(!C)return;mzCtx=new C();mzMaster=mzCtx.createGain();mzMaster.gain.value=0;
-const comp=mzCtx.createDynamicsCompressor();mzMaster.connect(comp);comp.connect(mzCtx.destination);
-const len=mzCtx.sampleRate*3.2,ir=mzCtx.createBuffer(2,len,mzCtx.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
-mzRev=mzCtx.createConvolver();mzRev.buffer=ir;const rg=mzCtx.createGain();rg.gain.value=.55;mzRev.connect(rg);rg.connect(mzMaster)}
-function mzNoise(kind){const sr=mzCtx.sampleRate,len=sr*4,b=mzCtx.createBuffer(1,len,sr),d=b.getChannelData(0);let last=0,b0=0,b1=0,b2=0;
-for(let i=0;i<len;i++){const w=Math.random()*2-1;if(kind==='brown'){last=(last+.02*w)/1.02;d[i]=last*3.5}else{b0=.997*b0+w*.029591;b1=.985*b1+w*.032534;b2=.95*b2+w*.048056;d[i]=(b0+b1+b2+w*.0186)*.22}}
-const s=mzCtx.createBufferSource();s.buffer=b;s.loop=true;return s}
-function mzG(v){const g=mzCtx.createGain();g.gain.value=v;return g}
-function mzBuild(kind){const t=mzCtx.currentTime;const add=(...n)=>mzNodes.push(...n);
-if(kind==='rain'){const n=mzNoise('pink'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=2600;const g=mzG(.9);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();add(n,f,g);
-const drop=()=>{if(!mzOn)return;const d=mzNoise('pink'),hp=mzCtx.createBiquadFilter();hp.type='bandpass';hp.frequency.value=1800+Math.random()*3500;hp.Q.value=6;const e=mzG(0);const now=mzCtx.currentTime;e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(.18+Math.random()*.2,now+.004);e.gain.exponentialRampToValueAtTime(.0001,now+.09);d.connect(hp);hp.connect(e);e.connect(mzMaster);d.start(now);d.stop(now+.12)};
-mzTimers.push(setInterval(()=>{for(let k=0;k<1+Math.floor(Math.random()*3);k++)setTimeout(drop,Math.random()*120)},140))}
-if(kind==='waves'){const n=mzNoise('brown'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=500;const g=mzG(.2);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();
-const lfo=mzCtx.createOscillator();lfo.frequency.value=.085;const lg=mzG(.55);lfo.connect(lg);lg.connect(g.gain);const lf2=mzG(420);lfo.connect(lf2);lf2.connect(f.frequency);lfo.start();g.gain.value=.6;add(n,f,g,lfo,lg,lf2)}
-if(kind==='brown'){const n=mzNoise('brown'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=900;const g=mzG(.75);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();add(n,f,g)}
-if(kind==='pad'){const CH=[[220,277.18,329.63,415.3],[185,233.08,277.18,369.99],[196,246.94,293.66,369.99],[174.61,220,261.63,329.63]];let ci=0;const bus=mzCtx.createBiquadFilter();bus.type='lowpass';bus.frequency.value=1400;const bg=mzG(.5);bus.connect(bg);bg.connect(mzMaster);bg.connect(mzRev);add(bus,bg);
-const chord=()=>{if(!mzOn)return;const now=mzCtx.currentTime;CH[ci%CH.length].forEach((fq,k)=>{[0,-6,6].forEach(det=>{const o=mzCtx.createOscillator();o.type=k?'sine':'triangle';o.frequency.value=fq;o.detune.value=det;const e=mzG(0);e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(.045,now+3.5);e.gain.setValueAtTime(.045,now+7);e.gain.linearRampToValueAtTime(0,now+11);o.connect(e);e.connect(bus);o.start(now);o.stop(now+11.2)})});ci++};
-chord();mzTimers.push(setInterval(chord,8000))}
-if(kind==='bowls'){const NT=[196,220,261.63,293.66,329.63,392];const bg=mzG(.6);bg.connect(mzMaster);bg.connect(mzRev);add(bg);
-const ring=()=>{if(!mzOn)return;const now=mzCtx.currentTime,f=NT[Math.floor(Math.random()*NT.length)];[[1,.22],[2.76,.08],[5.4,.035]].forEach(([m,a])=>{const o=mzCtx.createOscillator();o.type='sine';o.frequency.value=f*m;const e=mzG(0);e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(a,now+.03);e.gain.exponentialRampToValueAtTime(.0001,now+9);o.connect(e);e.connect(bg);o.start(now);o.stop(now+9.2)})};
-ring();mzTimers.push(setInterval(()=>{if(Math.random()<.8)ring()},3800))}}
-function mzClear(){mzTimers.forEach(clearInterval);mzTimers=[];mzNodes.forEach(n=>{try{n.stop&&n.stop()}catch(e){}try{n.disconnect()}catch(e){}});mzNodes=[]}
+/* ===== Musique apaisante : playlist chill composée en direct (Web Audio) ===== */
+const MZ=[
+{n:'Matin calme',d:'Piano doux et rythme léger',k:60,m:'maj',bpm:74,prog:[0,5,1,4],inst:'ep',dr:1},
+{n:'Thé chaud',d:'Lo-fi tranquille',k:62,m:'dor',bpm:70,prog:[0,3,0,3],inst:'ep',dr:1},
+{n:'Pluie de juillet',d:'Nappes et notes suspendues',k:65,m:'maj',bpm:64,prog:[3,2,1,0],inst:'pad',dr:0},
+{n:'Promenade',d:'Guitare pincée, pas léger',k:67,m:'maj',bpm:80,prog:[0,3,5,4],inst:'pl',dr:1},
+{n:'Nuit tranquille',d:'Lent, pour s’endormir',k:63,m:'maj',bpm:60,prog:[0,3,0,4],inst:'pad',dr:0},
+{n:'Bord de lac',d:'Piano et reflets',k:58,m:'maj',bpm:72,prog:[0,2,3,4],inst:'ep',dr:1},
+{n:'Fin d’après-midi',d:'Jazz chill, accords ronds',k:57,m:'dor',bpm:76,prog:[0,3,1,4],inst:'ep',dr:1},
+{n:'Respiration lente',d:'Très doux, sans rythme',k:60,m:'maj',bpm:56,prog:[0,3],inst:'pad',dr:0}];
+const SCALES={maj:[0,2,4,5,7,9,11],dor:[0,2,3,5,7,9,10]};
+let mzI=Math.floor(Math.random()*MZ.length),mzCtx=null,mzMaster=null,mzBus=null,mzRev=null,mzDel=null,mzNoiseBuf=null,mzOn=false,mzSched=null,mzStepN=0,mzNext=0,mzRng=Math.random,mzMotif=[],mzShuf=true,mzStopTmr=null,mzBars=56;
+function mzR(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mf(m){return 440*Math.pow(2,(m-69)/12)}
+function mzEnsure(){if(mzCtx)return true;const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;const c=mzCtx=new C();
+mzMaster=c.createGain();mzMaster.gain.value=0;const warm=c.createBiquadFilter();warm.type='lowpass';warm.frequency.value=7000;const comp=c.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=3;
+mzMaster.connect(warm);warm.connect(comp);comp.connect(c.destination);
+mzBus=c.createGain();mzBus.connect(mzMaster);
+const len=c.sampleRate*3,ir=c.createBuffer(2,len,c.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.4)}
+mzRev=c.createConvolver();mzRev.buffer=ir;const rg=c.createGain();rg.gain.value=.35;mzRev.connect(rg);rg.connect(mzMaster);
+mzDel=c.createDelay(2);const fb=c.createGain();fb.gain.value=.32;const dl=c.createBiquadFilter();dl.type='lowpass';dl.frequency.value=2200;const dg=c.createGain();dg.gain.value=.28;mzDel.connect(dl);dl.connect(fb);fb.connect(mzDel);dl.connect(dg);dg.connect(mzMaster);
+const nb=c.createBuffer(1,c.sampleRate,c.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;mzNoiseBuf=nb;return true}
+function mzEnv(g,t,a,peak,sus,len,rel){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.setTargetAtTime(peak*sus,t+a,.35);g.gain.setTargetAtTime(0,t+len,rel)}
+function mzOsc(type,f,t,end,dest,det){const o=mzCtx.createOscillator();o.type=type;o.frequency.value=f;if(det)o.detune.value=det;o.connect(dest);o.start(t);o.stop(end);return o}
+function mzEP(m,t,len,v,rev){const c=mzCtx,g=c.createGain();mzEnv(g,t,.008,.11*v,.35,len,.45);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2400;g.connect(lp);lp.connect(mzBus);if(rev)lp.connect(mzRev);
+const f=mf(m),g2=c.createGain();g2.gain.value=.22;g2.connect(g);mzOsc('sine',f,t,t+len+2,g);mzOsc('sine',f*2.001,t,t+len+2,g2);mzOsc('triangle',f,t,t+len+2,g,4)}
+function mzPad(m,t,len){const c=mzCtx,g=c.createGain();mzEnv(g,t,1.4,.028,.85,len,1.6);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=950;g.connect(lp);lp.connect(mzBus);lp.connect(mzRev);[-8,8].forEach(d=>mzOsc('sawtooth',mf(m),t,t+len+5,g,d))}
+function mzPluck(m,t,v){const c=mzCtx,g=c.createGain();mzEnv(g,t,.004,.09*v,0,.05,.25);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;g.connect(lp);lp.connect(mzBus);lp.connect(mzDel);lp.connect(mzRev);mzOsc('triangle',mf(m),t,t+1.6,g)}
+function mzBass(m,t,len){const c=mzCtx,g=c.createGain();mzEnv(g,t,.012,.2,.6,len*.85,.15);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;g.connect(lp);lp.connect(mzBus);mzOsc('sine',mf(m),t,t+len+1,g);mzOsc('triangle',mf(m),t,t+len+1,g,-3)}
+function mzNoise(t,dur,type,freq,q,peak){const c=mzCtx,s=c.createBufferSource();s.buffer=mzNoiseBuf;const f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;f.Q.value=q;const g=c.createGain();g.gain.setValueAtTime(peak,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(mzBus);s.start(t,Math.random()*.5);s.stop(t+dur+.05)}
+function mzKick(t){const c=mzCtx,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(115,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);g.gain.setValueAtTime(.42,t);g.gain.exponentialRampToValueAtTime(.0001,t+.32);o.connect(g);g.connect(mzBus);o.start(t);o.stop(t+.35)}
+function mzNote(tr,deg,oct){const S=SCALES[tr.m];const o=Math.floor(deg/7),i=((deg%7)+7)%7;return tr.k+12*(o+(oct||0))+S[i]}
+function mzChord(tr,deg){let ns=[0,2,4,6].map(x=>mzNote(tr,deg+x,-1));return ns.map(n=>{while(n<tr.k-9)n+=12;while(n>tr.k+7)n-=12;return n}).sort((a,b)=>a-b)}
+function mzMakeMotif(){const pent=[0,1,2,4,5,7,8,9];let pos=3+Math.floor(mzRng()*3);const m=[];for(let s=0;s<32;s++){const on=(s%2===0?.5:.22)>mzRng();if(on){pos=Math.max(0,Math.min(pent.length-1,pos+Math.round((mzRng()-.5)*3)));m.push(pent[pos])}else m.push(null)}return m}
+function mzTick(){const tr=MZ[mzI],e=60/tr.bpm/2,c=mzCtx;
+while(mzNext<c.currentTime+.18){const s=mzStepN,bar=Math.floor(s/8),st=s%8,t=mzNext,deg=tr.prog[bar%tr.prog.length];
+if(bar>=mzBars){mzAuto();return}
+const sw=st%2?e*.16:0,tt=t+sw;
+if(st===0){const ch=mzChord(tr,deg);if(tr.inst==='pad')ch.forEach(n=>mzPad(n,t,e*8));else{ch.forEach((n,i)=>mzEP(n,t+i*.012,e*(tr.inst==='pl'?3:7),.9,1));}}
+if(tr.inst==='pl'&&(st===3||st===6)){mzChord(tr,deg).slice(1).forEach((n,i)=>mzPluck(n+12,tt+i*.03,.7))}
+if(st===0||(st===5&&tr.dr)||(st===4&&!tr.dr))mzBass(mzNote(tr,deg,-2),tt,e*(tr.dr?2.5:4));
+if(tr.dr&&bar>=2){if(st===0||st===5)mzKick(tt);if(st===2||st===6)mzNoise(tt,.07,'bandpass',1900,1.5,.07);mzNoise(tt,.035,'highpass',8000,.7,st%2?.018:.03);if(mzRng()<.06)mzNoise(tt,.01,'highpass',3000,.5,.025)}
+if(bar>=4&&bar<mzBars-2){if(bar%8===0&&st===0&&mzRng()<.5){mzMotif=mzMotif.map(x=>mzRng()<.2?(x==null?null:x+(mzRng()<.5?1:-1)):x)}
+const n=mzMotif[s%32];if(n!=null){const m=mzNote(tr,n,1);tr.inst==='pad'?mzPluck(m,tt,.55):mzEP(m,tt,e*1.6,.75,1)}}
+mzStepN++;mzNext+=e}
+const pr=$('mzProg');if(pr)pr.style.width=(Math.min(1,mzStepN/(mzBars*8))*100)+'%'}
+function mzStart(){const tr=MZ[mzI];mzRng=mzR(mzI*7919+Math.floor(Math.random()*1e6));mzMotif=mzMakeMotif();mzStepN=0;mzNext=mzCtx.currentTime+.12;clearInterval(mzSched);mzSched=setInterval(mzTick,30);mzFade(mzVolVal(),2)}
 function mzFade(to,dur){const g=mzMaster.gain,now=mzCtx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(g.value,now);g.linearRampToValueAtTime(to,now+dur)}
-function mzVolume(v){try{localStorage.setItem('mb_mzvol',v)}catch(e){}if(mzCtx&&mzOn)mzFade(v/100*.9,.2)}
-function mzVolVal(){return(+($('mzVol')?.value??60))/100*.9}
-function mzPlay(){mzEnsure();if(!mzCtx)return;mzCtx.resume();mzClear();mzOn=true;mzBuild(MZ[mzI][2]);mzFade(mzVolVal(),1.6);mzUI()}
-function mzStop(now){if(!mzCtx||!mzOn){mzOn=false;mzUI();return}mzOn=false;if(now){mzClear();mzMaster.gain.value=0}else{mzFade(0,1.2);setTimeout(()=>{if(!mzOn)mzClear()},1300)}mzUI()}
+function mzVolVal(){return(+($('mzVol')?.value??55))/100*.85}
+function mzVolume(v){try{localStorage.setItem('mb_mzvol',v)}catch(e){}if(mzCtx&&mzOn)mzFade(mzVolVal(),.15)}
+function mzPlay(){if(!mzEnsure())return;mzCtx.resume();mzOn=true;mzStart();mzUI()}
+function mzStop(now){mzOn=false;clearInterval(mzSched);mzSched=null;if(mzCtx){if(now)mzMaster.gain.value=0;else mzFade(0,1)}mzUI()}
 window.mzStop=mzStop;
 function mzToggle(){mzOn?mzStop():mzPlay()}
-function mzStep(d){mzI=(mzI+d+MZ.length)%MZ.length;if(mzOn){mzFade(0,.5);setTimeout(()=>{mzClear();if(mzOn){mzBuild(MZ[mzI][2]);mzFade(mzVolVal(),1.2)}},550)}mzUI()}
-function mzPick(i){mzI=i;mzOn?mzStep(0):mzPlay();mzUI()}
-function mzSetTimer(m){clearTimeout(mzStopTmr);m=+m;if(m){mzStopAt=Date.now()+m*60000;mzStopTmr=setTimeout(()=>{mzStop();$('mzTimer').value='0'},m*60000)}}
+function mzGo(i){mzI=(i+MZ.length)%MZ.length;if(mzOn){clearInterval(mzSched);mzFade(0,.6);setTimeout(()=>{if(mzOn)mzStart()},650)}mzUI()}
+function mzStep(d){if(mzShuf&&d>0){let j;do{j=Math.floor(Math.random()*MZ.length)}while(j===mzI&&MZ.length>1);mzGo(j)}else mzGo(mzI+d)}
+function mzAuto(){mzStep(1)}
+function mzPick(i){mzI=i;mzOn?mzGo(i):mzPlay();mzUI()}
+function mzShuffle(){mzShuf=!mzShuf;mzUI()}
+function mzSetTimer(m){clearTimeout(mzStopTmr);m=+m;if(m)mzStopTmr=setTimeout(()=>{mzStop();const t=$('mzTimer');if(t)t.value='0'},m*60000)}
 function mzOpen(v){const p=$('mzPanel'),b=$('mzBubble');const open=v==null?p.hidden:v;p.hidden=!open;b.setAttribute('aria-expanded',open);if(open)setTimeout(()=>$('mzPlay').focus(),20)}
-function mzUI(){const t=MZ[mzI];$('mzTitle').textContent=t[0];$('mzSub').textContent=t[1];const pl=$('mzPlay');pl.textContent=mzOn?'❚❚':'▶';pl.setAttribute('aria-label',mzOn?'Pause':'Lecture');
-$('mz').classList.toggle('on',mzOn);$('mzList').innerHTML=MZ.map((x,i)=>`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})">${x[0]}</button>`).join('');$('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t[0]:'Musique'}
+function mzUI(){const t=MZ[mzI];$('mzTitle').textContent=t.n;$('mzSub').textContent=t.d+' · '+t.bpm+' bpm';$('mzPI').innerHTML=mzOn?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$('mzPlay').setAttribute('aria-label',mzOn?'Pause':'Lecture');
+$('mz').classList.toggle('on',mzOn);const sh=$('mzShuf');sh.setAttribute('aria-pressed',mzShuf);sh.classList.toggle('act',mzShuf);
+$('mzList').innerHTML=MZ.map((x,i)=>`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})"><span class="mz-n">${i===mzI&&mzOn?'<span class="mz-eq"><i></i><i></i><i></i></span>':String(i+1).padStart(2,'0')}</span><span class="mz-tt">${x.n}<small>${x.d}</small></span></button>`).join('');
+$('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t.n:'Musique apaisante'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('mzPanel');if(p&&!p.hidden){mzOpen(false);document.getElementById('mzBubble').focus()}}});
 document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(m&&p&&!p.hidden&&!m.contains(e.target))mzOpen(false)});
 setTimeout(()=>{try{const v=localStorage.getItem('mb_mzvol');if(v!=null)$('mzVol').value=v}catch(e){}mzUI()},0);
+
+/* ===== Boîte à outils, ancrage, plan de sécurité, FAQ ===== */
+const TOOLS=[['breath','🫁','Respirer 1 minute','Cohérence cardiaque guidée',"toolBreath()"],['ancrage','🖐️','Ancrage 5-4-3-2-1','Revenir au présent quand l’angoisse monte',"ancrageOpen()"],['plan','🛟','Mon plan de sécurité','Préparer à l’avance quoi faire si ça va très mal',"go('plan')"],['music','🎧','Musique apaisante','Playlist chill, composée en direct',"mzOpen(true);mzOn||mzPlay()"]];
+function toolboxHtml(){return`<section class="toolbox" aria-labelledby="tbT"><div class="sec-h"><h2 id="tbT">Ta boîte à outils</h2><a href="#" onclick="go('outils');return false">Tout voir</a></div><div class="tb-grid">${TOOLS.map(t=>`<button class="tb" onclick="${t[4]}"><span class="tb-i" aria-hidden="true">${t[1]}</span><span class="tb-t"><b>${t[2]}</b><small>${t[3]}</small></span></button>`).join('')}</div></section>`}
+const FAQ=[['Est-ce que c’est vraiment gratuit et anonyme ?','Oui. Ma Boussole est gratuit, sans inscription obligatoire. Tes réponses restent sur ton appareil : aucun serveur ne les reçoit.'],
+['Est-ce que le bilan est un diagnostic ?','Non. C’est un repère pour t’aider à y voir plus clair et à trouver vers qui te tourner. Seul un professionnel de santé peut poser un diagnostic.'],
+['D’où viennent les professionnels proposés ?','Des annuaires officiels : le RPPS (professionnels de santé) et FINESS (établissements), mis à jour chaque mois. Seuls ceux en activité sont affichés.'],
+['Que faire si je suis en danger maintenant ?','Appelle le 112 (ou le 15, le 17). Si tu as des idées suicidaires, le 3114 répond 24h/24, gratuitement. Pour un enfant en danger : 119.'],
+['Combien coûte un psychologue ?','Avec Mon soutien psy, des séances avec un psychologue partenaire sont remboursées par l’Assurance Maladie. Les CMP sont gratuits.'],
+['Je m’inquiète pour un proche, que faire ?','Fais le bilan en pensant à lui pour repérer les signaux, puis parles-en avec lui sans le juger. Tu peux aussi appeler le 3114 : la ligne est ouverte aux proches.']];
+function faqHtml(){return`<section class="faq" aria-labelledby="fqT"><h2 id="fqT" class="sec-h2">Questions fréquentes</h2>${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</section>`}
+function toolBreath(){const all=[...document.querySelectorAll('.w-breath')].filter(el=>el.offsetParent);const el=all[0];if(el){el.scrollIntoView({behavior:'smooth',block:'center'});const b=el.querySelector('.br-btn');if(b&&!brT)setTimeout(()=>breathToggle(b),400)}else go('outils')}
+const ANC=[[5,'choses que tu vois','Regarde autour de toi. Nomme-les, même dans ta tête : une couleur, un objet, une lumière…','👀'],[4,'choses que tu peux toucher','Le tissu de tes vêtements, la table, tes pieds au sol…','🖐️'],[3,'sons que tu entends','Un bruit lointain, ta respiration, le frigo…','👂'],[2,'odeurs que tu sens','Ou deux odeurs que tu aimes, si rien ne vient.','👃'],[1,'chose que tu peux goûter','Une gorgée d’eau, le goût dans ta bouche.','👅']];
+let ancI=0,ancLast=null;
+function ancrageOpen(){ancLast=document.activeElement;ancI=0;let m=$('modal');if(!m){m=document.createElement('div');m.id='modal';document.body.appendChild(m)}m.className='modal';ancRender();m.hidden=false;setTimeout(()=>{const b=m.querySelector('.anc-next');if(b)b.focus()},30)}
+function ancClose(){const m=$('modal');if(m){m.hidden=true;m.innerHTML=''}if(ancLast&&ancLast.focus)ancLast.focus()}
+function ancRender(){const m=$('modal');if(ancI>=ANC.length){m.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="ancT"><button class="dlg-x" onclick="ancClose()" aria-label="Fermer">✕</button><div class="anc-big" aria-hidden="true">🌿</div><h2 id="ancT">Bien joué.</h2><p class="mu">Tu viens de ramener ton attention ici et maintenant. Tu peux recommencer autant de fois que tu veux.</p><div class="next-actions"><button onclick="ancI=0;ancRender()">Recommencer</button><button class="s" onclick="ancClose()">Fermer</button></div></div>`;return}
+const [n,w,h,e]=ANC[ancI];m.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="ancT"><button class="dlg-x" onclick="ancClose()" aria-label="Fermer">✕</button><div class="anc-dots" aria-hidden="true">${ANC.map((_,i)=>`<i class="${i<=ancI?'on':''}"></i>`).join('')}</div><div class="anc-big" aria-hidden="true">${e}</div><p class="anc-n"><b>${n}</b> ${w}</p><p class="mu" style="text-align:center;margin:0 0 18px">${h}</p><p class="mu" style="text-align:center;font-size:.85rem;margin:0 0 14px">Prends ton temps, respire doucement.</p><div class="next-actions" style="justify-content:center"><button class="anc-next" onclick="ancI++;ancRender()">${ancI<ANC.length-1?'Suivant':'Terminer'}</button></div></div>`}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.getElementById('modal');if(m&&!m.hidden)ancClose()}});
+const PLAN=[['signes','Mes signaux d’alerte','Ce qui me montre que ça commence à aller mal (pensées, émotions, comportements).','Ex. : je ne dors plus, je m’isole, je me dis que rien ne va changer…'],
+['seul','Ce que je peux faire seul·e pour aller un peu mieux','Des choses simples qui m’aident à traverser le moment.','Ex. : marcher, prendre une douche, écouter de la musique, respirer 1 minute…'],
+['lieux','Des personnes et des lieux qui me changent les idées','Pour ne pas rester seul·e avec mes pensées.','Ex. : un café, chez un ami, la bibliothèque, ma sœur…'],
+['aide','Les personnes à qui je peux demander de l’aide','Noms et numéros de proches de confiance.','Ex. : Maman 06…, Léa 07…'],
+['pros','Les professionnels et numéros à appeler','Mon médecin, mon psy, les lignes d’écoute.','Ex. : Dr …, CMP de …\n3114 (24h/24) · SOS Amitié 09 72 39 40 50 · 112 en cas de danger'],
+['securite','Rendre mon environnement plus sûr','Ce que je peux éloigner ou confier à quelqu’un quand ça va mal.','Ex. : confier certains médicaments à un proche…'],
+['raison','Ce qui compte le plus pour moi','Mes raisons de tenir, ce qui me fait du bien.','Ex. : mon chien, ma petite sœur, mon projet de voyage…']];
+function planGet(){try{return JSON.parse(localStorage.getItem('mb_plan')||'{}')}catch(e){return{}}}
+function planSave(k,v){const p=planGet();p[k]=v;p._d=new Date().toLocaleDateString('fr-FR');try{localStorage.setItem('mb_plan',JSON.stringify(p))}catch(e){}const m=$('planMsg');if(m)m.textContent='Enregistré sur ton appareil · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
+function planV(){nav('outils');const p=planGet();$('v').innerHTML=`<section class="card plan-hero"><p class="hero2-kicker">🛟 Un outil utilisé en prévention du suicide</p><h2>Mon plan de sécurité</h2><p class="mu" style="max-width:62ch">Quand ça va très mal, c’est difficile de réfléchir. Ce plan se prépare à l’avance, au calme : tu notes tes signaux d’alerte, ce qui t’aide, et qui appeler. Tu peux le compléter à ton rythme, seul·e ou avec un professionnel.</p><div class="warn" style="margin:12px 0 0">En cas de danger immédiat, n’attends pas : appelle le <b>112</b>, ou le <b>3114</b> (24h/24, gratuit).</div></section>
+<ol class="plan">${PLAN.map(([k,t,d,ph],i)=>`<li class="card"><span class="plan-n" aria-hidden="true">${i+1}</span><div class="plan-b"><label for="pl_${k}"><b>${t}</b><small class="mu">${d}</small></label><textarea id="pl_${k}" rows="3" placeholder="${esc(ph)}" oninput="planSave('${k}',this.value)">${esc(p[k]||'')}</textarea></div></li>`).join('')}</ol>
+<div class="card plan-foot"><p class="mu" id="planMsg" aria-live="polite">${p._d?'Dernière modification le '+p._d+'.':'Tout est enregistré automatiquement sur ton appareil.'}</p><div class="next-actions"><button onclick="planPdf()">⬇️ Télécharger mon plan (PDF)</button><button class="s" onclick="go('outils')">← Boîte à outils</button><button class="s" id="planDel" onclick="planClear()">Tout effacer</button></div></div>`}
+function planClear(){const b=$('planDel');if(b.dataset.c){try{localStorage.removeItem('mb_plan')}catch(e){}planV();return}b.dataset.c=1;b.textContent='Confirmer l’effacement ?'}
+function planPdf(){try{const p=planGet(),d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});let y=20;d.setFillColor(91,108,214);d.rect(0,0,210,30,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(20);d.text('Mon plan de sécurité',16,19);d.setFontSize(9);d.setFont('helvetica','normal');d.text('Ma Boussole · '+new Date().toLocaleDateString('fr-FR'),16,25);y=40;
+PLAN.forEach(([k,t],i)=>{const L=d.splitTextToSize((p[k]||'').trim()||'—',170);const h=10+L.length*5;if(y+h>282){d.addPage();y=20}d.setTextColor(91,108,214);d.setFont('helvetica','bold');d.setFontSize(11.5);d.text((i+1)+'. '+t,16,y);d.setTextColor(37,36,45);d.setFont('helvetica','normal');d.setFontSize(10.5);d.text(L,20,y+6);y+=h+4});
+d.setTextColor(192,57,43);d.setFont('helvetica','bold');d.setFontSize(10);d.text('Danger immédiat : 112 · Prévention du suicide : 3114 (24h/24, gratuit)',16,288);d.save('Mon-plan-de-securite.pdf')}catch(e){alert('PDF indisponible.')}}
+function outilsV(){$('v').innerHTML=`<section class="card"><h2>Boîte à outils</h2><p class="mu" style="margin:0">Des exercices courts pour souffler, revenir au présent et te préparer aux moments difficiles. Tout reste sur ton appareil.</p></section>
+<div class="tb-grid tb-big">${TOOLS.map(t=>`<button class="tb" onclick="${t[4]}"><span class="tb-i" aria-hidden="true">${t[1]}</span><span class="tb-t"><b>${t[2]}</b><small>${t[3]}</small></span></button>`).join('')}</div>
+<div class="care-grid" style="margin-top:14px">${document.querySelector('.rail .w-breath')?.outerHTML||''}${document.querySelector('.rail .w-mood')?.outerHTML||''}${document.querySelector('.rail .w-tip')?.outerHTML||''}</div>`;setTimeout(()=>{moodRender();tipShow()},0)}
+
+go('home');
 </script>
 </body>
 </html>
