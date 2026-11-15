@@ -118,6 +118,8 @@ button.big{padding:14px 22px;font-size:1rem}
 .reco-ico{font-size:1.6rem;line-height:1}
 .reco-line{margin:10px 0 0}
 .next-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.next-actions button{margin:0}
+.ana{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.ana h3{margin:0 0 6px;font-size:1rem}
+.ana ul{margin:0;padding-left:20px}.ana li{margin:0 0 8px}.ana-neg li::marker{color:var(--hi)}.ana-pos li::marker{color:var(--ok)}.ana-neg .mu{display:block;font-size:.85rem}
 </style>
 </head>
 <body>
@@ -273,6 +275,7 @@ h+=`<div class="warn"><b>💛 Certaines de tes réponses signalent une situation
 const L=LV[r.lv];
 if(r.theme==='viol'||r.theme==='harc')h+=EXIT_TIP;
 h+=`<div class="card"><h2>${esc(r.label)}</h2><div class="row"><span>Résultat</span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${r.sc/r.max*100}%;background:${L[1]}"></i></div><p class="mu">Repère indicatif issu de tes réponses, pas un diagnostic.</p></div>`;
+{const an=pdfAnalyse(r);if(an.neg.length||an.pos.length)h+=`<div class="card"><h2>Ce qui ressort de ton bilan</h2><div class="ana">${an.neg.length?`<div><h3>À travailler</h3><ul class="ana-neg">${an.neg.map(o=>`<li><b>${esc(o.txt)}</b><span class="mu">Ex. : « ${esc(o.ex.t.replace(/\.$/,''))} » — ${scaleOf(r.age)[o.ex.a]}</span></li>`).join('')}</ul></div>`:''}<div><h3>Tes points d’appui</h3><ul class="ana-pos">${an.pos.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div></div>`}
 h+=`<div class="card"><h2>Conseils</h2><ul>${advOf(r).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
 const rc=recoFor(r);
 h+=`<div class="card next"><h2>Ta prochaine étape</h2>${minorNote()}<p>${rc.intro}</p>${rc.cat?`<div class="reco"><span class="reco-ico" aria-hidden="true">${catIcon(rc.cat[1])}</span><div><b>${esc(rc.title)}</b><p class="mu" style="margin:2px 0 0">${rc.why}</p></div></div>`:''}${rc.line?`<p class="reco-line">📞 <b>${rc.line[0]}</b> — ${rc.line[1]}</p>`:''}
@@ -592,6 +595,87 @@ g.restore()};
 if(withHeader){draw(W-210,160,150,'#ffffff',.28);draw(W-420,70,55,'#ffffff',.18)}
 draw(W-150,H-170,190,T.c1,.10);draw(140,H-420,90,T.c2,.08);
 return c.toDataURL('image/jpeg',.88)}
+const DIMS={
+conf:[
+[/corps/i,"Ton rapport à ton corps est difficile.","Tu te sens bien dans ton corps."],
+[/erreur|rate |rumine|repense|abandonne|tromper/i,"Tes erreurs te restent longtemps en tête et te découragent.","Tu gères plutôt bien tes erreurs."],
+[/compar|moins bien|likes|jugement|moqu|apprécient|aiment pas|remarque|cacher/i,"Le regard des autres et la comparaison pèsent sur toi.","Le regard des autres a peu d’emprise sur toi."],
+[/ose|avis|parole|lever la main|dire ce que|façon d’être/i,"Tu as du mal à t’affirmer et à prendre ta place.","Tu oses dire ce que tu penses."],
+[/déçu|décevoir|respecté|important·e pour/i,"Tu as peur de décevoir les personnes qui comptent pour toi.","Tu te sens respecté·e et important·e pour tes proches."],
+[/capable|avenir|objectif|choix|apprendre/i,"Tu doutes de tes capacités et de ton avenir.","Tu te sens capable d’avancer et de faire tes propres choix."],
+[/./,"Tu portes un regard dur sur toi-même.","Tu reconnais tes qualités et ce que tu réussis."]],
+harc:[
+[/me faire du mal/i,"Tu as pensé à te faire du mal à cause de cette situation : parles-en aujourd’hui.",null],
+[/pousse|tape|frapp|bouscul|abîme|prend mes affaires|goûter|fera du mal/i,"Tu subis aussi des violences physiques ou on s’en prend à tes affaires.",null],
+[/message|en ligne|réseau|photo|vidéo|faux compte|notification|surveillé|pisté|informations personnelles|chantage|bloque/i,"Le harcèlement passe aussi par le téléphone ou les réseaux.",null],
+[/exclu|jouer avec moi|écart|mis·e de côté/i,"On t’exclut ou on te met volontairement à l’écart.",null],
+[/moqu|insult|humili|surnom|rit de moi|rumeur|mensonge|même sujet|choses fausses/i,"Tu subis des moqueries ou des humiliations répétées.",null],
+[/appréhende|peur dans|mal au ventre|dors|dormir|sommeil|appétit|plus aller|ne plus aller|changé|chemin|trajets|plusieurs semaines/i,"Cette situation touche ton quotidien : sommeil, trajets, envie d’y aller.",null],
+[/soutien|ami·e|adulte de l’école|aide quand/i,"Tu manques de soutien autour de toi face à cette situation.","Tu as quelqu’un qui te soutient : appuie-toi sur cette personne."],
+[/./,"Tu te sens seul·e face à cette situation et tu as du mal à en parler.",null]],
+viol:[
+[/sexuel|touché·e|secret|intimes|déplacé/i,"Tu signales des gestes ou des violences à caractère sexuel.",null],
+[/coup|gifle|frapp|tape|secou|blessure|bleu|cassé|me fait mal|blessé/i,"Tu signales des violences physiques.",null],
+[/menace|crains|dans les jours|prochains jours/i,"Tu crains pour ta sécurité ou celle de tes proches.",null],
+[/contrôl|empêche|isolé|argent|comptes|prive|enferm|seul·e longtemps|assez à manger/i,"On contrôle ta vie, on te prive ou on t’isole de tes proches.",null],
+[/vers qui|adulte de confiance|adulte à qui|119|3919/i,"Tu ne sais pas encore vers qui te tourner en cas de danger.","Tu sais vers qui te tourner : c’est une vraie protection."],
+[/enfants|témoins|disputer|entre adultes/i,"Des violences ont lieu devant toi ou devant des enfants.",null],
+[/crie |cris |insulte|rabaisse|dévalorise|méchantes/i,"Tu subis des cris, des insultes ou des humiliations.",null],
+[/ma faute|excuse|caché|cacher|mentir/i,"Tu te sens responsable ou tu caches ce qui se passe. Ce n’est jamais de ta faute.",null],
+[/./,"Tu vis dans la peur et tu adaptes ton comportement pour éviter les crises.","Tu te sens en sécurité chez toi."]],
+anx:[
+[/panique|palpitation|cœur|souffle|vertige/i,"Le stress provoque des réactions fortes dans ton corps (cœur, souffle, panique).",null],
+[/endormir|dormir|cauchemar/i,"Ton sommeil est touché par tes pensées.","Tu dors plutôt bien malgré le stress."],
+[/tension|ventre|tête|boule|mâchoire/i,"Le stress se manifeste dans ton corps (tensions, ventre noué, maux de tête).","Ton corps reste plutôt détendu."],
+[/vérif|rituels|rassur/i,"Tu as souvent besoin de vérifier ou d’être rassuré·e.",null],
+[/évite|n’ose|peur d’être|parler à des gens|regard|loin de mes parents/i,"Tu évites certaines situations à cause de l’anxiété.","Tu ne te laisses pas arrêter par l’anxiété."],
+[/pression|dépassé|obligations|trop de choses|devoirs|contrôles|examens|remets|repousse|mal faire/i,"Tu te sens sous pression et dépassé·e.","Tu gères plutôt bien tes obligations."],
+[/calme|détend|me calmer|moyens/i,"Tu as du mal à retrouver ton calme.","Tu arrives à retrouver ton calme quand ça monte."],
+[/./,"Les inquiétudes tournent beaucoup dans ta tête et t’empêchent de profiter.",null]],
+hum:[
+[/me faire du mal|ne plus vivre|si je n’étais pas là|fait du mal/i,"Tu as des pensées de te faire du mal : parles-en aujourd’hui à quelqu’un.",null],
+[/plaisir|intérêt|envie de jouer|profiter|ennuie|week-end|rigole/i,"Tu as perdu le plaisir dans ce que tu aimais.","Tu gardes du plaisir et des envies dans certaines activités."],
+[/fatigu|énergie|ralenti|lever|effort|lourd|repousse/i,"Ton énergie est très basse.","Tu gardes de l’énergie au quotidien."],
+[/appétit|faim|sommeil|dors|dormir|mal au ventre/i,"Ton sommeil ou ton appétit ont changé.","Ton sommeil et ton appétit restent stables."],
+[/coupable|négatives|poids pour|embêter|bon·ne enfant/i,"Tu as des pensées dures envers toi-même.","Tu restes plutôt bienveillant·e envers toi-même."],
+[/isole|seul|chambre|comprend|téléphone/i,"Tu t’isoles davantage.","Tu restes en lien avec les autres."],
+[/bien la plupart/i,"Tu te sens rarement bien en ce moment.","Tu te sens bien une bonne partie du temps."],
+[/./,"Tu ressens de la tristesse ou un manque d’espoir.",null]],
+soc:[
+[/personne à qui|confiance|secrets|demander de l’aide|parler à un adulte|tourner|temps pour moi|disponible/i,"Tu manques de quelqu’un à qui te confier.","Tu as au moins une personne de confiance à qui parler."],
+[/différent|exclu|mis·e de côté|écart|groupe|club|équipe|activité|classe/i,"Tu te sens à l’écart des groupes.","Tu fais partie d’un groupe ou d’une activité avec d’autres."],
+[/amis|copain|garder|maintenir|nouveaux|perdu|aller vers/i,"Tu as du mal à créer ou à garder des liens.","Tu arrives à garder tes liens."],
+[/contact|vois|sortie|invitation|chez moi|récré|jouer|anniversaires|en ligne|écrans|seul·e, sans|temps libre/i,"Tu as peu de contacts en dehors de chez toi.","Tu gardes des contacts réguliers."],
+[/remarqu|disparaissais|inquiète/i,"Ton isolement t’inquiète, et tu as l’impression que ton absence passerait inaperçue.",null],
+[/./,"Tu te sens seul·e, et ce manque de lien pèse sur ton moral.",null]],
+add:[
+[/risque|conduite|malaise|trou noir|inconnus/i,"Tu as déjà pris des risques pour ta sécurité.","Tu ne prends pas de risques pour ta sécurité."],
+[/argent|dépense|paris|achats/i,"Cette habitude te coûte de l’argent.","Cette habitude ne pèse pas sur ton budget."],
+[/fuir|oublier|soucis|émotions/i,"Tu t’en sers pour fuir des émotions difficiles.","Tu ne t’en sers pas pour fuir tes émotions."],
+[/cache|cachette|seul·e|coupable/i,"Tu caches cette habitude ou tu culpabilises.",null],
+[/remarque|parents me disent|proposé de l’aide|proposé une|déjà goûté/i,"Ton entourage s’en inquiète déjà, ou tu y as été exposé·e tôt.",null],
+[/impact|conséquences|devoirs|cours|travail|sommeil|nuit|tard|fatigué|négligé|laissé tomber|activités importantes/i,"Cette habitude a déjà des conséquences sur ton sommeil, ton école ou ton travail, ou tes relations.","Cette habitude n’a pas de conséquence importante sur ton quotidien."],
+[/autres activités|m’occuper sans|arrête facilement|préfère/i,"Tu as peu d’autres activités qui te font du bien.","Tu as d’autres activités qui te font du bien."],
+[/besoin|manque|irrit|fâche|énervé|pense régulièrement|pense souvent|pense aux jeux|faire comme les autres/i,"Tu ressens un besoin ou un manque fort.",null],
+[/./,"Tu as du mal à garder le contrôle sur cette habitude.","Tu gardes la main sur cette habitude."]],
+ali:[
+[/vomi|laxatif/i,"Tu signales des vomissements ou la prise de laxatifs : parles-en vite à un médecin.",null],
+[/saute|sport|compenser|règles|régime|refuse/i,"Tu signales des comportements de contrôle (repas sautés, règles strictes, compensation).",null],
+[/grande quantité|très vite|perdre le contrôle|triste, inquiet|cachette|cache/i,"Tu as des moments de perte de contrôle avec la nourriture.","Tu gardes le contrôle pendant tes repas."],
+[/devant les autres|en groupe|avec d’autres|repas en famille|cantine/i,"Les repas avec les autres sont difficiles.","Tu apprécies les repas partagés."],
+[/coupable|culpabilise|menti/i,"Tu culpabilises autour de la nourriture.","Tu manges sans culpabiliser."],
+[/s’inquiète|inquiètent|besoin d’aide|vertiges|fatigué|mal au ventre/i,"Ton entourage s’inquiète, ou tu sens que ton corps en souffre.",null],
+[/mange de tout/i,"Tu évites beaucoup d’aliments.","Tu manges de tout sans problème."],
+[/corps|miroir|gros|maigre|compar|influenceur|pèse|bien dans/i,"Ton image du corps te fait souffrir.","Tu te sens bien dans ton corps."],
+[/./,"Le poids et la nourriture occupent beaucoup tes pensées.",null]]};
+function analyseDims(theme,Q,A){const D=DIMS[theme]||[];const g=D.map(([re,neg,pos])=>({neg,pos,items:[]}));
+Q.forEach((x,i)=>{const a=A[i];if(a==null)return;const k=D.findIndex(([re])=>re.test(x.t));if(k<0)return;g[k].items.push({i,t:x.t,a,v:x.r?3-a:a,rev:!!x.r,sec:!!x.sec})});
+const neg=g.filter(o=>o.items.some(it=>it.v>=2)).map(o=>{const top=o.items.slice().sort((p,q)=>q.v-p.v||(q.sec-p.sec))[0];return{txt:o.neg,max:Math.max(...o.items.map(it=>it.v)),n:o.items.filter(it=>it.v>=2).length,sec:o.items.some(it=>it.sec&&it.a>0),ex:top}})
+.sort((p,q)=>(q.sec-p.sec)||(q.max-p.max)||(q.n-p.n));
+const negSet=new Set(neg.map(o=>o.txt));
+const pos=g.filter(o=>o.pos&&o.items.length&&!negSet.has(o.neg)&&o.items.every(it=>it.v<=1)&&o.items.some(it=>it.v===0)).map(o=>o.pos);
+return{neg,pos}}
+
 const PDF_TIPS={
 conf:[[[0,2,3,6,18],"Quand tu te compares, compare-toi à toi il y a un an, pas aux autres : note un progrès concret."],[[4,10,14],"Entraîne-toi à donner ton avis dans une situation sans enjeu (choix d’un film, d’un plat) pour apprivoiser le regard des autres."],[[7,15,16],"Quand on te fait un compliment, réponds simplement « merci », sans le minimiser, et note-le."],[[8],"Quand tu rumines une erreur, demande-toi ce que tu dirais à un ami dans la même situation."],[[9],"Note 3 choses que ton corps te permet de faire, plutôt que de juger son apparence."],[[12,17],"Repère une personne qui t’apprécie vraiment et passe un moment avec elle cette semaine."],[[5,11,13,19],"Fixe-toi un petit objectif atteignable cette semaine et coche-le quand il est fait."]],
 harc:[[[19],"Tu as pensé à te faire du mal : appelle le 3114 dès aujourd’hui (24h/24, gratuit, confidentiel)."],[[0,1,3,8,9,10,17],"Note chaque fait dans un carnet (date, lieu, personnes, témoins) : cela compte si tu fais un signalement."],[[2,4,5,14,16],"En ligne : fais des captures d’écran, bloque, signale sur la plateforme et appelle le 3018, qui peut faire retirer des contenus rapidement."],[[6,11,18],"Parle à la vie scolaire, aux RH ou à la médecine du travail : ils ont l’obligation d’agir face au harcèlement."],[[13,15],"Choisis une seule personne de confiance et raconte-lui ; si tu n’oses pas, le 3018 peut t’écouter."],[[12],"Si ton sommeil ou ton appétit sont touchés, parles-en à ton médecin : c’est le signe que la situation te pèse fort."],[[7],"Les violences physiques peuvent faire l’objet d’une plainte ; un médecin peut constater les blessures."]],
@@ -606,7 +690,8 @@ const hard=items.filter(o=>o.v>=2).sort((p,q)=>q.v-p.v||p.i-q.i);const easy=item
 const vOf={};items.forEach(o=>vOf[o.i]=o.v);
 const tips=(minorAge(r.age)?[]:(PDF_TIPS[r.theme]||[])).map(([ids,t],k)=>({t,w:Math.max(...ids.map(i=>vOf[i]??0)),k})).filter(o=>o.w>=2).sort((p,q)=>p.k-q.k).map(o=>o.t);
 advOf(r).forEach(t=>{if(tips.length<3&&!tips.includes(t))tips.push(t)});
-return{hard,easy,tips:tips.slice(0,3),n:items.length}}
+const dm=analyseDims(r.theme,Q,A);const pos=dm.pos.slice(0,3);if(pos.length<2)pos.push('Tu as pris le temps de faire ce bilan : c’est déjà un vrai pas pour toi.');
+return{hard,easy,tips:tips.slice(0,3),n:items.length,neg:dm.neg.slice(0,3),pos:pos.slice(0,3)}}
 function pdfSummary(r,an){const t='« '+r.label+' »',n=an.hard.length;
 const base=['Sur le thème '+t+', tu sembles plutôt bien en ce moment.','Sur le thème '+t+', tes réponses montrent des signaux à surveiller.','Sur le thème '+t+', tes réponses montrent que cela pèse fortement en ce moment.'][r.lv];
 const cnt=an.n?(n?' '+n+' de tes '+an.n+' réponses sont « souvent » ou « presque toujours » difficiles.':' Aucune de tes '+an.n+' réponses n’est marquée comme fréquemment difficile.'):'';
@@ -632,16 +717,16 @@ const h=L.length*LH(9.5)+7;d.setFillColor(253,236,234);d.setDrawColor(217,83,79)
 d.setFillColor(...hex(LVC));d.roundedRect(W-M-46,y+3.5,40,8,4,4,'F');font(9.5,1,[255,255,255]);d.text(LV[r.lv][0],W-M-26,y+8.8,{align:'center'});
 d.setFillColor(236,234,244);d.roundedRect(M+6,y+14,CW-12,4,2,2,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+6,y+14,Math.max(4,(CW-12)*r.sc/r.max),4,2,2,'F');
 font(9.5,0);d.text(S,M+6,y+24);y+=h+G}
-{const hard=an.hard.slice(0,3),easy=an.easy.slice(0,2);
-const fmt=o=>({q:wrap('« '+o.t.replace(/\.$/,'')+' »',9,0,HW-12),a:o.v===0&&!o.rev?'« Jamais » : pas de difficulté ici':'Ta réponse : '+scaleOf(r.age)[o.a]});
-const H=hard.map(fmt),E=easy.map(fmt);const hh=L=>L.reduce((s,o)=>s+o.q.length*LH(9)+LH(8.5)+2.5,0);
-const h=Math.max(16+hh(H),16+hh(E),24);
-box(M,y,HW,h);head('Ce qui ressort de tes réponses',M,y);let z=y+15;
-if(!H.length){font(9,0,MU);d.text(wrap('Aucune difficulté fréquente dans tes réponses.',9,0,HW-12),M+6,z)}
-H.forEach(o=>{d.setFillColor(...hex(LVC));d.circle(M+7.2,z-1.2,1.1,'F');font(9,0,TX);d.text(o.q,M+10,z);z+=o.q.length*LH(9);font(8.5,1,hex(LVC));d.text(o.a,M+10,z);z+=LH(8.5)+2.5});
-const x2=M+HW+G;box(x2,y,HW,h);head('Tes points d’appui',x2,y);z=y+15;
-if(!E.length){font(9,0,MU);d.text(wrap('Chaque petit pas compte : ce bilan est déjà une façon de prendre soin de toi.',9,0,HW-12),x2+6,z)}
-E.forEach(o=>{d.setFillColor(47,158,107);d.circle(x2+7.2,z-1.2,1.1,'F');font(9,0,TX);d.text(o.q,x2+10,z);z+=o.q.length*LH(9);font(8.5,1,[47,158,107]);d.text(o.a,x2+10,z);z+=LH(8.5)+2.5});
+{const SCL=scaleOf(r.age);
+const N=an.neg.map(o=>({t:wrap(o.txt,9.5,1,HW-14),ex:wrap('Ex. : « '+o.ex.t.replace(/\.$/,'')+' » — '+SCL[o.ex.a],8,0,HW-14)}));
+const P=an.pos.map(t=>wrap(t,9.5,0,HW-14));
+const hN=16+N.reduce((s,o)=>s+o.t.length*LH(9.5)+o.ex.length*LH(8)+3,0),hP=16+P.reduce((s,L)=>s+L.length*LH(9.5)+3,0);
+const h=Math.max(hN,hP,26);
+box(M,y,HW,h);head('Ce qui ressort de tes réponses',M,y);let z=y+15.5;
+if(!N.length){font(9.5,0,MU);d.text(wrap('Aucune difficulté fréquente dans tes réponses.',9.5,0,HW-14),M+6,z)}
+N.forEach(o=>{d.setFillColor(...hex(LVC));d.circle(M+7.2,z-1.2,1.1,'F');font(9.5,1,TX);d.text(o.t,M+10,z);z+=o.t.length*LH(9.5);font(8,0,MU);d.text(o.ex,M+10,z);z+=o.ex.length*LH(8)+3});
+const x2=M+HW+G;box(x2,y,HW,h);head('Tes points d’appui',x2,y);z=y+15.5;
+P.forEach(L=>{d.setFillColor(47,158,107);d.circle(x2+7.2,z-1.2,1.1,'F');font(9.5,0,TX);d.text(L,x2+10,z);z+=L.length*LH(9.5)+3});
 y+=h+G}
 {const A=an.tips.map(t=>wrap(t,9.5,0,CW-22));const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0);box(M,y,CW,h);head('Mes conseils personnalisés',M,y);let z=y+16;
 A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});y+=h+G}
