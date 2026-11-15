@@ -525,7 +525,7 @@ soc:{c1:'#2f9e6b',c2:'#7cc6a0',ink:'#16553a',motif:'links'},
 add:{c1:'#1f7a8c',c2:'#e8914f',ink:'#0f3f49',motif:'chain'},
 ali:{c1:'#6a994e',c2:'#b5c95a',ink:'#2f4a20',motif:'leaves'}};
 function pdfBg(T,withHeader){const W=1240,H=1754,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
-const bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fbfaff');bg.addColorStop(1,T.c1+'22');g.fillStyle=bg;g.fillRect(0,0,W,H);
+g.fillStyle='#fbfaff';g.fillRect(0,0,W,H);const bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,'rgba(255,255,255,0)');bg.addColorStop(1,T.c1+'26');g.fillStyle=bg;g.fillRect(0,0,W,H);
 const hh=withHeader?470:0;
 if(withHeader){const hg=g.createLinearGradient(0,0,W,hh);hg.addColorStop(0,T.c1);hg.addColorStop(1,T.c2);g.fillStyle=hg;g.beginPath();g.moveTo(0,0);g.lineTo(W,0);g.lineTo(W,hh-60);g.quadraticCurveTo(W*.55,hh+40,0,hh-20);g.closePath();g.fill()}
 const draw=(cx,cy,R,col,alpha)=>{g.save();g.globalAlpha=alpha;g.strokeStyle=col;g.fillStyle=col;g.lineWidth=R*.06;g.lineCap='round';
@@ -554,9 +554,9 @@ const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.sli
 const bg1=pdfBg(T,true),bg2=pdfBg(T,false);d.addImage(bg1,'JPEG',0,0,210,297);
 d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(10);d.text('MA BOUSSOLE  ·  MON BILAN',M,18);
 d.setFontSize(30);d.text(d.splitTextToSize(r.label,140),M,38);d.setFont('helvetica','normal');d.setFontSize(11);d.text('Bilan du '+r.date+'  ·  '+BQ[r.theme].length+' questions',M,52);
-let y=78;
+let y=72;
 const page=()=>{d.addPage();d.addImage(bg2,'JPEG',0,0,210,297);y=20};
-const card=(h,fn)=>{if(y+h>282)page();d.setFillColor(255,255,255);d.setDrawColor(228,226,238);d.setLineWidth(.3);d.roundedRect(M,y,CW,h,4,4,'FD');fn(y);y+=h+6};
+const card=(h,fn)=>{if(y+h>282)page();d.setFillColor(255,255,255);d.setDrawColor(228,226,238);d.setLineWidth(.3);d.roundedRect(M,y,CW,h,4,4,'FD');fn(y);y+=h+5};
 const txt=(s,size,bold,col,maxw)=>{d.setFont('helvetica',bold?'bold':'normal');d.setFontSize(size);d.setTextColor(...(col||[37,36,45]));return d.splitTextToSize(s,maxw||CW-16)};
 const h2=(s,yy)=>{d.setFont('helvetica','bold');d.setFontSize(13);d.setTextColor(...hex(T.ink));d.text(s,M+8,yy)};
 if(r.sec){const L=txt('Certaines de tes réponses signalent une situation préoccupante. Si tu es en danger, appelle le 112 (ou le 17). Pour parler à quelqu’un maintenant : 3114, 24h/24, gratuit.',10.5,true,[122,30,30]);
@@ -567,7 +567,7 @@ d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(106,104,120);d.t
 {const L=txt(pdfSummary(r),11,false);card(16+L.length*5.2,yy=>{h2('En bref',yy+10);txt('',11);d.text(L,M+8,yy+18)})}
 {const A=(BADV[r.theme]||[]).map(a=>txt(a,10.5,false,null,CW-30));const h=14+A.reduce((s,l)=>s+l.length*5+4,0);card(h,yy=>{h2('Mes conseils',yy+10);let z=yy+19;A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+12,z-1.4,3.2,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(9);d.text(String(i+1),M+12,z-.3,{align:'center'});d.setTextColor(37,36,45);d.setFont('helvetica','normal');d.setFontSize(10.5);d.text(L,M+19,z);z+=L.length*5+4})})}
 const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));
-{const rows=lines.map(([n,ds])=>({n,L:txt(ds,9.5,false,null,CW-58)}));const h=14+rows.reduce((s,o)=>s+Math.max(1,o.L.length)*4.6+3,0);card(h,yy=>{h2('Numéros vérifiés pour ce thème',yy+10);let z=yy+18;rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(11);d.setTextColor(...hex(T.ink));d.text(o.n,M+8,z);d.setFont('helvetica','normal');d.setFontSize(9.5);d.setTextColor(74,72,88);d.text(o.L,M+50,z);z+=Math.max(1,o.L.length)*4.6+3})})}
+{const rows=lines.map(([n,ds])=>({n,L:txt(ds,9.5,false,null,CW-16)}));const h=14+rows.reduce((s,o)=>s+5+o.L.length*4.4+3,0);card(h,yy=>{h2('Numéros vérifiés pour ce thème',yy+10);let z=yy+18;rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(11);d.setTextColor(...hex(T.ink));d.text(o.n,M+8,z);d.setFont('helvetica','normal');d.setFontSize(9.5);d.setTextColor(74,72,88);d.text(o.L,M+8,z+4.8);z+=5+o.L.length*4.4+3})})}
 const picks=await pdfPicks(r.theme);
 if(picks&&picks.length){const rows=picks.map(({cat,x})=>{const info=[x.prof,[x.addr||x.ville].filter(Boolean).join(''),x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join('  ·  ');return{nm:x.name,info:txt(info,9,false,null,CW-60),tel:x.phone||'',cat}});
 const h=18+rows.reduce((s,o)=>s+5+o.info.length*4.2+3,0);card(h,yy=>{h2('Professionnels à contacter près de '+place,yy+10);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(106,104,120);d.text('Les plus proches selon les annuaires officiels (RPPS, FINESS). Vérifie avant de te déplacer.',M+8,yy+15.5);let z=yy+23;
