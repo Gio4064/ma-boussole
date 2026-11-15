@@ -114,6 +114,10 @@ button.big{padding:14px 22px;font-size:1rem}
 .pc-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .pc-btn{flex:1 1 150px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--bd);font-weight:700;text-decoration:none;color:var(--tx);background:transparent;text-align:center}
 .pc-btn:hover{border-color:currentColor}
+.reco{display:flex;gap:12px;align-items:flex-start;background:var(--ac2);border-radius:14px;padding:12px 14px;margin:10px 0}
+.reco-ico{font-size:1.6rem;line-height:1}
+.reco-line{margin:10px 0 0}
+.next-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.next-actions button{margin:0}
 </style>
 </head>
 <body>
@@ -270,9 +274,41 @@ const L=LV[r.lv];
 if(r.theme==='viol'||r.theme==='harc')h+=EXIT_TIP;
 h+=`<div class="card"><h2>${esc(r.label)}</h2><div class="row"><span>Résultat</span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${r.sc/r.max*100}%;background:${L[1]}"></i></div><p class="mu">Repère indicatif issu de tes réponses, pas un diagnostic.</p></div>`;
 h+=`<div class="card"><h2>Conseils</h2><ul>${advOf(r).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
-h+=`<div class="card"><h2>Étape suivante</h2>${minorNote()}<p>${r.lv==2?"Tes réponses suggèrent qu’un accompagnement par un professionnel ou une structure spécialisée serait utile.":r.lv==1?"Un échange avec un professionnel ou une ligne d’écoute peut t’aider, avant que la situation ne s’installe.":"Tu sembles plutôt bien sur ce thème. Refais ce bilan si la situation change."}</p><button onclick="go('aide')">📍 Trouver de l’aide près de chez moi</button><button class="s" onclick="pdf()">📄 Mon PDF</button><button class="s" onclick="go('bilan')">🧭 Faire un autre thème</button>${user?'<label style="display:block;margin:8px 0" class="mu"><input type="checkbox" id="delAfter"> Supprimer ce bilan de mon historique après le téléchargement</label>':''}<p class="mu" id="msg"></p></div>`;
-h+=nearCard('nearRes',CATS[r.theme]||CATS_DEFAULT,'📍 Près de chez toi — '+esc(r.label));
+const rc=recoFor(r);
+h+=`<div class="card next"><h2>Ta prochaine étape</h2>${minorNote()}<p>${rc.intro}</p>${rc.cat?`<div class="reco"><span class="reco-ico" aria-hidden="true">${catIcon(rc.cat[1])}</span><div><b>${esc(rc.title)}</b><p class="mu" style="margin:2px 0 0">${rc.why}</p></div></div>`:''}${rc.line?`<p class="reco-line">📞 <b>${rc.line[0]}</b> — ${rc.line[1]}</p>`:''}
+<div class="next-actions"><button class="s" onclick="pdf()">📄 Télécharger mon bilan (PDF)</button><button class="s" onclick="go('bilan')">🧭 Faire un autre thème</button>${rc.cat?'':'<button class="s" onclick="go(\'aide\')">📍 Trouver de l’aide si besoin</button>'}</div>${user?'<label style="display:block;margin:8px 0" class="mu"><input type="checkbox" id="delAfter"> Supprimer ce bilan de mon historique après le téléchargement</label>':''}<p class="mu" id="msg"></p></div>`;
+if(rc.cat)h+=nearCard('nearRes',[rc.cat],'📍 '+esc(rc.title)+' près de chez toi')+`<p class="mu" style="margin:-4px 4px 16px;font-size:.9rem">Tu cherches autre chose ? <a href="#" onclick="go('aide');return false">Voir tous les types d’aide</a></p>`;
 $('v').innerHTML=h}
+
+function recoFor(r){const Q=qset(r.theme,r.age),A=r.ans||[],minor=minorAge(r.age),kid=r.age==='enfant';
+const hi=re=>Q.some((x,i)=>A[i]!=null&&(x.r?3-A[i]:A[i])>=2&&re.test(x.t));
+const CMP=['centre médico-psychologique',kid||minor?'Centre médico-psychologique (CMP / CMPP)':'Centre médico-psychologique (CMP)'],PSY=['psychologue','Psychologue'],MG=['médecin généraliste','Médecin généraliste'],ASS=['assistant service social','Assistant·e de service social'],
+HEB=['hébergement urgence','Hébergement d’urgence'],CSAPA=['csapa addictologie','CSAPA, centre d’addictologie'],DIET=['diététicien','Diététicien·ne'];
+const WHY={'centre médico-psychologique':minor?'Gratuit, avec des psychologues et des médecins qui reçoivent les enfants et les ados.':'Gratuit, avec une équipe (psychologue, psychiatre, infirmier) qui peut te recevoir rapidement.',
+'psychologue':'Pour parler de ce que tu vis et trouver des solutions concrètes. Avec Mon soutien psy, des séances peuvent être remboursées.',
+'médecin généraliste':'Ton premier interlocuteur : il fait le point sur ta santé et t’oriente vers le bon spécialiste.',
+'assistant service social':'Pour t’aider dans tes démarches (logement, droits, protection) et t’orienter vers les bonnes structures.',
+'hébergement urgence':'Pour être mis·e à l’abri rapidement si tu dois quitter ton logement. Appelle aussi le 115 (gratuit, 24h/24).',
+'csapa addictologie':'Gratuit et confidentiel : une équipe spécialisée pour réduire ou arrêter, à ton rythme.',
+'diététicien':'Pour retrouver une alimentation régulière et apaisée, sans régime.'};
+let c=null,line=null;const sec=r.sec,lv=r.lv;
+const T=r.theme;
+if(lv===0&&!sec){const L0={conf:null,harc:minor?['3018','harcèlement, gratuit, 7j/7 de 9h à 23h']:null,viol:minor?['119','enfance en danger, 24h/24, gratuit']:['3919','Violences Femmes Info, 24h/24, gratuit']};
+return{intro:'Tes réponses ne montrent pas de difficulté importante sur ce thème. Continue ce qui te fait du bien, et refais ce bilan si la situation change.',cat:null,line:L0[T]||null}}
+switch(T){
+case'conf':c=minor&&lv===2?CMP:PSY;break;
+case'harc':c=minor||sec?CMP:PSY;line=minor?['3018','harcèlement à l’école et en ligne, gratuit, 7j/7 de 9h à 23h']:['3018','harcèlement en ligne, gratuit, 7j/7 de 9h à 23h'];break;
+case'viol':if(minor){c=CMP;line=['119','enfance en danger, 24h/24, gratuit, ne s’affiche pas sur la facture']}else{c=(sec||hi(/peur|coup|menace|sécurité|frapp/i))&&lv===2?HEB:ASS;line=['3919','Violences Femmes Info, 24h/24, gratuit, anonyme']}break;
+case'anx':c=hi(/palpitation|cœur|panique|souffle|vertige/i)?MG:lv===2?CMP:PSY;break;
+case'hum':c=sec||lv===2?CMP:(minor?CMP:MG);line=sec?['3114','prévention du suicide, 24h/24, gratuit']:null;break;
+case'soc':c=minor?CMP:lv===2?PSY:ASS;line=minor?null:['SOS Amitié','09 72 39 40 50, écoute 24h/24'];break;
+case'add':c=kid?MG:CSAPA;break;
+case'ali':c=hi(/vomi|laxatif|saute des repas|sauter/i)||lv===2?MG:(minor?MG:DIET);line=['FFAB','09 69 325 900, lun, mar, jeu, ven 16h-18h'];break;
+default:c=PSY}
+if(sec&&!line)line=minor?['119','24h/24, gratuit']:['3114','24h/24, gratuit'];
+if(T==='hum'&&minor&&!sec)line=['Fil Santé Jeunes','0 800 235 236, 7j/7 de 9h à 23h, gratuit'];
+const intro=lv===2||sec?'Tes réponses montrent que ce thème pèse fortement en ce moment. Voici <b>l’aide la plus adaptée</b> à ta situation :':'Tes réponses montrent des signaux à surveiller. En parler tôt peut éviter que ça s’installe. Voici <b>l’aide la plus adaptée</b> :';
+return{intro,cat:[c[1],c[0]],title:c[1],why:WHY[c[0]]||'',line}}
 function catList(){return [['Toutes les catégories','__all'],...(CATS[aideThemeSel]||CATS_DEFAULT)]}
 let aideKeepCat=false;
 function aideV(){if(!aideKeepCat)catSel=null;aideKeepCat=false;place='';osmList=[];resGroups=null;resPage=1;resFilter='all';osmGen++;const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
@@ -576,7 +612,7 @@ const base=['Sur le thème '+t+', tu sembles plutôt bien en ce moment.','Sur le
 const cnt=an.n?(n?' '+n+' de tes '+an.n+' réponses sont « souvent » ou « presque toujours » difficiles.':' Aucune de tes '+an.n+' réponses n’est marquée comme fréquemment difficile.'):'';
 const end=['Continue ce qui te fait du bien et refais ce bilan si la situation change.','En parler tôt, à un professionnel ou à une ligne d’écoute, peut éviter que cela s’installe.','Un accompagnement par un professionnel serait vraiment utile : tu n’as pas à porter cela seul·e.'][r.lv];
 return base+cnt+' '+end}
-async function pdfPicks(theme,max){if(!place)return null;try{const ref=await geoOf(place);if(!ref)return null;const cats=(CATS[theme]||CATS_DEFAULT).filter(c=>DATA_CAT[c[1].toLowerCase()]).slice(0,3);
+async function pdfPicks(rc,max){if(!place||!rc.cat)return null;try{const ref=await geoOf(place);if(!ref)return null;const cats=[rc.cat].filter(c=>DATA_CAT[c[1].toLowerCase()]);
 const lists=[];for(const[label,t]of cats){const L=await dataSearch(ref,curKm(),DATA_CAT[t.toLowerCase()]);lists.push(L&&L.length?sortRes(L.slice()):[])}
 const out=[];for(let k=0;out.length<max&&k<max;k++)lists.forEach(L=>{if(L[k]&&out.length<max)out.push(L[k])});return out}catch(e){return null}}
 async function pdf(){const m=$('msg');try{m.textContent='Préparation du PDF…';const r=res,T=PDF_THEME[r.theme]||PDF_THEME.hum,LVC=['#2f9e6b','#e0a030','#d9534f'][r.lv];const an=pdfAnalyse(r);
@@ -610,17 +646,17 @@ y+=h+G}
 {const A=an.tips.map(t=>wrap(t,9.5,0,CW-22));const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0);box(M,y,CW,h);head('Mes conseils personnalisés',M,y);let z=y+16;
 A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});y+=h+G}
 const avail=297-14-y;
-{const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2)).slice(0,3);
+{const rc=recoFor(r);const idx=THEME_HOTLINE_IDX[r.theme];let lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));if(rc.line)lines=[rc.line].concat(lines.filter(l=>l[0]!==rc.line[0]));lines=lines.slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
-const maxP=Math.max(0,Math.min(5,Math.floor((avail-18)/10.5)));const picks=maxP?await pdfPicks(r.theme,maxP):null;
+const maxP=Math.max(0,Math.min(5,Math.floor((avail-26)/10.5)));const picks=maxP?await pdfPicks(rc,maxP):null;
 const rowsR=(picks||[]).map(x=>({nm:(()=>{const w=x.phone?HW-42:HW-12;font(9.5,1);let t=String(x.name);if(d.getTextWidth(t)<=w)return t;while(t.length>3&&d.getTextWidth(t+'…')>w)t=t.slice(0,-1);return t.trim()+'…'})(),tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
 let hL=14;const keepL=[];for(const o of rowsL){const add=LH(10)+o.L.length*LH(8.5)+2.5;if(hL+add>avail)break;hL+=add;keepL.push(o)}
-const hR=rowsR.length?18+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
+const hR=rowsR.length?26+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
 box(M,y,HW,h);head('Numéros vérifiés',M,y);let z=y+15;keepL.forEach(o=>{font(10,1,INK);d.text(o.n,M+6,z);z+=LH(10);font(8.5,0,MU);d.text(o.L,M+6,z);z+=o.L.length*LH(8.5)+2.5});
 const x2=M+HW+G;box(x2,y,HW,h);
-if(rowsR.length){head('À contacter près de '+place,x2,y);font(7.5,0,MU);d.text('Les plus proches (annuaires officiels RPPS / FINESS)',x2+6,y+12.5);z=y+18.5;
+if(rowsR.length){head('Ton aide conseillée',x2,y);font(8.5,1,TX);d.text(d.splitTextToSize(rc.title+' près de '+place,HW-12)[0],x2+6,y+13);font(7.5,0,MU);const wy=d.splitTextToSize(rc.why,HW-12).slice(0,2);d.text(wy,x2+6,y+17);z=y+18.5+wy.length*3.4+2;
 rowsR.forEach(o=>{font(9.5,1,TX);d.text(o.nm,x2+6,z);if(o.tel){font(9,1,INK);d.text(o.tel,x2+HW-6,z,{align:'right'})}z+=LH(9.5)+.6;font(8.5,0,MU);d.text(o.info,x2+6,z);z+=LH(9.5)+2.6})}
-else{head('Vers qui te tourner',x2,y);const C=(CATS[r.theme]||CATS_DEFAULT).slice(0,4).map(c=>c[0]);const L=wrap(C.join(', ')+'. Indique ta ville sur la page de résultat avant de télécharger pour voir ici les plus proches.',9,0,HW-12);font(9,0,TX);d.text(L.slice(0,Math.max(1,Math.floor((h-16)/LH(9)))),x2+6,y+15)}
+else{head(rc.cat?'Ton aide conseillée':'Si un jour tu en as besoin',x2,y);const L=wrap(rc.cat?rc.title+' : '+rc.why+' Indique ta ville sur la page de résultat avant de télécharger pour voir ici les plus proches.':'Pas de besoin particulier d’après tes réponses. Si la situation change, refais ce bilan : Ma Boussole t’indiquera l’aide la plus adaptée près de chez toi.',9,0,HW-12);font(9,0,TX);d.text(L.slice(0,Math.max(1,Math.floor((h-16)/LH(9)))),x2+6,y+15)}
 y+=h}
 font(7.5,0,MU);d.text('Urgence : 112  ·  SAMU 15  ·  Prévention du suicide 3114 (24h/24, gratuit)   —   Bilan indicatif, pas un diagnostic  ·  gio4064.github.io/ma-boussole',W/2,291,{align:'center'});
 const fname='mon-bilan-'+r.date.replace(/\//g,'-')+'.pdf';
