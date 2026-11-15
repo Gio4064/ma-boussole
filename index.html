@@ -571,6 +571,10 @@ html.noscroll{overflow:hidden}
 @media(max-width:900px){.dos-grid{grid-template-columns:1fr}.dos-in{grid-template-columns:1fr;padding:22px}}
 @media(max-width:640px){#toast{bottom:calc(76px + var(--tbh,0px))}.dos-stats{grid-template-columns:1fr 1fr}.ex-form{grid-template-columns:1fr}.dos-feat{grid-template-columns:1fr}.ex-d{width:30px;height:30px}.dos-tabs{overflow-x:auto}}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
+.ex-why{margin:4px 0 0;font-size:.8rem;color:var(--tx);background:color-mix(in srgb,var(--ac) 7%,transparent);border-left:3px solid color-mix(in srgb,var(--ac) 50%,transparent);padding:5px 9px;border-radius:0 8px 8px 0;line-height:1.45}
+.rx{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--bd)}.rx:first-of-type{border-top:0;padding-top:0}
+.rx-ic{flex:none;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1.3rem;background:var(--ac2)}.rx>div{flex:1;min-width:0}
+.bc-ex{margin:8px 0 0;font-size:.82rem;color:var(--mu)}.bc-ex b{color:var(--tx);font-weight:650}
 </style>
 </head>
 <body>
@@ -791,6 +795,7 @@ if(r.theme==='viol'||r.theme==='harc')h+=EXIT_TIP;
 h+=`<div class="card"><h2>${esc(r.label)}</h2><div class="row"><span>Résultat</span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${r.sc/r.max*100}%;background:${L[1]}"></i></div><p class="mu">Repère indicatif issu de tes réponses, pas un diagnostic.</p></div>`;
 {const an=pdfAnalyse(r);if(an.neg.length||an.pos.length)h+=`<div class="card"><h2>Ce qui ressort de ton bilan</h2><div class="ana">${an.neg.length?`<div><h3>À travailler</h3><ul class="ana-neg">${an.neg.map(o=>`<li><b>${esc(o.txt)}</b><span class="mu">Ex. : « ${esc(o.ex.t.replace(/\.$/,''))} » — ${ansLabel(o.ex.q,o.ex.a,r.age)}</span></li>`).join('')}</ul></div>`:''}<div><h3>Tes points d’appui</h3><ul class="ana-pos">${an.pos.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div></div>`}
 h+=`<div class="card"><h2>Conseils</h2><ul>${advOf(r).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+{const pk=r.exP||(r.exP=exPick(r));h+=`<div class="card res-ex"><h2>Tes exercices pour les jours qui viennent</h2><p class="mu" style="margin:-4px 0 12px;font-size:.9rem">Ils ont été choisis d’après tes réponses. ${r.fromDos||user?'Ils sont dans ton dossier, avec une case à cocher chaque jour.':'Enregistre ton bilan pour les suivre jour après jour dans ton dossier.'}</p>${pk.map((o,i)=>{const e=EX[o.key];return`<div class="rx"><span class="rx-ic" aria-hidden="true">${e.ic}</span><div><div class="ex-top"><b>${e.t}</b><span class="ex-f">${e.f==='s'?'1 fois par semaine':'Chaque jour'}</span></div><p class="ex-dsc">${e.d}</p><p class="ex-why">${esc(o.why)}</p></div></div>`}).join('')}${user?'<button class="s" style="margin-top:6px" onclick="dosGo(\'ex\')">Voir mon programme</button>':''}</div>`}
 const rc=recoFor(r);
 h+=`<div class="card next"><h2>Ta prochaine étape</h2>${minorNote()}<p>${rc.intro}</p>${rc.cat?`<div class="reco"><span class="reco-ico" aria-hidden="true">${catIcon(rc.cat[1])}</span><div><b>${esc(rc.title)}</b><p class="mu" style="margin:2px 0 0">${rc.why}</p></div></div>`:''}${rc.line?`<p class="reco-line">📞 <b>${rc.line[0]}</b> — ${rc.line[1]}</p>`:''}
 <div class="next-actions"><button onclick="pdf()" aria-describedby="pdfHint">⬇️ Télécharger mon bilan en PDF</button><button class="s" onclick="go('bilan')">🧭 Faire un autre thème</button>${rc.cat?'':'<button class="s" onclick="go(\'aide\')">📍 Trouver de l’aide si besoin</button>'}</div><p class="mu" id="pdfHint" style="margin:6px 0 0;font-size:.88rem">Un fichier d’une page à garder ou à montrer à un professionnel : ton résultat, ce qui ressort de tes réponses, tes conseils et l’aide conseillée près de chez toi.</p>${r.fromDos?'':user?'<p class="dos-saved" id="dosSaved">Enregistrement dans ton dossier…</p>':`<div class="dos-cta"><div><b>Garde ce bilan et reçois ton programme d’exercices</b><span>Ton dossier personnel, gratuit : bilans, exercices suivis jour après jour et documents, chiffrés sur cet appareil.</span></div><button class="s" onclick="pendingSave=res;openAcct('signup')">Enregistrer dans mon dossier</button></div>`}<p class="mu" id="msg"></p></div>`;
@@ -1241,8 +1246,14 @@ N.forEach(o=>{d.setFillColor(...hex(LVC));d.circle(M+7.2,z-1.2,1.1,'F');font(9.5
 const x2=M+HW+G;box(x2,y,HW,h);head('Tes points d’appui',x2,y);z=y+15.5;
 P.forEach(L=>{d.setFillColor(47,158,107);d.circle(x2+7.2,z-1.2,1.1,'F');font(9.5,0,TX);d.text(L,x2+10,z);z+=L.length*LH(9.5)+3});
 y+=h+G}
-{const A=an.tips.map(t=>wrap(t,9.5,0,CW-22));const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0);box(M,y,CW,h);head('Mes conseils personnalisés',M,y);let z=y+16;
-A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});y+=h+G}
+{const A=an.tips.slice(0,2).map(t=>wrap(t,9.5,0,CW-22));const pk=(r.exP||(r.exP=exPick(r)));
+const X=pk.map(o=>{const e=EX[o.key];const w=wrap(o.why,8,0,CW-60);return{t:e.t,f:e.f==='s'?'1 fois par semaine':'Chaque jour',w:w.length>1?w[0].replace(/\s*\S*$/,'')+'…':w[0]}});
+const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0)+9+X.length*(LH(9.5)+LH(8)+3.2)+LH(7.5)+2;box(M,y,CW,h);head('Mes conseils et mes exercices',M,y);let z=y+16;
+A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});
+z+=1;d.setDrawColor(228,226,238);d.setLineWidth(.3);d.line(M+6,z,W-M-6,z);z+=6;font(8.5,1,INK);d.text('À faire dans les prochains jours, choisis d’après tes réponses :',M+6,z);z+=LH(9.5)+1.2;
+X.forEach(o=>{d.setDrawColor(...hex(T.c1));d.setLineWidth(.5);d.roundedRect(M+7,z-3.2,3.6,3.6,.8,.8,'S');font(9.5,1,TX);d.text(o.t,M+14,z);font(8,1,INK);d.text(o.f,W-M-6,z,{align:'right'});z+=LH(8)+.6+1.6;font(8,0,MU);d.text(o.w,M+14,z);z+=LH(9.5)+1.4});
+font(7.5,0,MU);d.text(user?'Ces exercices sont dans ton dossier Ma Boussole, avec un suivi jour après jour.':'Crée ton dossier gratuit sur Ma Boussole pour les suivre jour après jour.',M+6,z+.5);
+y+=h+G}
 const avail=297-14-y;
 {const rc=recoFor(r);const idx=THEME_HOTLINE_IDX[r.theme];let lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));if(rc.line)lines=[rc.line].concat(lines.filter(l=>l[0]!==rc.line[0]));lines=lines.slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
@@ -1613,19 +1624,35 @@ setTimeout(()=>{const k=$('srchK');if(k&&/Mac|iPhone|iPad/.test(navigator.platfo
 /* ===== Mon dossier : bilans, exercices suivis, documents, évolution ===== */
 let dosTab='home',pendingSave=null;
 const EX={
-respire:{t:'Respirer 1 minute',d:'Cohérence cardiaque : inspire 5 secondes, expire 5 secondes, pendant 1 minute.',f:'j',ic:'🫁',go:'toolBreath()'},
-ancrage:{t:'Ancrage 5-4-3-2-1',d:'Quand l’angoisse monte : 5 choses que tu vois, 4 que tu touches, 3 sons, 2 odeurs, 1 goût.',f:'s',ic:'🖐️',go:'ancrageOpen()'},
-gratitude:{t:'3 petites réussites',d:'Le soir, note 3 choses qui se sont bien passées dans ta journée, même minuscules.',f:'j',ic:'✍️'},
-marche:{t:'10 minutes dehors',d:'Sors marcher à la lumière du jour, sans téléphone si tu peux.',f:'j',ic:'🚶'},
-message:{t:'Un message à un proche',d:'Écris à quelqu’un, même juste pour prendre des nouvelles.',f:'s',ic:'💬'},
-inquietude:{t:'Le temps inquiétude',d:'15 minutes à heure fixe pour noter tes soucis, puis tu passes à autre chose.',f:'j',ic:'🗒️'},
-sommeil:{t:'Écrans coupés avant de dormir',d:'Une heure avant le coucher, pose le téléphone et les écrans.',f:'j',ic:'🌙'},
-defi:{t:'Le micro-défi de la semaine',d:'Une chose un peu inconfortable : donner ton avis, poser une question, essayer un truc nouveau.',f:'s',ic:'🎯'},
-limite:{t:'Ma limite du jour',d:'Fixe une limite précise (quantité, durée ou budget) et note si tu l’as tenue.',f:'j',ic:'🧭'},
-repas:{t:'3 repas à heures régulières',d:'Petit-déjeuner, déjeuner et dîner à peu près aux mêmes heures.',f:'j',ic:'🍽️'},
-preuves:{t:'Noter les faits',d:'Garde une trace datée de ce qui se passe : messages, dates, lieux, témoins.',f:'s',ic:'📎'},
-plan:{t:'Relire mon plan de sécurité',d:'Vérifie que ton plan est à jour : signaux d’alerte, personnes à appeler, numéros.',f:'s',ic:'🛟',go:"go('plan')"}};
-const EX_BY={conf:['gratitude','defi','respire'],harc:['preuves','message','respire','plan'],viol:['plan','preuves','respire'],anx:['respire','ancrage','inquietude','sommeil'],hum:['marche','gratitude','message','sommeil'],soc:['message','marche','defi'],add:['limite','sommeil','respire'],ali:['repas','respire','gratitude']};
+respire:{t:'Respirer 1 minute',d:'Cohérence cardiaque : inspire 5 secondes, expire 5 secondes, pendant 1 minute.',f:'j',ic:'🫁',go:'toolBreath()',q:/stress|nerveu|tension|détendre|calme|pression|à bout|irritable/i},
+ancrage:{t:'Ancrage 5-4-3-2-1',d:'Quand l’angoisse monte : 5 choses que tu vois, 4 que tu touches, 3 sons, 2 odeurs, 1 goût.',f:'s',ic:'🖐️',go:'ancrageOpen()',q:/panique|crise|cœur|vertige|souffle|déconnecté|vide|peur de rentrer|peur dans/i},
+inquietude:{t:'Le temps inquiétude',d:'15 minutes à heure fixe pour noter tes soucis, puis tu passes à autre chose.',f:'j',ic:'🗒️',q:/inquiét|anticipe le pire|rumine|repense|arrêter de m|tourne/i,th:['anx','conf','hum','soc','ali']},
+sommeil:{t:'Écrans coupés avant de dormir',d:'Une heure avant le coucher, pose le téléphone et les écrans, et garde la même heure de lever.',f:'j',ic:'🌙',q:/dormir|endormir|sommeil|nuit|cauchemar|tard|fatigué·e le matin/i},
+gratitude:{t:'3 petites réussites',d:'Le soir, note 3 choses qui se sont bien passées dans ta journée, même minuscules.',f:'j',ic:'✍️',q:/fier|réussi|qualités|satisfait|content·e d’être|bien la plupart|triste|sans espoir|ne s’amélioreront/i},
+plaisir:{t:'Un moment plaisir',d:'Prévois une petite activité agréable, même sans envie : l’envie revient souvent après l’avoir commencée.',f:'j',ic:'🎈',q:/plaisir|intérêt|ennuie|profiter|envie de jouer|envie de rien|rigole|week-end/i},
+marche:{t:'10 minutes dehors',d:'Sors marcher à la lumière du jour, sans téléphone si tu peux.',f:'j',ic:'🚶',q:/énergie|fatigu|ralenti|lever|chambre|effort|lourd/i},
+tache:{t:'Une seule petite tâche',d:'Choisis une tâche minuscule et fais-la : ranger une chose, répondre à un message. Finir redonne de l’élan.',f:'j',ic:'✔️',q:/dépassé|obligations|repousse|remets|devoirs|trop de choses/i},
+compassion:{t:'Me parler comme à un ami',d:'Quand une pensée dure revient, écris ce que tu dirais à un ami dans la même situation.',f:'j',ic:'💛',q:/nul|bête|coupable|faute|poids pour|à la hauteur|dévalorise|négatives|ne servir à rien|moins bien que|erreurs|valeur/i},
+defi:{t:'Le micro-défi de la semaine',d:'Une chose un peu inconfortable : donner ton avis, poser une question, lever la main.',f:'s',ic:'🎯',q:/ose|prendre la parole|avis|jugement|lever la main|n’ose pas dire|cacher pour|me tromper/i,th:['conf','soc','anx']},
+message:{t:'Un message à un proche',d:'Écris à quelqu’un, même juste pour prendre des nouvelles. Le lien se garde par petits gestes.',f:'s',ic:'💬',q:/seul|isole|contact|amis|copain|incompris|perdu|vide affectif|disparaissais/i},
+confiance:{t:'Ma personne de confiance',d:'Choisis une personne à qui parler de ce que tu vis, et prévois un moment avec elle cette semaine.',f:'s',ic:'🤝',q:/personne ne me croirait|n’ose pas en parler|seul·e face|seul·e avec ce|personne à qui|personne vers qui|confiance|à qui je peux|demander de l’aide/i},
+groupe:{t:'Une activité avec d’autres',d:'Teste un club, une association, un atelier ou un bénévolat près de chez toi.',f:'s',ic:'🧩',q:/exclu|écart|groupe|nouveaux|activité|invit|différent·e|anniversaires|récré/i,th:['soc','conf','hum']},
+detente:{t:'Détendre le corps',d:'5 minutes : contracte puis relâche chaque groupe de muscles, des pieds jusqu’au visage.',f:'j',ic:'🧘',q:/tension|mâchoire|boule au ventre|mal au ventre|mal à la tête|crispé/i},
+detox:{t:'Une heure sans écran',d:'Choisis un créneau chaque jour sans téléphone, jeux ni vidéos, et fais autre chose.',f:'j',ic:'📵',q:/écran|téléphone|jeux|jouer|scroll|vidéo|réseaux|notifications|tablette|console/i,th:['add','anx','hum','soc','conf']},
+limite:{t:'Ma limite du jour',d:'Fixe une limite précise (quantité, durée ou budget) avant de commencer, et note si tu l’as tenue.',f:'j',ic:'🧭',q:/plus que prévu|plus que ce que|quantités|dépense|argent|paris|consomme/i,th:['add']},
+envie:{t:'Laisser passer l’envie',d:'Quand l’envie arrive, attends 10 minutes en respirant : elle monte, puis redescend. Note ce qui l’a déclenchée.',f:'j',ic:'🌊',q:/besoin de consommer|manque|irrit|pense régulièrement|pense souvent|pense aux jeux|fuir|oublier|émotions difficiles/i,th:['add']},
+repas:{t:'3 repas à heures régulières',d:'Petit-déjeuner, déjeuner et dîner à peu près aux mêmes heures, sans en sauter.',f:'j',ic:'🍽️',q:/repas|saute|grande quantité|très vite|perdre le contrôle|faim|compenser/i,th:['ali','hum']},
+corps:{t:'Merci à mon corps',d:'Note une chose que ton corps t’a permis de faire aujourd’hui, plutôt que de juger son apparence.',f:'j',ic:'🌱',q:/corps|miroir|gros|maigre|poids|compar|pèse|grossir/i,th:['ali','conf']},
+preuves:{t:'Noter les faits',d:'Garde une trace datée de ce qui se passe : messages, captures, dates, lieux, témoins.',f:'s',ic:'📎',q:/messages|photos|rumeur|insult|menace|coups|frapp|tape|moqu|chantage|surnom|bouscul|faux compte|humili/i,th:['harc','viol']},
+plan:{t:'Mon plan de sécurité à jour',d:'Relis et complète ton plan : signaux d’alerte, ce qui t’aide, personnes et numéros à appeler.',f:'s',ic:'🛟',go:"go('plan')",q:/me faire du mal|ne plus vivre|si je n’étais pas là|crains pour ma sécurité|peur de ce qui pourrait|peur de rentrer|danger|fuguer/i}};
+const EX_BY={conf:['compassion','gratitude','defi'],harc:['confiance','preuves','respire','plan'],viol:['plan','confiance','preuves'],anx:['respire','inquietude','ancrage','sommeil'],hum:['plaisir','marche','compassion','sommeil'],soc:['message','groupe','confiance'],add:['envie','limite','detox'],ali:['repas','corps','confiance']};
+function exPick(r){const Q=qset(r.theme,r.age),A=r.ans||[],sc={},why={};
+Q.forEach((x,i)=>{const a=A[i];if(a==null)return;const v=x.r?3-a:a;if(v<2)return;for(const k in EX){const e=EX[k];if(e.q&&e.q.test(x.t)&&(!e.th||e.th.includes(r.theme))){sc[k]=(sc[k]||0)+v+(x.sec?3:0);if(!why[k]||v>why[k].v)why[k]={v,x,a}}}});
+const D=EX_BY[r.theme]||[],rk=k=>{const i=D.indexOf(k);return i<0?9:i};
+const keys=Object.keys(sc).sort((a,b)=>sc[b]-sc[a]||rk(a)-rk(b));const N=r.lv===0&&keys.length<3?2:3,out=[];
+if((r.sec||(r.theme==='viol'&&r.lv===2))&&!out.includes('plan'))out.push('plan');
+for(const k of keys)if(!out.includes(k)&&out.length<N)out.push(k);for(const k of D)if(!out.includes(k)&&out.length<N)out.push(k);
+return out.map(k=>{const w=why[k];return{key:k,why:!w?`Conseillé pour le thème ${r.label}`:w.x.sec?'Conseillé d’après certaines de tes réponses : à préparer au calme, pour les moments difficiles.':`Tu as répondu « ${ansLabel(w.x,w.a,r.age)} » à « ${w.x.t.replace(/\.$/,'')} »`}})}
 const TH_IC=k=>(BTHEMES.find(t=>t[0]===k)||[])[2]||'🧭';
 function dosK(n){return'mb_'+n+'_'+user.hash}
 async function dosGet(n,d){return user?hGet(user.name,dosK(n),d):d}
@@ -1634,8 +1661,8 @@ function dosGo(t){dosTab=t||'home';go('dossier')}
 function uid(p){return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 async function dosHist(){const h=await dosGet('hist',[]);let ch=false;h.forEach((e,i)=>{if(!e.id){e.id='old'+i+'-'+(e.date||'').replace(/\D/g,'');ch=true}if(!e.ts){const m=String(e.date||'').match(/(\d+)\/(\d+)\/(\d+)/);e.ts=m?new Date(+m[3],+m[2]-1,+m[1],12).getTime():0;ch=true}});if(ch)await dosSet('hist',h);return h.sort((a,b)=>b.ts-a.ts)}
 async function dosSaveBilan(r){if(!user||!r)return 0;if(!r.id){r.id=uid('b');r.ts=Date.now()}
-const h=await dosGet('hist',[]);if(!h.some(e=>e.id===r.id)){h.push({id:r.id,ts:r.ts,date:r.date,theme:r.theme,label:r.label,sc:r.sc,max:r.max,lv:r.lv,sec:!!r.sec,age:r.age,ans:r.ans,place:r.place||''});await dosSet('hist',h)}
-const P=await dosGet('prog',[]);let n=0;for(const k of (EX_BY[r.theme]||[]).slice(0,r.lv===0?2:3)){if(!P.some(x=>x.key===k)){const e=EX[k];P.push({id:uid('x'),key:k,t:e.t,d:e.d,f:e.f,from:r.label+' du '+r.date,ts:Date.now(),done:[]});n++}}if(n)await dosSet('prog',P);r.exAdded=n;
+const h=await dosGet('hist',[]);if(!h.some(e=>e.id===r.id)){h.push({id:r.id,ts:r.ts,date:r.date,theme:r.theme,label:r.label,sc:r.sc,max:r.max,lv:r.lv,sec:!!r.sec,age:r.age,ans:r.ans,place:r.place||'',ex:(r.exP||(r.exP=exPick(r))).map(o=>o.key)});await dosSet('hist',h)}
+const P=await dosGet('prog',[]);let n=0;const pk=r.exP||(r.exP=exPick(r));for(const o of pk){const x=P.find(e=>e.key===o.key),e=EX[o.key];if(x){x.why=o.why;x.from=r.label+' du '+r.date}else{P.push({id:uid('x'),key:o.key,t:e.t,d:e.d,f:e.f,why:o.why,from:r.label+' du '+r.date,ts:Date.now(),done:[]});n++}}await dosSet('prog',P);r.exAdded=n;
 const el=$('dosSaved');if(el)el.innerHTML=`✓ Enregistré dans <a href="#" onclick="dosGo('bilans');return false">ton dossier</a>${n?`, avec ${n} exercice${n>1?'s':''} ajouté${n>1?'s':''} à <a href="#" onclick="dosGo('ex');return false">ton programme</a>`:''}.`;return n}
 function weekDays(){const t=new Date();t.setHours(12,0,0,0);const dow=(t.getDay()+6)%7;const m=new Date(t);m.setDate(t.getDate()-dow);return[...Array(7)].map((_,i)=>{const d=new Date(m);d.setDate(m.getDate()+i);return d})}
 function exStreak(x){const S=new Set(x.done);if(x.f==='s'){const wk=d=>{const c=new Date(d);c.setHours(12);c.setDate(c.getDate()-((c.getDay()+6)%7));return dayKey(c)};const W=new Set(x.done.map(k=>wk(new Date(k+'T12:00'))));let n=0;const c=new Date();c.setHours(12);if(!W.has(wk(c)))c.setDate(c.getDate()-7);while(W.has(wk(c))){n++;c.setDate(c.getDate()-7)}return n}
@@ -1644,7 +1671,7 @@ function exWeekCount(x){const D=weekDays().map(dayKey);return x.done.filter(k=>D
 function exStreakTxt(x){const n=exStreak(x);if(!n)return x.f==='s'?'Pas encore fait cette semaine':'Pas encore commencé';return x.f==='s'?`${n} semaine${n>1?'s':''} d’affilée`:`${n} jour${n>1?'s':''} d’affilée`}
 function exCard(x,compact){const today=dayKey(new Date()),E=EX[x.key]||{},J=['L','M','M','J','V','S','D'];
 const week=weekDays().map((d,i)=>{const k=dayKey(d),fut=k>today,on=x.done.includes(k);return`<button class="ex-d${on?' on':''}${k===today?' today':''}" ${fut?'disabled':''} aria-pressed="${on}" aria-label="${d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}${on?' : fait':''}" onclick="exToggle('${x.id}','${k}',this)"><span>${J[i]}</span></button>`}).join('');
-return`<article class="ex${compact?' ex-c':''}" data-x="${x.id}"><span class="ex-ic" aria-hidden="true">${E.ic||'⭐'}</span><div class="ex-b"><div class="ex-top"><b>${esc(x.t)}</b><span class="ex-f">${x.f==='s'?'1 fois par semaine':'Chaque jour'}</span></div>${compact?'':`<p class="ex-dsc">${esc(x.d||'')}</p>${x.from?`<p class="ex-from">Suite à ton bilan ${esc(x.from)}</p>`:x.key==='custom'?'<p class="ex-from">Ajouté par toi</p>':''}`}
+return`<article class="ex${compact?' ex-c':''}" data-x="${x.id}"><span class="ex-ic" aria-hidden="true">${E.ic||'⭐'}</span><div class="ex-b"><div class="ex-top"><b>${esc(x.t)}</b><span class="ex-f">${x.f==='s'?'1 fois par semaine':'Chaque jour'}</span></div>${compact?'':`<p class="ex-dsc">${esc(x.d||'')}</p>${x.why?`<p class="ex-why">${esc(x.why)}</p>`:''}${x.from?`<p class="ex-from">Suite à ton bilan ${esc(x.from)}</p>`:x.key==='custom'?'<p class="ex-from">Ajouté par toi</p>':''}`}
 <div class="ex-row"><div class="ex-week" role="group" aria-label="Cette semaine">${week}</div><span class="ex-st" data-st>${exStreakTxt(x)}</span></div>
 ${compact?'':`<div class="ex-act">${E.go?`<button class="s ex-go" onclick="exDo('${x.id}')">Faire maintenant</button>`:''}<button class="ex-del" onclick="twoStep(this,()=>exDel('${x.id}'))">Retirer du programme</button></div>`}</div></article>`}
 async function exToggle(id,k,btn){const P=await dosGet('prog',[]);const x=P.find(e=>e.id===id);if(!x)return;const i=x.done.indexOf(k);if(i>=0)x.done.splice(i,1);else x.done.push(k);x.done=x.done.slice(-500);await dosSet('prog',P);
@@ -1683,7 +1710,7 @@ async function dosDelBilan(id){const h=(await dosGet('hist',[])).filter(e=>e.id!
 function bilanCard(e,prev){const L=LV[e.lv||0],pct=e.max?Math.round(e.sc/e.max*100):0;let trend='';if(prev&&prev.max){const p0=Math.round(prev.sc/prev.max*100),dv=pct-p0;trend=dv<=-5?`<span class="bc-tr up">En amélioration depuis le ${prev.date}</span>`:dv>=5?`<span class="bc-tr dn">Plus difficile que le ${prev.date}</span>`:`<span class="bc-tr">Stable depuis le ${prev.date}</span>`}
 let ana='';try{if(e.ans&&e.ans.length){const an=pdfAnalyse(e);ana=an.neg.slice(0,2).map(o=>`<li>${esc(o.txt)}</li>`).join('')}}catch(x){}
 return`<article class="bc"><div class="bc-h"><span class="bc-ic" aria-hidden="true">${TH_IC(e.theme)}</span><div class="bc-t"><b>${esc(e.label||'Bilan')}</b><small>${e.date}${e.place?', '+esc(e.place):''}</small></div><span class="pill" style="background:${L[1]}">${L[0]}</span></div>
-<div class="bar"><i style="width:${pct}%;background:${L[1]}"></i></div>${trend}${ana?`<ul class="bc-ana">${ana}</ul>`:''}
+<div class="bar"><i style="width:${pct}%;background:${L[1]}"></i></div>${trend}${ana?`<ul class="bc-ana">${ana}</ul>`:''}${(e.ex&&e.ex.length)?`<p class="bc-ex"><b>Exercices conseillés :</b> ${e.ex.filter(k=>EX[k]).map(k=>EX[k].t).join(', ')}</p>`:''}
 <div class="bc-act"><button onclick="dosView('${e.id}')">Revoir le bilan</button><button class="s" onclick="dosPdf('${e.id}')">Télécharger le PDF</button><button class="ex-del" onclick="twoStep(this,()=>dosDelBilan('${e.id}'))">Supprimer</button></div></article>`}
 function evoChart(list){const W=320,H=120,P=10,n=list.length;const x=i=>n<2?W/2:P+i*(W-2*P)/(n-1),y=v=>P+(v/100)*(H-2*P);const pts=list.map((e,i)=>[x(i),y(e.max?e.sc/e.max*100:0),e]);
 const band=(a,b,c)=>`<rect x="0" y="${y(a)}" width="${W}" height="${y(b)-y(a)}" fill="${c}" opacity=".09"/>`;
