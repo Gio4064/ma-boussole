@@ -214,40 +214,6 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}.foot-links a{color:var(--tx);font-size:.88rem;font-weight:600;text-decoration:none}.foot-links a:hover{color:var(--ac);text-decoration:underline}
 .foot-note{margin:0;font-size:.8rem;color:var(--mu);max-width:80ch}
 
-.topbar{gap:10px}.topbar .mz{margin-left:auto}
-.mz{position:relative}
-.mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 16px 0 6px;border-radius:999px;background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:0 6px 18px -10px rgba(30,30,70,.35);font:650 .9rem system-ui,sans-serif;transition:border-color .2s,box-shadow .2s}
-.mz-bubble:hover{border-color:var(--ac)}.mz-bubble:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.mz-ico{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 50%,var(--accent)));color:#fff}
-.mz-bars{display:none;align-items:flex-end;gap:2px;height:16px;width:32px;justify-content:center}.mz-bars i{width:3px;border-radius:2px;background:var(--ac);animation:mzb 1.1s ease-in-out infinite}.mz-bars i:nth-child(2){animation-delay:.2s}.mz-bars i:nth-child(3){animation-delay:.45s}.mz-bars i:nth-child(4){animation-delay:.7s}
-.mz.on .mz-bars{display:inline-flex}.mz.on .mz-ico{display:none}
-@keyframes mzb{0%,100%{height:4px}50%{height:16px}}
-.mz-lbl{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mz-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:70;width:min(340px,calc(100vw - 32px));background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:22px;padding:14px;box-shadow:0 30px 60px -20px rgba(30,30,70,.45)}
-.mz-panel[hidden]{display:none}
-.mz-art{height:92px;border-radius:16px;margin-bottom:12px;background:radial-gradient(120% 120% at 0% 0%,color-mix(in srgb,var(--accent) 55%,transparent),transparent 55%),radial-gradient(120% 120% at 100% 100%,color-mix(in srgb,var(--ac) 70%,transparent),transparent 60%),var(--ac2);display:grid;place-items:center;overflow:hidden}
-.mz-disc{width:64px;height:64px;border-radius:50%;background:repeating-radial-gradient(circle,rgba(0,0,0,.55) 0 2px,rgba(0,0,0,.42) 2px 4px);box-shadow:0 8px 20px rgba(0,0,0,.25);position:relative}
-.mz-disc::after{content:"";position:absolute;inset:24px;border-radius:50%;background:var(--accent)}
-.mz.on .mz-disc{animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.mz-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mz-kick{display:block;font-size:.72rem;color:var(--ac);font-weight:700}
-.mz-title{display:block;font:700 1.15rem "Bricolage Grotesque",system-ui,sans-serif;margin:1px 0}.mz-sub{color:var(--mu);font-size:.8rem}
-.mz-x{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--mu);flex:none}.mz-x:hover{background:var(--ac2);color:var(--tx)}
-.mz-prog{height:4px;border-radius:2px;background:var(--ac2);margin:12px 0 6px;overflow:hidden}.mz-prog i{display:block;height:100%;width:0;background:var(--ac);transition:width .5s linear}
-.mz-ctl{display:flex;justify-content:space-between;align-items:center;gap:6px;margin:6px 0 8px}
-.mz-c{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--tx)}.mz-c:hover{background:var(--ac2)}.mz-c.act{color:var(--ac)}
-.mz-play{all:unset;cursor:pointer;width:58px;height:58px;display:grid;place-items:center;border-radius:50%;background:var(--tx);color:var(--card);box-shadow:0 10px 22px -10px rgba(0,0,0,.55)}
-.mz-c:focus-visible,.mz-play:focus-visible,.mz-x:focus-visible,.mz-list button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
-.mz-tim{border:1px solid var(--bd);border-radius:999px;background:var(--card);color:var(--mu);font:600 .74rem system-ui,sans-serif;padding:6px 6px;max-width:80px}
-.mz-vol{display:flex;align-items:center;gap:8px;color:var(--mu)}.mz-vol input{flex:1;accent-color:var(--ac);margin:0}
-.mz-list{display:flex;flex-direction:column;gap:2px;margin:10px 0 6px;max-height:220px;overflow:auto}
-.mz-list button{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:12px}
-.mz-list button:hover{background:var(--ac2)}.mz-list button.sel{background:color-mix(in srgb,var(--ac) 10%,transparent)}
-.mz-n{width:22px;text-align:center;font:600 .78rem ui-monospace,system-ui;color:var(--mu)}.mz-list .sel .mz-n{color:var(--ac)}
-.mz-tt{display:flex;flex-direction:column;font:600 .88rem system-ui,sans-serif;min-width:0}.mz-tt small{font-weight:400;color:var(--mu);font-size:.74rem}
-.mz-eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px}.mz-eq i{width:3px;background:var(--ac);border-radius:1px;animation:mzb .9s ease-in-out infinite}.mz-eq i:nth-child(2){animation-delay:.25s}.mz-eq i:nth-child(3){animation-delay:.5s}
-.mz-note{margin:6px 2px 0;font-size:.7rem;color:var(--mu)}
-@media (max-width:640px){.mz-lbl{display:none}.mz-bubble{padding:0 6px}.mz-panel{position:fixed;left:16px;right:16px;top:auto;bottom:max(16px,env(safe-area-inset-bottom,0px));width:auto}}
-@media (prefers-reduced-motion:reduce){.mz-bars i,.mz-eq i{animation:none;height:10px}.mz.on .mz-disc{animation:none}}
 .opt-yn{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px}.opt-yn button{justify-content:center;font-size:1.05rem;min-height:52px}
 .opt button.on{outline:2px solid var(--ac);outline-offset:1px}
 
@@ -279,7 +245,70 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .plan-b textarea{width:100%;box-sizing:border-box;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;background:var(--card);color:var(--tx);resize:vertical;min-height:72px}
 .plan-b textarea:focus{outline:2px solid var(--ac);border-color:transparent}
 .plan-hero h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 8px}
-.mz-gr{display:flex;gap:4px;margin:12px 0 2px;overflow-x:auto;scrollbar-width:none}.mz-gr button{all:unset;cursor:pointer;white-space:nowrap;padding:6px 11px;border-radius:999px;font:600 .78rem system-ui,sans-serif;color:var(--mu);border:1px solid var(--bd)}.mz-gr button.on{background:var(--tx);color:var(--card);border-color:var(--tx)}.mz-gr button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.topbar{gap:10px}.topbar .mz{margin-left:auto}
+.mz{position:relative}
+.mz-pill{display:inline-flex;align-items:center;gap:2px;height:46px;box-sizing:border-box;padding:4px 5px 4px 4px;border-radius:999px;background:var(--card);border:1px solid var(--bd);box-shadow:0 6px 18px -10px rgba(30,30,70,.35);transition:border-color .2s}
+.mz-pill:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--bd))}
+.mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:9px;height:36px;padding:0 4px 0 0;border-radius:999px;color:var(--tx);min-width:0}
+.mz-bubble:focus-visible,.mz-mini:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-thumb{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.mz-pt{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.mz-lbl{font:650 .88rem system-ui,sans-serif;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mz-lbl2{font-size:.72rem;color:var(--mu)}.mz:not(.on) .mz-lbl2{display:none}
+.mz-mini{all:unset;cursor:pointer;flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--tx);transition:background .15s}
+.mz-mini:hover{background:var(--ac2)}
+.g-ete{background:linear-gradient(140deg,#ffbe6b,#f06683)}
+.g-det{background:linear-gradient(140deg,#62d0a8,#3586b8)}
+.g-dodo{background:linear-gradient(140deg,#7d86e8,#2b2766)}
+.g-all{background:linear-gradient(140deg,#8d9bff,#ffb86b)}
+.mz-eq{display:inline-flex;align-items:flex-end;gap:2px;height:13px}.mz-eq i{width:3px;background:currentColor;border-radius:1px;animation:mzb .9s ease-in-out infinite}.mz-eq i:nth-child(2){animation-delay:.25s}.mz-eq i:nth-child(3){animation-delay:.5s}
+@keyframes mzb{0%,100%{height:3px}50%{height:13px}}
+.mz-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:70;width:320px;max-width:calc(100vw - 24px);box-sizing:border-box;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:14px;box-shadow:0 24px 60px -18px rgba(20,20,60,.45);transform-origin:top right;animation:mzIn .18s ease-out}
+.mz-panel[hidden]{display:none}
+@keyframes mzIn{from{opacity:0;transform:translateY(-6px) scale(.98)}}
+.mz-head{display:flex;align-items:center;gap:12px}
+.mz-cover{flex:none;width:56px;height:56px;border-radius:12px;display:grid;place-items:center;color:#fff;box-shadow:0 8px 18px -8px rgba(0,0,0,.45);transform:scale(.9);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.mz.on .mz-cover{transform:scale(1)}
+.mz-meta{flex:1;min-width:0}
+.mz-title{display:block;font:700 1.02rem "Bricolage Grotesque",system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mz-sub{display:block;color:var(--mu);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mz-x{all:unset;cursor:pointer;flex:none;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--mu);align-self:flex-start}.mz-x:hover{background:var(--ac2);color:var(--tx)}
+.mz-seek{margin:14px 2px 0}
+.mz-prog{height:4px;border-radius:2px;background:color-mix(in srgb,var(--tx) 12%,transparent);overflow:hidden}.mz-prog i{display:block;height:100%;width:0;background:var(--tx);border-radius:2px;transition:width .9s linear}
+.mz-times{display:flex;justify-content:space-between;font:600 .7rem system-ui,sans-serif;color:var(--mu);margin-top:5px;font-variant-numeric:tabular-nums}
+.mz-ctl{display:grid;grid-template-columns:repeat(5,1fr);align-items:center;justify-items:center;margin:2px 0 10px}
+.mz-c{all:unset;cursor:pointer;position:relative;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;color:var(--tx);transition:background .15s,color .15s}
+.mz-c:hover{background:var(--ac2)}.mz-c.dim{color:var(--mu)}.mz-c.act{color:var(--ac)}
+.mz-c.act::after{content:"";position:absolute;bottom:2px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor}
+.mz-c span{position:absolute;top:-3px;right:-8px;font:700 .58rem system-ui,sans-serif;background:var(--ac);color:#fff;border-radius:999px;padding:1px 5px;white-space:nowrap}.mz-c span:empty{display:none}
+.mz-play{all:unset;cursor:pointer;width:52px;height:52px;display:grid;place-items:center;border-radius:50%;background:var(--tx);color:var(--card);box-shadow:0 8px 18px -8px rgba(0,0,0,.5);transition:transform .12s}
+.mz-play:hover{transform:scale(1.05)}.mz-play:active{transform:scale(.96)}
+.mz-c:focus-visible,.mz-play:focus-visible,.mz-x:focus-visible,.mz-pl:focus-visible,.mz-qbtn:focus-visible,.mz-list button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-vol{display:flex;align-items:center;gap:10px;color:var(--mu);margin:0 4px}
+.mz-vol input{flex:1;margin:0;height:4px;-webkit-appearance:none;appearance:none;border-radius:2px;cursor:pointer;background:linear-gradient(var(--tx),var(--tx)) 0/var(--v,55%) 100% no-repeat,color-mix(in srgb,var(--tx) 12%,transparent)}
+.mz-vol input::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--tx);border:0;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.mz-vol input::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--tx);border:0}
+.mz-vol input:focus-visible{outline:3px solid var(--ac);outline-offset:4px}
+.mz-lab{margin:16px 2px 8px;font:700 .7rem system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)}
+.mz-pls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mz-pl{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;border-radius:12px}
+.mz-pl-c{width:100%;aspect-ratio:1;border-radius:12px;display:grid;place-items:center;color:#fff;box-shadow:0 6px 14px -8px rgba(0,0,0,.45);transition:transform .15s,box-shadow .2s}
+.mz-pl:hover .mz-pl-c{transform:translateY(-2px)}
+.mz-pl.on .mz-pl-c{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--tx)}
+.mz-pl-l{font:600 .72rem system-ui,sans-serif;color:var(--mu);white-space:nowrap}.mz-pl.on .mz-pl-l{color:var(--tx)}
+.mz-qbtn{all:unset;cursor:pointer;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 4px 2px;border-top:1px solid var(--bd);font:650 .84rem system-ui,sans-serif;color:var(--tx)}
+.mz-qbtn small{color:var(--mu);font-weight:500;margin-left:8px}
+.mz-qbtn svg{transition:transform .2s;color:var(--mu)}.mz-qbtn.open svg{transform:rotate(180deg)}
+.mz-list{display:flex;flex-direction:column;gap:1px;margin-top:6px;max-height:200px;overflow:auto;scrollbar-width:thin}
+.mz-list[hidden]{display:none}
+.mz-list button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:6px;border-radius:10px}
+.mz-list button:hover{background:var(--ac2)}.mz-list button.sel{background:color-mix(in srgb,var(--ac) 10%,transparent)}
+.mz-q-c{flex:none;width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#fff}
+.mz-tt{flex:1;display:flex;flex-direction:column;font:600 .84rem system-ui,sans-serif;min-width:0}.mz-tt small{font-weight:400;color:var(--mu);font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mz-list .sel .mz-tt{color:var(--ac)}
+.mz-q-d{font:500 .74rem system-ui,sans-serif;color:var(--mu);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.mz-pt{display:none}.mz-bubble{padding:0}.mz-panel{background:var(--card);position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px);width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center}}
+@media (prefers-reduced-motion:reduce){.mz-eq i{animation:none;height:9px}.mz-panel{animation:none}.mz-cover,.mz-play,.mz-pl-c,.mz-prog i{transition:none}}
 </style>
 </head>
 <body>
@@ -288,15 +317,22 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <main class="content">
 <div class="topbar"><h1 class="mobile-brand"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
 <nav id="nav"></nav><div class="mz" id="mz">
-<button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel"><span class="mz-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18.5a2.5 2.5 0 1 1-2-2.45V5.5l11-2v11a2.5 2.5 0 1 1-2-2.45V7.1l-7 1.3z"/></svg></span><span class="mz-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mz-lbl">Musique apaisante</span></button>
-<div class="mz-panel" id="mzPanel" role="dialog" aria-label="Musique apaisante" hidden>
-<div class="mz-art" aria-hidden="true"><div class="mz-disc"></div></div>
-<div class="mz-top"><div style="min-width:0"><small class="mz-kick">Playlist chill · composée en direct</small><b class="mz-title" id="mzTitle">Matin calme</b><small class="mz-sub" id="mzSub"></small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur">✕</button></div>
-<div class="mz-prog" aria-hidden="true"><i id="mzProg"></i></div>
-<div class="mz-ctl"><button class="mz-c" id="mzShuf" onclick="mzShuffle()" aria-pressed="true" aria-label="Lecture aléatoire" title="Lecture aléatoire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><button class="mz-c" onclick="mzStep(-1)" aria-label="Morceau précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button><button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture"><svg id="mzPI" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></button><button class="mz-c" onclick="mzStep(1)" aria-label="Morceau suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button><select id="mzTimer" class="mz-tim" onchange="mzSetTimer(this.value)" aria-label="Arrêt automatique" title="Arrêt automatique"><option value="0">⏱ Off</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 h</option></select></div>
-<label class="mz-vol"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/></svg><input type="range" min="0" max="100" value="55" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"></label>
-<div class="mz-gr" id="mzGr" role="group" aria-label="Ambiance"></div><div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux"></div>
-<p class="mz-note">Musique générée par ton navigateur : libre de droits, rien n’est téléchargé.</p>
+<div class="mz-pill"><button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel" title="Musique apaisante"><span class="mz-thumb g-all" id="mzThumb" aria-hidden="true"></span><span class="mz-pt"><span class="mz-lbl">Musique apaisante</span><small class="mz-lbl2"></small></span></button><button class="mz-mini" id="mzMini" onclick="mzToggle()" aria-label="Lancer la musique"><svg id="mzMI" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"></svg></button></div>
+<div class="mz-panel" id="mzPanel" role="dialog" aria-label="Lecteur de musique apaisante" hidden>
+<div class="mz-head"><div class="mz-cover g-all" id="mzCover" aria-hidden="true"></div><div class="mz-meta"><b class="mz-title" id="mzTitle"></b><small class="mz-sub" id="mzSub"></small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<div class="mz-seek" aria-hidden="true"><div class="mz-prog"><i id="mzProg"></i></div><div class="mz-times"><span id="mzEl">0:00</span><span id="mzDu">-0:00</span></div></div>
+<div class="mz-ctl">
+<button class="mz-c" id="mzShuf" onclick="mzShuffle()" aria-pressed="true" aria-label="Lecture aléatoire" title="Lecture aléatoire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+<button class="mz-c" onclick="mzStep(-1)" aria-label="Morceau précédent" title="Précédent"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.2v14H6zM19 6.2v11.6c0 .8-.9 1.3-1.6.8L9.6 13c-.6-.4-.6-1.2 0-1.6l7.8-5.6c.7-.5 1.6 0 1.6.8z"/></svg></button>
+<button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture"><svg id="mzPI" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"></svg></button>
+<button class="mz-c" onclick="mzStep(1)" aria-label="Morceau suivant" title="Suivant"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.8 5H18v14h-2.2zM5 6.2v11.6c0 .8.9 1.3 1.6.8l7.8-5.6c.6-.4.6-1.2 0-1.6L6.6 5.4C5.9 4.9 5 5.4 5 6.2z"/></svg></button>
+<button class="mz-c dim" id="mzTim" onclick="mzTimerCycle()" aria-label="Arrêt automatique : désactivé" title="Arrêt automatique"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span></span></button>
+</div>
+<label class="mz-vol"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z"/></svg><input type="range" min="0" max="100" value="55" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z" fill="currentColor" stroke="none"/><path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></label>
+<p class="mz-lab">Playlists</p>
+<div class="mz-pls" id="mzPls" role="group" aria-label="Playlists"></div>
+<button class="mz-qbtn" id="mzQBtn" onclick="mzQueue()" aria-expanded="false" aria-controls="mzList"><span>Morceaux<small id="mzQN"></small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux de la playlist" hidden></div>
 </div></div>
 <div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="hide" style="position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(30,30,70,.16);padding:14px;z-index:40"></div></div></div>
 <div id="v"></div>
@@ -1122,31 +1158,56 @@ if(tr.dr===3&&bar>=1){const cl=bar%2?[2,4]:[0,3,6];if(cl.includes(st))mzNoise(tt
 if(bar>=4&&bar<mzBars-2){if(bar%8===0&&st===0&&mzRng()<.5){mzMotif=mzMotif.map(x=>mzRng()<.2?(x==null?null:x+(mzRng()<.5?1:-1)):x)}
 const n=mzMotif[s%32];if(n!=null){const m=mzNote(tr,n,1);tr.inst==='pad'?mzPluck(m,tt,.55):mzEP(m,tt,e*1.6,.75,1)}}
 mzStepN++;mzNext+=e}
-const pr=$('mzProg');if(pr)pr.style.width=(Math.min(1,mzStepN/(mzBars*8))*100)+'%'}
-function mzStart(){const tr=MZ[mzI];mzRng=mzR(mzI*7919+Math.floor(Math.random()*1e6));mzMotif=mzMakeMotif();mzStepN=0;mzNext=mzCtx.currentTime+.12;clearInterval(mzSched);mzSched=setInterval(mzTick,30);mzFade(mzVolVal(),2)}
+mzProgUI()}
+function mzStart(){const tr=MZ[mzI];mzRng=mzR(mzI*7919+Math.floor(Math.random()*1e6));mzMotif=mzMakeMotif();mzStepN=0;mzNext=mzCtx.currentTime+.12;mzT0=mzNext;mzPause=null;mzLastSec=-1;clearInterval(mzSched);mzSched=setInterval(mzTick,30);mzFade(mzVolVal(),2)}
 function mzFade(to,dur){const g=mzMaster.gain,now=mzCtx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(g.value,now);g.linearRampToValueAtTime(to,now+dur)}
 function mzVolVal(){return(+($('mzVol')?.value??55))/100*.85}
-function mzVolume(v){try{localStorage.setItem('mb_mzvol',v)}catch(e){}if(mzCtx&&mzOn)mzFade(mzVolVal(),.15)}
-function mzPlay(){if(!mzEnsure())return;mzCtx.resume();mzOn=true;mzStart();mzUI()}
-function mzStop(now){mzOn=false;clearInterval(mzSched);mzSched=null;if(mzCtx){if(now)mzMaster.gain.value=0;else mzFade(0,1)}mzUI()}
+function mzVolume(v){const el=$('mzVol');if(el)el.style.setProperty('--v',v+'%');try{localStorage.setItem('mb_mzvol',v)}catch(e){}if(mzCtx&&mzOn)mzFade(mzVolVal(),.15)}
+function mzPlay(){if(!mzEnsure())return;mzCtx.resume();mzOn=true;if(mzPause&&mzPause.i===mzI){const e=60/MZ[mzI].bpm/2;mzNext=mzCtx.currentTime+.12;mzT0=mzNext-mzStepN*e;mzPause=null;mzLastSec=-1;clearInterval(mzSched);mzSched=setInterval(mzTick,30);mzFade(mzVolVal(),1.2)}else mzStart();mzUI()}
+function mzStop(now){if(mzOn&&mzCtx)mzPause={i:mzI,el:mzCtx.currentTime-mzT0};mzOn=false;clearInterval(mzSched);mzSched=null;if(mzCtx){if(now)mzMaster.gain.value=0;else mzFade(0,1)}mzUI()}
 window.mzStop=mzStop;
 function mzToggle(){mzOn?mzStop():mzPlay()}
-function mzGo(i){mzI=(i+MZ.length)%MZ.length;if(mzOn){clearInterval(mzSched);mzFade(0,.6);setTimeout(()=>{if(mzOn)mzStart()},650)}mzUI()}
+function mzGo(i){mzI=(i+MZ.length)%MZ.length;mzPause=null;mzLastSec=-1;if(mzOn){clearInterval(mzSched);mzFade(0,.6);setTimeout(()=>{if(mzOn)mzStart()},650)}mzUI()}
 function mzPool(){const L=MZ.map((x,i)=>i).filter(i=>mzGr==='all'||MZ[i].g===mzGr);return L.length?L:MZ.map((x,i)=>i)}
 function mzStep(d){const P=mzPool();if(mzShuf&&d>0){let j;do{j=P[Math.floor(Math.random()*P.length)]}while(j===mzI&&P.length>1);mzGo(j)}else{const k=P.indexOf(mzI);mzGo(P[((k<0?0:k+d)+P.length)%P.length])}}
-function mzGroup(g){mzGr=g;mzUI()}
+function mzGroup(g){mzGr=g;const P=mzPool();if(mzOn&&P.includes(mzI)){mzUI();return}mzPick(P.includes(mzI)?mzI:P[Math.floor(Math.random()*P.length)])}
 function mzAuto(){mzStep(1)}
 function mzPick(i){mzI=i;mzOn?mzGo(i):mzPlay();mzUI()}
 function mzShuffle(){mzShuf=!mzShuf;mzUI()}
-function mzSetTimer(m){clearTimeout(mzStopTmr);m=+m;if(m)mzStopTmr=setTimeout(()=>{mzStop();const t=$('mzTimer');if(t)t.value='0'},m*60000)}
-function mzOpen(v){const p=$('mzPanel'),b=$('mzBubble');const open=v==null?p.hidden:v;p.hidden=!open;b.setAttribute('aria-expanded',open);if(open)setTimeout(()=>$('mzPlay').focus(),20)}
-function mzUI(){const t=MZ[mzI];$('mzTitle').textContent=t.n;$('mzSub').textContent=t.d+' · '+t.bpm+' bpm';$('mzPI').innerHTML=mzOn?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$('mzPlay').setAttribute('aria-label',mzOn?'Pause':'Lecture');
-$('mz').classList.toggle('on',mzOn);const sh=$('mzShuf');sh.setAttribute('aria-pressed',mzShuf);sh.classList.toggle('act',mzShuf);
-$('mzGr').innerHTML=MZG.map(([k,l])=>`<button class="${mzGr===k?'on':''}" aria-pressed="${mzGr===k}" onclick="mzGroup('${k}')">${l}</button>`).join('');$('mzList').innerHTML=MZ.map((x,i)=>(mzGr!=='all'&&x.g!==mzGr)?'':`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})"><span class="mz-n">${i===mzI&&mzOn?'<span class="mz-eq"><i></i><i></i><i></i></span>':({ete:'☀️',det:'🍃',dodo:'🌙'})[x.g]}</span><span class="mz-tt">${x.n}<small>${x.d}</small></span></button>`).join('');
-$('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t.n:'Musique apaisante'}
+const MZ_GL={all:'Tout',ete:'Été chill',det:'Détente',dodo:'Sommeil'};
+const MZ_ICO={ete:'<circle cx="12" cy="12" r="4.2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
+det:'<path d="M5.5 19.5C5 11 10 5.5 19.5 4.5 19 13 14 18.5 5.5 19.5z"/><path fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.6" stroke-linecap="round" d="M6.8 18.2 14 11"/>',
+dodo:'<path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1z"/><circle cx="17" cy="5.5" r="1.1"/><circle cx="20.3" cy="9" r=".8"/>',
+all:'<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 15.5V12a8 8 0 0 1 16 0v3.5"/><rect x="2.8" y="13.5" width="5" height="7.5" rx="2"/><rect x="16.2" y="13.5" width="5" height="7.5" rx="2"/>'};
+const MZ_EQ='<span class="mz-eq"><i></i><i></i><i></i></span>';
+let mzT0=0,mzPause=null,mzLastSec=-1,mzTimerM=0,mzQOpen=false,mzLsig='',mzUsed=false;
+function mzSvg(g,n){return`<svg width="${n}" height="${n}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${MZ_ICO[g]||MZ_ICO.all}</svg>`}
+function mzDur(t){return mzBars*240/t.bpm}
+function mzFmt(x){x=Math.max(0,Math.floor(x));return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')}
+function mzProgUI(){const t=MZ[mzI],D=mzDur(t);let el=0;if(mzCtx&&mzOn)el=mzCtx.currentTime-mzT0;else if(mzPause&&mzPause.i===mzI)el=mzPause.el;el=Math.min(D,Math.max(0,el));const sec=Math.floor(el);if(sec===mzLastSec)return;mzLastSec=sec;
+const p=$('mzProg');if(p)p.style.width=(el/D*100)+'%';const a=$('mzEl'),b=$('mzDu');if(a)a.textContent=mzFmt(el);if(b)b.textContent='-'+mzFmt(D-el)}
+function mzTimerCycle(){const o=[0,15,30,60];mzTimerM=o[(o.indexOf(mzTimerM)+1)%o.length];clearTimeout(mzStopTmr);if(mzTimerM)mzStopTmr=setTimeout(()=>{mzStop();mzTimerM=0;mzUI()},mzTimerM*60000);mzUI()}
+function mzQueue(){mzQOpen=!mzQOpen;mzUI()}
+function mzOpen(v){const p=$('mzPanel'),b=$('mzBubble');const open=v==null?p.hidden:v;p.hidden=!open;b.setAttribute('aria-expanded',open);if(open){mzUI();setTimeout(()=>$('mzPlay').focus(),20)}}
+function mzUI(){const t=MZ[mzI];if(!$('mzTitle'))return;
+$('mzTitle').textContent=t.n;$('mzSub').textContent=MZ_GL[t.g]+' · '+t.d;
+const cv=$('mzCover');cv.className='mz-cover g-'+t.g;cv.innerHTML=mzSvg(t.g,26);
+if(mzOn)mzUsed=true;const tg=mzUsed?t.g:'all';const th=$('mzThumb');th.className='mz-thumb g-'+tg;th.innerHTML=mzOn?MZ_EQ:mzSvg(tg,16);
+const pi=mzOn?'<path d="M6.5 4.5h3.8v15H6.5zM13.7 4.5h3.8v15h-3.8z"/>':'<path d="M8 4.8v14.4c0 .8.9 1.3 1.6.8l11-7.2c.6-.4.6-1.2 0-1.6l-11-7.2C8.9 3.5 8 4 8 4.8z"/>';
+$('mzPI').innerHTML=pi;$('mzMI').innerHTML=pi;$('mzPlay').setAttribute('aria-label',mzOn?'Pause':'Lecture');$('mzMini').setAttribute('aria-label',mzOn?'Mettre la musique en pause':'Lancer la musique');
+$('mz').classList.toggle('on',mzOn);
+const sh=$('mzShuf');sh.setAttribute('aria-pressed',mzShuf);sh.classList.toggle('act',mzShuf);sh.classList.toggle('dim',!mzShuf);
+const tm=$('mzTim'),tl=mzTimerM?(mzTimerM<60?mzTimerM+' min':'1 h'):'';tm.classList.toggle('act',!!mzTimerM);tm.classList.toggle('dim',!mzTimerM);tm.querySelector('span').textContent=tl;tm.setAttribute('aria-label','Arrêt automatique : '+(tl||'désactivé'));tm.title='Arrêt automatique : '+(tl||'désactivé');
+const PL=$('mzPls');if(!PL.children.length)PL.innerHTML=Object.keys(MZ_GL).map(g=>`<button class="mz-pl" data-g="${g}" onclick="mzGroup('${g}')"><span class="mz-pl-c g-${g}"></span><span class="mz-pl-l">${MZ_GL[g]}</span></button>`).join('');
+PL.querySelectorAll('.mz-pl').forEach(b=>{const g=b.dataset.g,on=mzGr===g;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);const c=b.firstChild,w=on&&mzOn?'eq':'ic';if(c.dataset.s!==w){c.dataset.s=w;c.innerHTML=w==='eq'?MZ_EQ:mzSvg(g,22)}});
+const P=mzPool();$('mzQN').textContent=P.length+' titres';const qb=$('mzQBtn');qb.setAttribute('aria-expanded',mzQOpen);qb.classList.toggle('open',mzQOpen);const L=$('mzList');L.hidden=!mzQOpen;
+const sig=mzGr+'|'+mzQOpen;if(sig!==mzLsig){mzLsig=sig;L.innerHTML=mzQOpen?P.map(i=>{const x=MZ[i];return`<button role="option" data-i="${i}" onclick="mzPick(${i})"><span class="mz-q-c g-${x.g}"></span><span class="mz-tt">${x.n}<small>${x.d}</small></span><span class="mz-q-d">${mzFmt(mzDur(x))}</span></button>`}).join(''):''}
+L.querySelectorAll('button').forEach(b=>{const i=+b.dataset.i,cur=i===mzI;b.classList.toggle('sel',cur);b.setAttribute('aria-selected',cur);const c=b.firstChild,w=cur&&mzOn?'eq':'ic';if(c.dataset.s!==w){c.dataset.s=w;c.innerHTML=w==='eq'?MZ_EQ:mzSvg(MZ[i].g,14)}});
+$('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t.n:'Musique apaisante';$('mzBubble').querySelector('.mz-lbl2').textContent=mzOn?MZ_GL[t.g]:'';
+mzLastSec=-1;mzProgUI()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('mzPanel');if(p&&!p.hidden){mzOpen(false);document.getElementById('mzBubble').focus()}}});
 document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(!m||!p||p.hidden)return;const path=e.composedPath?e.composedPath():[];if(path.includes(m)||!e.target.isConnected||m.contains(e.target))return;mzOpen(false)});
-setTimeout(()=>{try{const v=localStorage.getItem('mb_mzvol');if(v!=null)$('mzVol').value=v}catch(e){}mzUI()},0);
+setTimeout(()=>{let v=55;try{const x=localStorage.getItem('mb_mzvol');if(x!=null&&/^\d{1,3}$/.test(x))v=Math.min(100,+x)}catch(e){}const el=$('mzVol');if(el){el.value=v;el.style.setProperty('--v',v+'%')}mzUI()},0);
 
 /* ===== Boîte à outils, ancrage, plan de sécurité, FAQ ===== */
 const TOOLS=[['breath','🫁','Respirer 1 minute','Cohérence cardiaque guidée',"toolBreath()"],['ancrage','🖐️','Ancrage 5-4-3-2-1','Revenir au présent quand l’angoisse monte',"ancrageOpen()"],['plan','🛟','Mon plan de sécurité','Préparer à l’avance quoi faire si ça va très mal',"go('plan')"],['music','🎧','Musique apaisante','Playlist chill, composée en direct',"mzOpen(true);mzOn||mzPlay()"]];
