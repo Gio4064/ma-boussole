@@ -211,6 +211,31 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .foot-brand b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.05rem;margin-right:8px}.foot-brand span{color:var(--mu);font-size:.88rem}
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}.foot-links a{color:var(--tx);font-size:.88rem;font-weight:600;text-decoration:none}.foot-links a:hover{color:var(--ac);text-decoration:underline}
 .foot-note{margin:0;font-size:.8rem;color:var(--mu);max-width:80ch}
+
+.mz{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 54px);z-index:59;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 6px;border-radius:999px;background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:0 10px 26px -10px rgba(30,30,70,.35);font:650 .88rem system-ui,sans-serif;transition:transform .15s,box-shadow .2s}
+.mz-bubble:hover{transform:translateY(-1px);box-shadow:0 14px 30px -10px rgba(30,30,70,.45)}.mz-bubble:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-ico{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 55%,var(--accent)));color:#fff;font-size:1rem}
+.mz-bars{display:none;align-items:flex-end;gap:2px;height:16px}.mz-bars i{width:3px;border-radius:2px;background:var(--ac);animation:mzb 1.1s ease-in-out infinite}.mz-bars i:nth-child(2){animation-delay:.25s}.mz-bars i:nth-child(3){animation-delay:.5s}
+.mz.on .mz-bars{display:inline-flex}.mz.on .mz-ico{display:none}
+@keyframes mzb{0%,100%{height:4px}50%{height:16px}}
+.mz-lbl{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mz-panel{width:min(300px,calc(100vw - 32px));background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:16px;box-shadow:0 24px 48px -16px rgba(30,30,70,.4)}
+.mz-panel[hidden]{display:none}
+.mz-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mz-title{display:block;font:700 1.05rem "Bricolage Grotesque",system-ui,sans-serif}.mz-sub{color:var(--mu);font-size:.78rem}
+.mz-x{all:unset;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:var(--mu)}.mz-x:hover{background:var(--ac2);color:var(--tx)}
+.mz-viz{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:42px;margin:12px 0 6px}.mz-viz i{width:6px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--ac) 55%,var(--accent))}
+.mz.on .mz-viz i{animation:mzb 1.6s ease-in-out infinite}.mz.on .mz-viz i:nth-child(2n){animation-duration:1.2s}.mz.on .mz-viz i:nth-child(3n){animation-duration:2s;animation-delay:.3s}
+.mz-ctl{display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 10px}
+.mz-c{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--tx);font-size:.95rem}.mz-c:hover{background:var(--ac2)}
+.mz-play{all:unset;cursor:pointer;width:56px;height:56px;display:grid;place-items:center;border-radius:50%;background:var(--tx);color:var(--card);font-size:1.05rem;box-shadow:0 10px 20px -10px rgba(0,0,0,.5)}
+.mz-c:focus-visible,.mz-play:focus-visible,.mz-x:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.mz-vol{display:flex;align-items:center;gap:8px;font-size:.85rem}.mz-vol input{flex:1;accent-color:var(--ac);margin:0}
+.mz-list{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 10px}.mz-list button{width:auto!important;margin:0!important;padding:6px 10px!important;border-radius:999px!important;background:var(--ac2)!important;color:var(--tx)!important;font:600 .76rem system-ui,sans-serif!important;border:1px solid transparent}
+.mz-list button.sel{background:var(--tx)!important;color:var(--card)!important}
+.mz-timer{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--mu);border-top:1px solid var(--bd);padding-top:10px}.mz-timer select{padding:5px 8px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit}
+@media (max-width:520px){.mz-lbl{display:none}.mz-bubble{padding:0 6px}}
+@media (prefers-reduced-motion:reduce){.mz-bars i,.mz.on .mz-viz i{animation:none;height:10px}}
 </style>
 </head>
 <body>
@@ -222,6 +247,17 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <div id="v"></div>
 <footer class="foot"><div class="foot-brand"><b>Ma Boussole</b><span>Bilan et orientation en santé mentale, gratuit et confidentiel.</span></div><nav class="foot-links" aria-label="Pied de page"><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="go('themes');return false">Numéros vérifiés</a><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a></nav><p class="foot-note">Outil d’auto-évaluation et d’orientation : il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. Danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b>, 24h/24, gratuit.</p></footer>
 </main>
+<div class="mz" id="mz">
+<div class="mz-panel" id="mzPanel" role="dialog" aria-label="Musique apaisante" hidden>
+<div class="mz-top"><div><b class="mz-title" id="mzTitle">Pluie douce</b><small class="mz-sub" id="mzSub">Ambiance générée en direct, sans droits d’auteur</small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur">✕</button></div>
+<div class="mz-viz" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="mz-ctl"><button class="mz-c" onclick="mzStep(-1)" aria-label="Ambiance précédente">⏮</button><button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture">▶</button><button class="mz-c" onclick="mzStep(1)" aria-label="Ambiance suivante">⏭</button></div>
+<label class="mz-vol"><span aria-hidden="true">🔈</span><input type="range" min="0" max="100" value="60" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"><span aria-hidden="true">🔊</span></label>
+<div class="mz-list" id="mzList" role="listbox" aria-label="Ambiances"></div>
+<div class="mz-timer"><span>Arrêt auto</span><select id="mzTimer" onchange="mzSetTimer(this.value)" aria-label="Arrêt automatique"><option value="0">Jamais</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 h</option></select></div>
+</div>
+<button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel" aria-label="Musique apaisante"><span class="mz-ico" aria-hidden="true">♪</span><span class="mz-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="mz-lbl">Musique</span></button>
+</div>
 <button id="quickExit" type="button" onclick="quickExit()" title="Quitter immédiatement le site (ou appuie deux fois sur Échap)">✕ Quitter vite</button>
 <aside class="rail" aria-label="Outils et ressources">
 <section class="card w-breath"><div class="w-head"><h3>Respire avec moi</h3><span class="w-tag">1 min</span></div><p class="mu w-sub">Cohérence cardiaque : 5 secondes pour inspirer, 5 pour expirer. Ça calme le cœur et les pensées.</p><div class="br-stage"><div class="br-orb"><span class="br-txt">Prêt·e ?</span></div></div><div class="br-row"><button class="w-btn br-btn" onclick="breathToggle(this)">Commencer</button><span class="mu br-left" aria-live="polite"></span></div></section>
@@ -301,7 +337,7 @@ $('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x
 const sd=$('side');if(sd)sd.innerHTML=t.map(x=>{const ico=(x[0]==='compte'&&user)?'':NAV_ICO[x[0]]||'';const subs=SUB[x[0]];
 const subHtml=subs?('<div style="margin:0 0 4px 28px;display:flex;flex-direction:column;gap:1px">'+subs.map(s=>`<button class="sub" onclick="goSub('${x[0]}','${s[1]}')">${s[0]}</button>`).join('')+'</div>'):'';
 return `<button class="${x[0]==on?'on':''}" onclick="go('${x[0]}')">${ico?`<span aria-hidden="true">${ico}</span>`:''}${x[1]}</button>${subHtml}`}).join('')}
-function quickExit(){try{document.body.innerHTML='';document.title='Météo'}catch(e){}window.location.replace('https://www.google.com/search?q=m%C3%A9t%C3%A9o')}
+function quickExit(){try{if(window.mzStop)mzStop(true);}catch(e){}try{document.body.innerHTML='';document.title='Météo'}catch(e){}window.location.replace('https://www.google.com/search?q=m%C3%A9t%C3%A9o')}
 document.addEventListener('keydown',e=>{const t=e.target;if(!t||t.getAttribute('role')!=='tab')return;const ks=['point','aide','lire','espace'];const i=ks.indexOf(homeTab);if(e.key==='ArrowRight'){e.preventDefault();setHomeTab(ks[(i+1)%4])}else if(e.key==='ArrowLeft'){e.preventDefault();setHomeTab(ks[(i+3)%4])}});
 let escAt=0;document.addEventListener('keydown',e=>{if(e.key==='Escape'){const n=Date.now();if(n-escAt<600)quickExit();escAt=n}});
 const EXIT_TIP='<div class="exit-tip">🔒 Besoin de partir vite ? Le bouton <b>« ✕ Quitter vite »</b> en bas à droite (ou deux fois la touche Échap) remplace le site par une page météo. Pour ne pas laisser de trace, utilise la navigation privée.</div>';
@@ -969,6 +1005,48 @@ let tipI=null;function tipShow(){if(tipI==null){const d=new Date();tipI=(d.getFu
 function tipNext(){tipI=((tipI??0)+1)%TIPS.length;tipShow()}
 function careHtml(){return`<section class="home-care" aria-label="Prendre soin de toi"><h2 class="care-h">Prendre soin de toi, maintenant</h2><div class="care-grid">${document.querySelector('.rail .w-breath')?.outerHTML||''}${document.querySelector('.rail .w-mood')?.outerHTML||''}${document.querySelector('.rail .w-tip')?.outerHTML||''}</div></section>`}
 document.addEventListener('DOMContentLoaded',()=>{moodRender();tipShow()});if(document.readyState!=='loading'){setTimeout(()=>{moodRender();tipShow()},0)}
+
+/* ===== Musique apaisante : ambiances générées (Web Audio), sans fichier ni droits ===== */
+const MZ=[['Pluie douce','Pluie légère sur le toit','rain'],['Vagues','Le ressac, lent et régulier','waves'],['Nappe apaisante','Accords doux et lents','pad'],['Bols chantants','Résonances calmes, espacées','bowls'],['Bruit doux','Un fond feutré pour dormir ou se concentrer','brown']];
+let mzI=0,mzCtx=null,mzMaster=null,mzNodes=[],mzTimers=[],mzOn=false,mzStopAt=0,mzStopTmr=null,mzRev=null;
+function mzEnsure(){if(mzCtx)return;const C=window.AudioContext||window.webkitAudioContext;if(!C)return;mzCtx=new C();mzMaster=mzCtx.createGain();mzMaster.gain.value=0;
+const comp=mzCtx.createDynamicsCompressor();mzMaster.connect(comp);comp.connect(mzCtx.destination);
+const len=mzCtx.sampleRate*3.2,ir=mzCtx.createBuffer(2,len,mzCtx.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
+mzRev=mzCtx.createConvolver();mzRev.buffer=ir;const rg=mzCtx.createGain();rg.gain.value=.55;mzRev.connect(rg);rg.connect(mzMaster)}
+function mzNoise(kind){const sr=mzCtx.sampleRate,len=sr*4,b=mzCtx.createBuffer(1,len,sr),d=b.getChannelData(0);let last=0,b0=0,b1=0,b2=0;
+for(let i=0;i<len;i++){const w=Math.random()*2-1;if(kind==='brown'){last=(last+.02*w)/1.02;d[i]=last*3.5}else{b0=.997*b0+w*.029591;b1=.985*b1+w*.032534;b2=.95*b2+w*.048056;d[i]=(b0+b1+b2+w*.0186)*.22}}
+const s=mzCtx.createBufferSource();s.buffer=b;s.loop=true;return s}
+function mzG(v){const g=mzCtx.createGain();g.gain.value=v;return g}
+function mzBuild(kind){const t=mzCtx.currentTime;const add=(...n)=>mzNodes.push(...n);
+if(kind==='rain'){const n=mzNoise('pink'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=2600;const g=mzG(.9);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();add(n,f,g);
+const drop=()=>{if(!mzOn)return;const d=mzNoise('pink'),hp=mzCtx.createBiquadFilter();hp.type='bandpass';hp.frequency.value=1800+Math.random()*3500;hp.Q.value=6;const e=mzG(0);const now=mzCtx.currentTime;e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(.18+Math.random()*.2,now+.004);e.gain.exponentialRampToValueAtTime(.0001,now+.09);d.connect(hp);hp.connect(e);e.connect(mzMaster);d.start(now);d.stop(now+.12)};
+mzTimers.push(setInterval(()=>{for(let k=0;k<1+Math.floor(Math.random()*3);k++)setTimeout(drop,Math.random()*120)},140))}
+if(kind==='waves'){const n=mzNoise('brown'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=500;const g=mzG(.2);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();
+const lfo=mzCtx.createOscillator();lfo.frequency.value=.085;const lg=mzG(.55);lfo.connect(lg);lg.connect(g.gain);const lf2=mzG(420);lfo.connect(lf2);lf2.connect(f.frequency);lfo.start();g.gain.value=.6;add(n,f,g,lfo,lg,lf2)}
+if(kind==='brown'){const n=mzNoise('brown'),f=mzCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=900;const g=mzG(.75);n.connect(f);f.connect(g);g.connect(mzMaster);n.start();add(n,f,g)}
+if(kind==='pad'){const CH=[[220,277.18,329.63,415.3],[185,233.08,277.18,369.99],[196,246.94,293.66,369.99],[174.61,220,261.63,329.63]];let ci=0;const bus=mzCtx.createBiquadFilter();bus.type='lowpass';bus.frequency.value=1400;const bg=mzG(.5);bus.connect(bg);bg.connect(mzMaster);bg.connect(mzRev);add(bus,bg);
+const chord=()=>{if(!mzOn)return;const now=mzCtx.currentTime;CH[ci%CH.length].forEach((fq,k)=>{[0,-6,6].forEach(det=>{const o=mzCtx.createOscillator();o.type=k?'sine':'triangle';o.frequency.value=fq;o.detune.value=det;const e=mzG(0);e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(.045,now+3.5);e.gain.setValueAtTime(.045,now+7);e.gain.linearRampToValueAtTime(0,now+11);o.connect(e);e.connect(bus);o.start(now);o.stop(now+11.2)})});ci++};
+chord();mzTimers.push(setInterval(chord,8000))}
+if(kind==='bowls'){const NT=[196,220,261.63,293.66,329.63,392];const bg=mzG(.6);bg.connect(mzMaster);bg.connect(mzRev);add(bg);
+const ring=()=>{if(!mzOn)return;const now=mzCtx.currentTime,f=NT[Math.floor(Math.random()*NT.length)];[[1,.22],[2.76,.08],[5.4,.035]].forEach(([m,a])=>{const o=mzCtx.createOscillator();o.type='sine';o.frequency.value=f*m;const e=mzG(0);e.gain.setValueAtTime(0,now);e.gain.linearRampToValueAtTime(a,now+.03);e.gain.exponentialRampToValueAtTime(.0001,now+9);o.connect(e);e.connect(bg);o.start(now);o.stop(now+9.2)})};
+ring();mzTimers.push(setInterval(()=>{if(Math.random()<.8)ring()},3800))}}
+function mzClear(){mzTimers.forEach(clearInterval);mzTimers=[];mzNodes.forEach(n=>{try{n.stop&&n.stop()}catch(e){}try{n.disconnect()}catch(e){}});mzNodes=[]}
+function mzFade(to,dur){const g=mzMaster.gain,now=mzCtx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(g.value,now);g.linearRampToValueAtTime(to,now+dur)}
+function mzVolume(v){try{localStorage.setItem('mb_mzvol',v)}catch(e){}if(mzCtx&&mzOn)mzFade(v/100*.9,.2)}
+function mzVolVal(){return(+($('mzVol')?.value??60))/100*.9}
+function mzPlay(){mzEnsure();if(!mzCtx)return;mzCtx.resume();mzClear();mzOn=true;mzBuild(MZ[mzI][2]);mzFade(mzVolVal(),1.6);mzUI()}
+function mzStop(now){if(!mzCtx||!mzOn){mzOn=false;mzUI();return}mzOn=false;if(now){mzClear();mzMaster.gain.value=0}else{mzFade(0,1.2);setTimeout(()=>{if(!mzOn)mzClear()},1300)}mzUI()}
+window.mzStop=mzStop;
+function mzToggle(){mzOn?mzStop():mzPlay()}
+function mzStep(d){mzI=(mzI+d+MZ.length)%MZ.length;if(mzOn){mzFade(0,.5);setTimeout(()=>{mzClear();if(mzOn){mzBuild(MZ[mzI][2]);mzFade(mzVolVal(),1.2)}},550)}mzUI()}
+function mzPick(i){mzI=i;mzOn?mzStep(0):mzPlay();mzUI()}
+function mzSetTimer(m){clearTimeout(mzStopTmr);m=+m;if(m){mzStopAt=Date.now()+m*60000;mzStopTmr=setTimeout(()=>{mzStop();$('mzTimer').value='0'},m*60000)}}
+function mzOpen(v){const p=$('mzPanel'),b=$('mzBubble');const open=v==null?p.hidden:v;p.hidden=!open;b.setAttribute('aria-expanded',open);if(open)setTimeout(()=>$('mzPlay').focus(),20)}
+function mzUI(){const t=MZ[mzI];$('mzTitle').textContent=t[0];$('mzSub').textContent=t[1];const pl=$('mzPlay');pl.textContent=mzOn?'❚❚':'▶';pl.setAttribute('aria-label',mzOn?'Pause':'Lecture');
+$('mz').classList.toggle('on',mzOn);$('mzList').innerHTML=MZ.map((x,i)=>`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})">${x[0]}</button>`).join('');$('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t[0]:'Musique'}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('mzPanel');if(p&&!p.hidden){mzOpen(false);document.getElementById('mzBubble').focus()}}});
+document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(m&&p&&!p.hidden&&!m.contains(e.target))mzOpen(false)});
+setTimeout(()=>{try{const v=localStorage.getItem('mb_mzvol');if(v!=null)$('mzVol').value=v}catch(e){}mzUI()},0);
 </script>
 </body>
 </html>
