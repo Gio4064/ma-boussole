@@ -783,6 +783,24 @@ html.ast-on .ast-fab{visibility:hidden}
 .sky .hello-ex{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}.sky .hx{border-color:rgba(255,255,255,.12)}.sky .hx-t b{color:#fff}.sky .hx-t small{color:#b9bde6}.sky .hx-ic{background:rgba(255,255,255,.12)}.sky .hx-ck{border-color:rgba(255,255,255,.35)}
 @container (max-width:720px){.sky-in{grid-template-columns:1fr}.sky-cp{max-width:230px;order:-1;margin:0 auto 6px}.dirs{grid-template-columns:repeat(2,minmax(0,1fr))}.sky-c button{flex:1 1 220px}}
 @media (prefers-reduced-motion:reduce){.sky-cp .halo{animation:none}.dir{transition:none}}
+
+/* ===== Vidéo « Comment ça marche » ===== */
+.vid{position:relative;border-radius:28px;overflow:hidden;background:#0f1233;box-shadow:var(--sh2);aspect-ratio:16/9}
+.vid video{display:block;width:100%;height:100%;background:#0f1233}
+.chap{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.chap button{margin:0;justify-content:flex-start;gap:12px;min-height:52px;padding:10px 14px;border-radius:16px;background:var(--card);color:var(--tx);box-shadow:inset 0 0 0 1px var(--bd);font:600 .9rem var(--ff);text-align:left}
+.chap button:hover{background:var(--ac2);box-shadow:inset 0 0 0 1.5px var(--ac)}
+.chap button.on{background:var(--ac2);box-shadow:inset 0 0 0 2px var(--ac)}
+.chap em{font-style:normal;flex:none;font:700 .78rem var(--ff);color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,transparent);padding:3px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.vteaser{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:center;width:100%;padding:16px;border-radius:28px;background:var(--card);border:1px solid var(--bd);box-shadow:var(--sh1);transition:border-color .2s}
+.vteaser:hover{border-color:color-mix(in srgb,var(--ac) 50%,var(--bd))}.vteaser:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.vt-img{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#0f1233 url(video/apercu-site.jpg) center/cover}
+.vt-img::after{content:"";position:absolute;left:50%;top:50%;width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;background:rgba(255,255,255,.95) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5.5v13l11-6.5z' fill='%23161a44'/%3E%3C/svg%3E") 56% 50%/30px no-repeat;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);transition:transform .2s}
+.vteaser:hover .vt-img::after{transform:scale(1.08)}
+.vt-img span{position:absolute;right:12px;bottom:12px;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font:700 .8rem var(--ff)}
+.vt-t b{display:block;font:800 clamp(1.3rem,2.4vw,1.7rem)/1.15 var(--fd);letter-spacing:-.02em;margin-bottom:8px}.vt-t p{margin:0 0 14px;color:var(--mu)}
+.vt-t ul{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-size:.92rem}.vt-t li{margin:0}.vt-t li::before{content:"▸ ";color:var(--accent)}
+@media(max-width:760px){.vteaser{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -815,7 +833,7 @@ html.ast-on .ast-fab{visibility:hidden}
 <div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="dialog" aria-expanded="false" aria-controls="qaPanel"><span class="qa-av" aria-hidden="true"></span><svg class="qa-ic" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="qa-panel hide" role="dialog" aria-labelledby="qaT"></div></div><button class="qx" type="button" onclick="quickExit()" title="Quitter immédiatement le site (ou appuie deux fois sur Échap)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Quitter vite</button></div>
 <div id="v" tabindex="-1"></div>
 <footer class="foot"><div class="foot-brand"><b><svg width="28" height="28" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="120" fill="#4b58d1"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-opacity=".92" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ee8c50"/><circle cx="256" cy="256" r="18" fill="#3a46b8"/></svg>Ma Boussole</b><p>Fais le point, trouve la bonne aide près de chez toi et suis ton évolution. Gratuit, confidentiel, sans inscription.</p></div>
-<div><h4>S’orienter</h4><nav aria-label="S’orienter"><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="go('ressources');return false">Numéros d’écoute</a></nav></div>
+<div><h4>S’orienter</h4><nav aria-label="S’orienter"><a href="#" onclick="go('guide');return false">Comment ça marche</a><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="go('ressources');return false">Numéros d’écoute</a></nav></div>
 <div><h4>Prendre soin de toi</h4><nav aria-label="Prendre soin de toi"><a href="#" onclick="go('outils');return false">Boîte à outils</a><a href="#" onclick="go('plan');return false">Mon plan de sécurité</a><a href="#" onclick="go('articles');return false">Comprendre</a></nav></div>
 <div><h4>Mon espace</h4><nav aria-label="Mon espace"><a href="#" onclick="go('dossier');return false">Mon dossier</a><a href="#" onclick="go('compte');return false">Compte et réglages</a><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a></nav></div>
 <p class="foot-note">Ma Boussole est un outil d’auto-évaluation et d’orientation : il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. Danger immédiat : <a href="tel:112"><b>112</b></a> ou <a href="tel:15"><b>15</b></a>. Besoin de parler : <a href="tel:3114"><b>3114</b></a>, 24h/24, gratuit.</p></footer>
@@ -940,9 +958,9 @@ function ageNote(){return(age==='enfant'?'Questions simples pour les 8-12 ans.':
 function telOf(n,d){const s=/^[\d ]+$/.test(n)?n:(String(d||'').match(/0 ?\d(?:[ .]?\d){8}|\b\d{2} \d{2}\b/)||[])[0];return s?s.replace(/\D/g,''):''}
 function numRow(n,d){const t=telOf(n,d);return`<div class="nl"><div class="nl-t"><b>${n}</b><small>${d}</small></div>${t?`<a href="tel:${t}" aria-label="Appeler ${esc(n)}">${svg('phone',15)}Appeler</a>`:''}</div>`}
 function prefPlace(){return place||((store.g('mb_pref')||{}).place)||''}
-const TITLES={bilan:'Faire le point',aide:'Trouver de l’aide',ressources:'Numéros d’écoute',outils:'Boîte à outils',plan:'Mon plan de sécurité',articles:'Comprendre',lire:'Comprendre',dossier:'Mon dossier',suivi:'Mon évolution',compte:'Compte et réglages',legal:'Mentions et confidentialité'};
+const TITLES={guide:'Comment ça marche',bilan:'Faire le point',aide:'Trouver de l’aide',ressources:'Numéros d’écoute',outils:'Boîte à outils',plan:'Mon plan de sécurité',articles:'Comprendre',lire:'Comprendre',dossier:'Mon dossier',suivi:'Mon évolution',compte:'Compte et réglages',legal:'Mentions et confidentialité'};
 function docTitle(t){document.title=t?t+' – Ma Boussole':'Ma Boussole – Bilan et orientation en santé mentale'}
-const ROUTES=['home','bilan','aide','ressources','outils','plan','articles','dossier','compte','legal'];
+const ROUTES=['home','guide','bilan','aide','ressources','outils','plan','articles','dossier','compte','legal'];
 function route(p){try{const h=p==='lire'&&curArt?'#lire-'+curArt:ROUTES.includes(p)&&p!=='home'?'#'+p:location.pathname+location.search;history.replaceState(null,'',h)}catch(e){}}
 /* ===== Bilan en cours (gardé seulement dans cet onglet) ===== */
 const PROG_K='mb_encours';
@@ -981,6 +999,7 @@ $('v').innerHTML=`<section class="sky" aria-labelledby="heroT"><div class="sky-i
 <div id="moodAlert" style="margin-top:16px">${moodAlertHtml()}</div>${progBanner()}
 <div class="sh"><h2>Comment tu te sens en ce moment&nbsp;?</h2>${ageSeg('homeV()')}<p>Choisis ce qui te ressemble le plus : le bon questionnaire s’ouvre, adapté à ton âge.</p></div>
 <div class="tiles">${feelTiles()}</div><p class="pt-note mu">${ageNote()}</p>
+<div class="sh"><h2>Comment ça marche ?</h2><a href="#" onclick="go('guide');return false">Chapitres de la vidéo</a></div>${vTeaser()}
 <div class="sh"><h2>Prendre soin de toi aujourd’hui</h2><a href="#" onclick="go('outils');return false">Toute la boîte à outils</a></div>
 <div class="g3">${wBreath()}${wMood()}${wTip()}</div>
 <div class="sh"><h2>Trouver de l’aide près de chez toi</h2><a href="#" onclick="go('ressources');return false">Numéros d’écoute</a><p>Indique ta ville : on te montre les professionnels les plus proches, d’après les annuaires officiels.</p></div>
@@ -1847,12 +1866,13 @@ function planPdf(){try{const p=planGet(),d=new window.jspdf.jsPDF({unit:'mm',for
 PLAN.forEach(([k,t],i)=>{const L=d.splitTextToSize((p[k]||'').trim()||'—',170);const h=10+L.length*5;if(y+h>282){d.addPage();y=20}d.setTextColor(91,108,214);d.setFont('helvetica','bold');d.setFontSize(11.5);d.text((i+1)+'. '+t,16,y);d.setTextColor(37,36,45);d.setFont('helvetica','normal');d.setFontSize(10.5);d.text(L,20,y+6);y+=h+4});
 d.setTextColor(192,57,43);d.setFont('helvetica','bold');d.setFontSize(10);d.text('Danger immédiat : 112 · Prévention du suicide : 3114 (24h/24, gratuit)',16,288);d.save('Mon-plan-de-securite.pdf')}catch(e){toast('Le PDF n’a pas pu être créé. Vérifie ta connexion et réessaie.')}}
 /* ===== Navigation : menu latéral, tiroir mobile, barre d'onglets ===== */
-const NV_I={home:'<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',compass:'<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',book:'<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/>',chart:'<path d="M4 19V5M4 19h16M8 15l3.5-4 3 2.5L19 8"/>',folder:'<path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',chev:'<path d="m6 9 6 6 6-6"/>'};
+const NV_I={play:'<circle cx="12" cy="12" r="8.5"/><path d="M10.2 8.6v6.8l5.4-3.4z" fill="currentColor" stroke="none"/>',home:'<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',compass:'<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',book:'<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/>',chart:'<path d="M4 19V5M4 19h16M8 15l3.5-4 3 2.5L19 8"/>',folder:'<path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',chev:'<path d="m6 9 6 6 6-6"/>'};
 function navIco(n,z){return`<svg width="${z||20}" height="${z||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NV_I[n]}</svg>`}
 function goLire(){go('articles')}
 const NAV=[
 {h:'S’orienter',items:[
  {id:'home',l:'Accueil',i:'home'},
+ {id:'guide',l:'Comment ça marche',i:'play'},
  {id:'bilan',l:'Faire le point',i:'compass',sub:()=>[...(progGet()?[['Reprendre mon bilan','progResume()']]:[]),...BTHEMES.map(t=>[t[1],`startTheme('${t[0]}')`])]},
  {id:'aide',l:'Trouver de l’aide',i:'pin',pages:['ressources'],sub:()=>[['Près de chez moi',"go('aide')"],['Un ou une psychologue',"openAide('psychologue')"],['Un CMP gratuit',"openAide('centre médico-psychologique')"],['Un médecin généraliste',"openAide('médecin généraliste')"],['Numéros d’écoute',"go('ressources')"]]}]},
 {h:'Prendre soin de toi',items:[
@@ -1886,7 +1906,7 @@ function ckBuild(){if(ckItems)return ckItems;ckItems=[
 ...TOOLS.map(t=>({g:'Boîte à outils',ic:t[1],t:t[2],d:t[3],k:CK_TKW[t[0]]||'',f:CK_TF[t[0]]})),
 ...ARTICLES.map(a=>({g:'Comprendre',ic:a.ico,t:a.t,d:a.r,k:'article lire',f:()=>readArt(a.id)})),
 ...THEMES.flatMap(([cat,items])=>items.map(([n,d])=>({g:'Numéros d’écoute',ic:'📞',t:n,d,k:cat+' appeler telephone numero ecoute ligne',f:()=>goSub('ressources','res-numeros')}))),
-...[['home','🏠','Accueil',''],['articles','📚','Comprendre','tous les articles lire guide'],['ressources','☎️','Numéros d’écoute','telephone appeler ligne urgence'],['dossier','📁','Mon dossier','bilans exercices documents'],['suivi','📈','Mon évolution','courbe suivi progres'],['compte','⚙️','Compte et réglages','profil donnees parametres reglages'],['legal','📄','Mentions et confidentialité','vie privee rgpd donnees']].map(([pg,ic,l,k])=>({g:'Pages',ic,t:l,d:'',k,f:()=>go(pg)})),{g:'Pages',ic:'💬',t:'Poser une question à l’assistant',d:'Réponses immédiates, rien n’est envoyé',k:'aide question chat discuter assistant parler',f:()=>astOpen(true)},{g:'Réglages',ic:'🌗',t:'Changer l’apparence',d:'Automatique, clair ou sombre',k:'theme sombre clair nuit mode dark',f:()=>themeCycle()},{g:'Réglages',ic:'🔠',t:'Changer la taille du texte',d:'Normal, grand ou très grand',k:'police lire grossir agrandir zoom taille',f:()=>fsCycle()}];
+...[['home','🏠','Accueil',''],['articles','📚','Comprendre','tous les articles lire guide'],['ressources','☎️','Numéros d’écoute','telephone appeler ligne urgence'],['dossier','📁','Mon dossier','bilans exercices documents'],['suivi','📈','Mon évolution','courbe suivi progres'],['compte','⚙️','Compte et réglages','profil donnees parametres reglages'],['legal','📄','Mentions et confidentialité','vie privee rgpd donnees']].map(([pg,ic,l,k])=>({g:'Pages',ic,t:l,d:'',k,f:()=>go(pg)})),{g:'Pages',ic:'🎬',t:'Comment ça marche (vidéo)',d:'Visite guidée du site en 2 min 30',k:'video tutoriel aide guide decouvrir explication',f:()=>guideGo()},{g:'Pages',ic:'💬',t:'Poser une question à l’assistant',d:'Réponses immédiates, rien n’est envoyé',k:'aide question chat discuter assistant parler',f:()=>astOpen(true)},{g:'Réglages',ic:'🌗',t:'Changer l’apparence',d:'Automatique, clair ou sombre',k:'theme sombre clair nuit mode dark',f:()=>themeCycle()},{g:'Réglages',ic:'🔠',t:'Changer la taille du texte',d:'Normal, grand ou très grand',k:'police lire grossir agrandir zoom taille',f:()=>fsCycle()}];
 ckItems.forEach(x=>{x.n=nz(x.t);x.s=nz(x.t+' '+x.d+' '+x.k+' '+x.g)});return ckItems}
 function ckSearch(q){const it=ckBuild(),w=nz(q).split(/\s+/).filter(Boolean);
 if(!w.length){const pick=['Respirer 1 minute','Je stresse','3114','Un ou une psychologue','Ancrage 5-4-3-2-1','Mon plan de sécurité'];return pick.map(p=>it.find(x=>x.t.startsWith(p)||x.t===p)).filter(Boolean).map(x=>({...x,g:'Suggestions'}))}
@@ -2167,6 +2187,7 @@ a:()=>({t:`Tu peux porter plainte dans n’importe quel commissariat ou gendarme
 {id:'droit',l:'tes droits',kw:'avocat juridiq juge =droit =droits tribunal',ph:['aide juridictionnelle','mes droits','garde des enfants'],
 a:()=>({t:`Pour connaître tes droits gratuitement : les points-justice (maisons de justice et du droit) proposent des consultations gratuites avec des juristes et des avocats. Selon tes revenus, l’<b>aide juridictionnelle</b> peut payer tout ou partie d’un avocat. France Victimes (116 006) accompagne aussi les victimes.`,acts:[aA('⚖️ Trouver un avocat','avocat'),aT('116006','France Victimes')]})},
 /* ---------- Le site ---------- */
+{id:'video',l:'la vidéo',kw:'video tuto tutoriel demonstration',ph:['comment ca marche en video','visite guidee','montre moi'],a:()=>({t:`Une vidéo de 2 min 30 montre tout le site étape par étape : faire le point, ton résultat, trouver de l’aide, les outils, l’assistant et ton dossier.`,acts:[aF('🎬 Voir la vidéo',()=>guideGo())]})},
 {id:'bilan',l:'le bilan',kw:'bilan =test questionnaire',ph:['comment ca marche','comment ca fonctionne','par ou commencer','a quoi sert ce site','c est quoi ce site','comment utiliser','faire le point','ca sert a quoi'],
 a:()=>({t:`Ma Boussole t’aide à y voir plus clair en 3 étapes :<br>1. tu choisis un thème et tu réponds à une vingtaine de questions (environ 3 minutes) ;<br>2. tu découvres ce qui ressort, tes points d’appui et des conseils, à garder en PDF ;<br>3. on te montre l’aide la plus adaptée près de chez toi, et des exercices pour les jours qui viennent.<br><br>C’est gratuit et sans inscription.`,acts:[aG('🧭 Faire le point','bilan'),aQ('Quel thème choisir ?')]})},
 {id:'theme',l:'le choix du thème',ph:['quel theme','quel bilan','lequel choisir','je sais pas quel','plusieurs themes','tous les themes'],
@@ -2272,6 +2293,18 @@ const r=astFind(t);setTimeout(()=>{w.remove();astMsg('bot',r.t,r.acts);if(r.extr
 function astSend(){const i=$('astIn');if(!i)return;const v=i.value;i.value='';astAsk(v);i.focus()}
 function astOpen(v){const p=$('astP'),b=$('astFab');if(!p)return;if(v===undefined)v=p.hidden;p.hidden=!v;b.setAttribute('aria-expanded',v);document.documentElement.classList.toggle('ast-on',v);if(v){astStart();try{qaClose();mzOpen(false)}catch(e){}setTimeout(()=>{const i=$('astIn');if(i&&matchMedia('(hover:hover)').matches)i.focus()},60)}else if(document.activeElement&&p.contains(document.activeElement))b.focus({preventScroll:true})}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=$('astP');if(p&&!p.hidden){astOpen(false)}}});
+
+/* ===== Comment ça marche (vidéo) ===== */
+const CHAP=[[0,'Introduction'],[7,'L’accueil'],[16,'Ta boussole'],[24,'Comment tu te sens ?'],[32,'Faire le point'],[40,'Répondre aux questions'],[49,'Ta ville (facultatif)'],[56,'Ton résultat'],[66,'Exercices et prochaine étape'],[76,'Près de chez toi'],[84,'Trouver de l’aide'],[93,'Numéros d’écoute'],[101,'La boîte à outils'],[109,'L’assistant'],[118,'Ton dossier'],[127,'Ton évolution'],[135,'Confidentialité'],[143,'À toi de jouer']];
+const mmss=t=>Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+function guideV(play){$('v').innerHTML=ph({c:[['Comment ça marche']],t:'Comment ça marche',l:'Une visite guidée de Ma Boussole en 2 min 30 : faire le point, comprendre ton résultat, trouver de l’aide près de chez toi et suivre ton évolution.'})
++`<div class="vid"><video id="gvid" controls preload="metadata" playsinline poster="video/apercu.jpg" aria-label="Vidéo : comment fonctionne Ma Boussole"><source src="video/comment-ca-marche.mp4" type="video/mp4">Ton navigateur ne peut pas lire cette vidéo.</video></div>
+<div class="sh"><h2>Chapitres</h2><p>Touche un chapitre pour y aller directement.</p></div><div class="chap" id="gchap">${CHAP.map(([t,l],i)=>`<button data-t="${t}" onclick="gSeek(${t})"><em>${mmss(t)}</em>${l}</button>`).join('')}</div>`
++nexts('À toi de jouer',[['🧭','Faire le point','3 minutes pour y voir plus clair.',"go('bilan')"],['📍','Trouver de l’aide','Les professionnels près de chez toi.',"go('aide')"],['💬','Une question ?','L’assistant te répond tout de suite.','astOpen(true)']]);
+const v=$('gvid');if(v){v.addEventListener('timeupdate',()=>{const t=v.currentTime;let k=0;CHAP.forEach((c,i)=>{if(t>=c[0])k=i});document.querySelectorAll('#gchap button').forEach((b,i)=>b.classList.toggle('on',i===k))});if(play===true)setTimeout(()=>{v.play().catch(()=>{})},150)}}
+function gSeek(t){const v=$('gvid');if(!v)return;v.currentTime=t;v.play().catch(()=>{});v.scrollIntoView({behavior:'smooth',block:'center'})}
+function guideGo(){go('guide');setTimeout(()=>{const v=$('gvid');if(v)v.play().catch(()=>{})},200)}
+function vTeaser(){return`<button class="vteaser" onclick="guideGo()" aria-label="Voir la vidéo : comment ça marche, 2 minutes 30"><span class="vt-img"><span>2:30</span></span><span class="vt-t"><b>Découvre Ma Boussole en 2&nbsp;min&nbsp;30</b><p>Une visite guidée de tout le site, étape par étape.</p><ul><li>Faire le point et comprendre ton résultat</li><li>Trouver un professionnel près de chez toi</li><li>Les outils, l’assistant et ton dossier</li></ul></span></button>`}
 
 uiApply();try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',uiApply)}catch(e){}
 addEventListener('scroll',()=>{const t=$('topbar');if(t)t.classList.toggle('stuck',scrollY>4);const b=$('rdBar'),a=document.querySelector('.art-page');if(b&&a){const r=a.getBoundingClientRect(),h=Math.max(1,r.height-innerHeight*.5);b.style.width=Math.max(0,Math.min(100,(80-r.top)/h*100))+'%'}},{passive:true});
