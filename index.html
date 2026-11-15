@@ -245,7 +245,7 @@ $('v').innerHTML=`${(themeCur==='viol'||themeCur==='harc')&&qi===0?EXIT_TIP:''}<
 function fin(){const Q=BQ[themeCur];let sc=0,sec=false;
 Q.forEach((x,i)=>{const v=x.r?3-ans[i]:ans[i];sc+=v;if(x.sec&&ans[i]>0)sec=true});
 const meta=BTHEMES.find(t=>t[0]==themeCur),max=Q.length*3;
-res={theme:themeCur,label:meta[1],date:new Date().toLocaleDateString('fr-FR'),sc,max,lv:lvl(sc,max),sec};aideThemeSel=themeCur;
+res={theme:themeCur,label:meta[1],date:new Date().toLocaleDateString('fr-FR'),sc,max,lv:lvl(sc,max),sec,ans:ans.slice(0,Q.length)};aideThemeSel=themeCur;
 if(user){hGet(user.name,'mb_hist_'+user.hash,[]).then(h=>{h.push({date:res.date,theme:themeCur,label:meta[1],sc:res.sc,max:res.max,lv:res.lv});hSet(user.name,'mb_hist_'+user.hash,h)})}
 resV()}
 function resV(){nav('');const r=res;
@@ -526,7 +526,7 @@ add:{c1:'#1f7a8c',c2:'#e8914f',ink:'#0f3f49',motif:'chain'},
 ali:{c1:'#6a994e',c2:'#b5c95a',ink:'#2f4a20',motif:'leaves'}};
 function pdfBg(T,withHeader){const W=1240,H=1754,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
 g.fillStyle='#fbfaff';g.fillRect(0,0,W,H);const bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,'rgba(255,255,255,0)');bg.addColorStop(1,T.c1+'26');g.fillStyle=bg;g.fillRect(0,0,W,H);
-const hh=withHeader?470:0;
+const hh=withHeader?330:0;
 if(withHeader){const hg=g.createLinearGradient(0,0,W,hh);hg.addColorStop(0,T.c1);hg.addColorStop(1,T.c2);g.fillStyle=hg;g.beginPath();g.moveTo(0,0);g.lineTo(W,0);g.lineTo(W,hh-60);g.quadraticCurveTo(W*.55,hh+40,0,hh-20);g.closePath();g.fill()}
 const draw=(cx,cy,R,col,alpha)=>{g.save();g.globalAlpha=alpha;g.strokeStyle=col;g.fillStyle=col;g.lineWidth=R*.06;g.lineCap='round';
 switch(T.motif){
@@ -539,41 +539,76 @@ case'links':[[-.38,0],[.38,0],[0,-.4],[0,.4]].forEach(([dx,dy])=>{g.beginPath();
 case'chain':g.beginPath();g.ellipse(cx-R*.42,cy+R*.1,R*.42,R*.22,-.5,0,7);g.stroke();g.beginPath();g.ellipse(cx+R*.42,cy-R*.1,R*.42,R*.22,-.5,.6,5.4);g.stroke();break;
 case'leaves':for(let i=0;i<5;i++){const a=-Math.PI/2+(i-2)*.45;g.save();g.translate(cx,cy+R*.6);g.rotate(a+Math.PI/2);g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(R*.32,-R*.55,0,-R*1.05);g.quadraticCurveTo(-R*.32,-R*.55,0,0);g.fill();g.restore()}break}
 g.restore()};
-if(withHeader){draw(W-230,210,210,'#ffffff',.28);draw(W-470,90,70,'#ffffff',.18)}
+if(withHeader){draw(W-210,160,150,'#ffffff',.28);draw(W-420,70,55,'#ffffff',.18)}
 draw(W-150,H-170,190,T.c1,.10);draw(140,H-420,90,T.c2,.08);
 return c.toDataURL('image/jpeg',.88)}
-function pdfSummary(r){const t='« '+r.label+' »';return[
-'Sur le thème '+t+', tes réponses montrent que tu sembles plutôt bien en ce moment. Continue ce qui te fait du bien, et refais ce bilan si la situation change.',
-'Sur le thème '+t+', tes réponses montrent quelques signaux à surveiller. En parler tôt, à un professionnel ou à une ligne d’écoute, peut éviter que la situation s’installe.',
-'Sur le thème '+t+', tes réponses montrent que cela pèse fortement en ce moment. Un accompagnement par un professionnel ou une structure spécialisée serait vraiment utile : tu n’as pas à porter cela seul·e.'][r.lv]}
-async function pdfPicks(theme){if(!place)return null;try{const ref=await geoOf(place);if(!ref)return null;const cats=(CATS[theme]||CATS_DEFAULT).filter(c=>DATA_CAT[c[1].toLowerCase()]).slice(0,3);
-const out=[];for(const[label,t]of cats){const L=await dataSearch(ref,curKm(),DATA_CAT[t.toLowerCase()]);if(L&&L.length)sortRes(L.slice()).slice(0,2).forEach(x=>out.push({cat:label,x}))}return out}catch(e){return null}}
-async function pdf(){const m=$('msg');try{m.textContent='Préparation du PDF…';const r=res,T=PDF_THEME[r.theme]||PDF_THEME.hum,LVC=['#2f9e6b','#e0a030','#d9534f'][r.lv];
-const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});const W=210,M=16,CW=W-2*M;
-const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
-const bg1=pdfBg(T,true),bg2=pdfBg(T,false);d.addImage(bg1,'JPEG',0,0,210,297);
-d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(10);d.text('MA BOUSSOLE  ·  MON BILAN',M,18);
-d.setFontSize(30);d.text(d.splitTextToSize(r.label,140),M,38);d.setFont('helvetica','normal');d.setFontSize(11);d.text('Bilan du '+r.date+'  ·  '+BQ[r.theme].length+' questions',M,52);
-let y=72;
-const page=()=>{d.addPage();d.addImage(bg2,'JPEG',0,0,210,297);y=20};
-const card=(h,fn)=>{if(y+h>282)page();d.setFillColor(255,255,255);d.setDrawColor(228,226,238);d.setLineWidth(.3);d.roundedRect(M,y,CW,h,4,4,'FD');fn(y);y+=h+5};
-const txt=(s,size,bold,col,maxw)=>{d.setFont('helvetica',bold?'bold':'normal');d.setFontSize(size);d.setTextColor(...(col||[37,36,45]));return d.splitTextToSize(s,maxw||CW-16)};
-const h2=(s,yy)=>{d.setFont('helvetica','bold');d.setFontSize(13);d.setTextColor(...hex(T.ink));d.text(s,M+8,yy)};
-if(r.sec){const sos=r.theme==='viol'?'3919 (Violences Femmes Info, 24h/24, gratuit, anonyme)':r.theme==='harc'?'3018 (harcèlement, 7j/7 de 9h à 23h) ou 119 si un enfant est en danger':'3114 (24h/24, gratuit)';const L=txt('Certaines de tes réponses signalent une situation préoccupante. Si tu es en danger, appelle le 112 (ou le 17). Pour parler à quelqu’un maintenant : '+sos+'.',10.5,true,[122,30,30]);
-if(y+L.length*5+12>282)page();d.setFillColor(253,236,234);d.setDrawColor(217,83,79);d.roundedRect(M,y,CW,L.length*5+10,4,4,'FD');d.setTextColor(122,30,30);d.text(L,M+8,y+8);y+=L.length*5+16}
-card(36,yy=>{h2('Résultat',yy+10);d.setFillColor(...hex(LVC));d.roundedRect(W-M-52,yy+4,44,9,4.5,4.5,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(10.5);d.text(LV[r.lv][0],W-M-30,yy+10,{align:'center'});
-d.setFillColor(236,234,244);d.roundedRect(M+8,yy+18,CW-16,5,2.5,2.5,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+8,yy+18,Math.max(5,(CW-16)*r.sc/r.max),5,2.5,2.5,'F');
-d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(106,104,120);d.text('Score : '+r.sc+' / '+r.max+'  ·  repère indicatif, pas un diagnostic',M+8,yy+30)});
-{const L=txt(pdfSummary(r),11,false);card(16+L.length*5.2,yy=>{h2('En bref',yy+10);txt('',11);d.text(L,M+8,yy+18)})}
-{const A=(BADV[r.theme]||[]).map(a=>txt(a,10.5,false,null,CW-30));const h=14+A.reduce((s,l)=>s+l.length*5+4,0);card(h,yy=>{h2('Mes conseils',yy+10);let z=yy+19;A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+12,z-1.4,3.2,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(9);d.text(String(i+1),M+12,z-.3,{align:'center'});d.setTextColor(37,36,45);d.setFont('helvetica','normal');d.setFontSize(10.5);d.text(L,M+19,z);z+=L.length*5+4})})}
-const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));
-{const rows=lines.map(([n,ds])=>({n,L:txt(ds,9.5,false,null,CW-16)}));const h=14+rows.reduce((s,o)=>s+5+o.L.length*4.4+3,0);card(h,yy=>{h2('Numéros vérifiés pour ce thème',yy+10);let z=yy+18;rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(11);d.setTextColor(...hex(T.ink));d.text(o.n,M+8,z);d.setFont('helvetica','normal');d.setFontSize(9.5);d.setTextColor(74,72,88);d.text(o.L,M+8,z+4.8);z+=5+o.L.length*4.4+3})})}
-const picks=await pdfPicks(r.theme);
-if(picks&&picks.length){const rows=picks.map(({cat,x})=>{const info=[x.prof,[x.addr||x.ville].filter(Boolean).join(''),x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join('  ·  ');return{nm:x.name,info:txt(info,9,false,null,CW-60),tel:x.phone||'',cat}});
-const h=18+rows.reduce((s,o)=>s+5+o.info.length*4.2+3,0);card(h,yy=>{h2('Professionnels à contacter près de '+place,yy+10);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(106,104,120);d.text('Les plus proches selon les annuaires officiels (RPPS, FINESS). Vérifie avant de te déplacer.',M+8,yy+15.5);let z=yy+23;
-rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(37,36,45);d.text(d.splitTextToSize(o.nm,CW-60)[0],M+8,z);if(o.tel){d.setTextColor(...hex(T.ink));d.text(o.tel,W-M-8,z,{align:'right'})}d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(106,104,120);d.text(o.info,M+8,z+4.6);z+=5+o.info.length*4.2+3})})}
-else{const C=(CATS[r.theme]||CATS_DEFAULT).slice(0,5).map(c=>c[0]);const L=txt('Vers qui te tourner : '+C.join(', ')+'. Retrouve les plus proches de chez toi sur gio4064.github.io/ma-boussole (rubrique « Trouver de l’aide »).',10.5,false);card(16+L.length*5.2,yy=>{h2('Professionnels à contacter',yy+10);txt('',10.5);d.text(L,M+8,yy+18)})}
-if(y>270)page();d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(106,104,120);d.text('Urgence : 112  ·  SAMU 15  ·  Prévention du suicide 3114 (24h/24, gratuit)',M,286);d.text('Ce bilan est indicatif et ne constitue pas un diagnostic.  ·  gio4064.github.io/ma-boussole',M,291);
+const PDF_TIPS={
+conf:[[[0,2,3,6,18],"Quand tu te compares, compare-toi à toi il y a un an, pas aux autres : note un progrès concret."],[[4,10,14],"Entraîne-toi à donner ton avis dans une situation sans enjeu (choix d’un film, d’un plat) pour apprivoiser le regard des autres."],[[7,15,16],"Quand on te fait un compliment, réponds simplement « merci », sans le minimiser, et note-le."],[[8],"Quand tu rumines une erreur, demande-toi ce que tu dirais à un ami dans la même situation."],[[9],"Note 3 choses que ton corps te permet de faire, plutôt que de juger son apparence."],[[12,17],"Repère une personne qui t’apprécie vraiment et passe un moment avec elle cette semaine."],[[5,11,13,19],"Fixe-toi un petit objectif atteignable cette semaine et coche-le quand il est fait."]],
+harc:[[[19],"Tu as pensé à te faire du mal : appelle le 3114 dès aujourd’hui (24h/24, gratuit, confidentiel)."],[[0,1,3,8,9,10,17],"Note chaque fait dans un carnet (date, lieu, personnes, témoins) : cela compte si tu fais un signalement."],[[2,4,5,14,16],"En ligne : fais des captures d’écran, bloque, signale sur la plateforme et appelle le 3018, qui peut faire retirer des contenus rapidement."],[[6,11,18],"Parle à la vie scolaire, aux RH ou à la médecine du travail : ils ont l’obligation d’agir face au harcèlement."],[[13,15],"Choisis une seule personne de confiance et raconte-lui ; si tu n’oses pas, le 3018 peut t’écouter."],[[12],"Si ton sommeil ou ton appétit sont touchés, parles-en à ton médecin : c’est le signe que la situation te pèse fort."],[[7],"Les violences physiques peuvent faire l’objet d’une plainte ; un médecin peut constater les blessures."]],
+viol:[[[4,5,19],"Si tu crains pour ta sécurité : 17 ou 112, ou SMS au 114 si tu ne peux pas parler. Garde ces numéros à portée de main."],[[6,7,15],"Un médecin ou les urgences peuvent constater les blessures (certificat médical), même sans porter plainte tout de suite."],[[10,12,17],"Le cycle « crise puis excuses » est typique des violences : le 3919 peut t’aider à préparer un départ en sécurité."],[[1,13],"Garde en lieu sûr (chez un proche, en ligne) une copie de tes papiers et de tes relevés bancaires."],[[2,16],"Reprends contact avec une personne de confiance, même par un court message : l’isolement fait partie de l’emprise."],[[11,18],"Repère dès maintenant un lieu où aller en urgence (proche, voisin, pharmacie) et note le 3919 et le 17."],[[14],"Des enfants témoins de violences en sont aussi victimes : le 119 peut te conseiller."]],
+anx:[[[4,13],"Des palpitations ou une crise de panique méritent d’en parler à ton médecin pour écarter une cause physique."],[[0,2,3,9,16],"Respiration 4-6 : inspire 4 secondes, expire 6 secondes, pendant 3 minutes, deux fois par jour."],[[1,5,11],"Réserve 15 minutes par jour de « temps inquiétude » : note tes soucis à ce moment-là, puis passe à autre chose."],[[7],"Le soir, coupe les écrans une heure avant de dormir et écris ce qui te tracasse pour le « déposer »."],[[6,12,17],"Affronte une situation que tu évites par petites étapes, en commençant par la plus facile."],[[10,15],"Réduis les vérifications : une seule fois, puis tu t’arrêtes, même si l’envie revient."],[[14,18,19,8],"Liste tes obligations et choisis-en une à alléger ou à déléguer cette semaine."]],
+hum:[[[19],"Tu as des pensées de ne plus vivre : appelle le 3114 dès maintenant (24h/24, gratuit, confidentiel)."],[[1,6,9,15],"Si ces signes durent depuis plus de deux semaines, parles-en à ton médecin ou à un psychologue (Mon soutien psy : séances remboursées)."],[[0,11],"Prévois chaque jour une petite activité agréable, même sans envie : l’envie revient souvent après."],[[2,3,12,16,17],"Découpe ta journée en toutes petites tâches et coche-les : se lever, se laver, sortir 10 minutes."],[[8,13,18],"Quand une pensée dure sur toi revient, écris-la puis réponds-y comme tu répondrais à un ami."],[[14],"Garde une heure de lever régulière, même le week-end, et prends la lumière du jour le matin."],[[10],"Envoie un message à une personne proche aujourd’hui, même court."],[[4,5,7],"Note une semaine ton sommeil, ton appétit et ton humeur : cela aidera le professionnel que tu verras."]],
+soc:[[[7,19],"Si l’isolement t’inquiète ou te fait penser que personne ne remarquerait ton absence, parles-en à ton médecin ou appelle le 3114."],[[1,4,12,16,11],"SOS Amitié (09 72 39 40 50, 24h/24) est là pour parler quand on n’a personne autour de soi."],[[0,5,10,15],"Écris à une personne avec qui tu as perdu contact, simplement pour prendre des nouvelles."],[[2,3,8,14],"Fixe-toi une sortie courte par semaine : un marché, une bibliothèque, un café."],[[9,13,17,18,6],"Rejoins une activité régulière (association, club, bénévolat) : le lien se crée plus facilement autour d’un projet commun."]],
+add:[[[9],"Ne conduis jamais après avoir consommé : prévois un retour autrement avant de sortir."],[[1,17,15],"Arrêter seul·e est difficile : un CSAPA accompagne gratuitement et de façon confidentielle."],[[0,11],"Repère les moments où l’envie arrive (stress, ennui, solitude) et prépare une alternative pour chacun."],[[3,7,8],"Fixe-toi une limite précise avant de commencer (quantité, durée, budget) et note si tu l’as tenue."],[[4],"Le manque peut se soulager : un médecin peut proposer un accompagnement adapté."],[[10],"Pour les jeux d’argent, fixe un plafond de dépenses ou demande une interdiction volontaire de jeux."],[[12,13,5,18],"Note une semaine l’impact concret sur ton sommeil, ton travail et tes relations, pour en parler à un professionnel."],[[2,6,14,16],"Parler à un proche de confiance de ta consommation réelle allège souvent la culpabilité."]],
+ali:[[[3,4],"Vomissements, laxatifs ou repas sautés ont des effets sur la santé : parles-en rapidement à ton médecin."],[[2,11],"Mange à heures régulières (3 repas et une collation) : sauter un repas augmente le risque de perdre le contrôle ensuite."],[[10,12,18,19],"La FFAB (09 69 325 900) et un diététicien ou un psychologue spécialisé peuvent t’accompagner."],[[0,5,9,15],"Range la balance quelque temps et note plutôt ton énergie et ton humeur."],[[1,6,14],"Note chaque jour une chose que ton corps t’a permis de faire."],[[7,16,17],"Commence par partager un repas simple avec une seule personne de confiance."],[[8],"Bouge pour le plaisir ou la santé, jamais pour « compenser » un repas."]]};
+function pdfAnalyse(r){const Q=BQ[r.theme]||[],A=r.ans||[];const items=Q.map((x,i)=>{const a=A[i];if(a==null)return null;const v=x.r?3-a:a;return{i,t:x.t,a,v,rev:!!x.r}}).filter(Boolean);
+const hard=items.filter(o=>o.v>=2).sort((p,q)=>q.v-p.v||p.i-q.i);const easy=items.filter(o=>o.v===0).sort((p,q)=>(q.rev-p.rev)||p.i-q.i);
+const vOf={};items.forEach(o=>vOf[o.i]=o.v);
+const tips=(PDF_TIPS[r.theme]||[]).map(([ids,t],k)=>({t,w:Math.max(...ids.map(i=>vOf[i]??0)),k})).filter(o=>o.w>=2).sort((p,q)=>q.w-p.w||p.k-q.k).map(o=>o.t);
+(BADV[r.theme]||[]).forEach(t=>{if(tips.length<3&&!tips.includes(t))tips.push(t)});
+return{hard,easy,tips:tips.slice(0,3),n:items.length}}
+function pdfSummary(r,an){const t='« '+r.label+' »',n=an.hard.length;
+const base=['Sur le thème '+t+', tu sembles plutôt bien en ce moment.','Sur le thème '+t+', tes réponses montrent des signaux à surveiller.','Sur le thème '+t+', tes réponses montrent que cela pèse fortement en ce moment.'][r.lv];
+const cnt=an.n?(n?' '+n+' de tes '+an.n+' réponses sont « souvent » ou « presque toujours » difficiles.':' Aucune de tes '+an.n+' réponses n’est marquée comme fréquemment difficile.'):'';
+const end=['Continue ce qui te fait du bien et refais ce bilan si la situation change.','En parler tôt, à un professionnel ou à une ligne d’écoute, peut éviter que cela s’installe.','Un accompagnement par un professionnel serait vraiment utile : tu n’as pas à porter cela seul·e.'][r.lv];
+return base+cnt+' '+end}
+async function pdfPicks(theme,max){if(!place)return null;try{const ref=await geoOf(place);if(!ref)return null;const cats=(CATS[theme]||CATS_DEFAULT).filter(c=>DATA_CAT[c[1].toLowerCase()]).slice(0,3);
+const lists=[];for(const[label,t]of cats){const L=await dataSearch(ref,curKm(),DATA_CAT[t.toLowerCase()]);lists.push(L&&L.length?sortRes(L.slice()):[])}
+const out=[];for(let k=0;out.length<max&&k<max;k++)lists.forEach(L=>{if(L[k]&&out.length<max)out.push(L[k])});return out}catch(e){return null}}
+async function pdf(){const m=$('msg');try{m.textContent='Préparation du PDF…';const r=res,T=PDF_THEME[r.theme]||PDF_THEME.hum,LVC=['#2f9e6b','#e0a030','#d9534f'][r.lv];const an=pdfAnalyse(r);
+const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});const W=210,M=14,CW=W-2*M,G=5,HW=(CW-G)/2;
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];const INK=hex(T.ink),TX=[37,36,45],MU=[106,104,120];
+d.addImage(pdfBg(T,true),'JPEG',0,0,210,297);
+d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(9);d.text('MA BOUSSOLE  ·  MON BILAN PERSONNEL',M,14);d.setFontSize(26);d.text(r.label,M,29);d.setFont('helvetica','normal');d.setFontSize(10);d.text('Bilan du '+r.date+'  ·  '+an.n+' questions',M,37);
+let y=50;
+const font=(z,b,c)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(z);d.setTextColor(...(c||TX))};
+const wrap=(s,z,b,w)=>{font(z,b);return d.splitTextToSize(s,w)};
+const box=(x,yy,w,h)=>{d.setFillColor(255,255,255);d.setDrawColor(228,226,238);d.setLineWidth(.3);d.roundedRect(x,yy,w,h,3.5,3.5,'FD')};
+const head=(s,x,yy)=>{font(11.5,1,INK);d.text(s,x+6,yy+8)};
+const LH=z=>z*.42+.6;
+if(r.sec){const sos=r.theme==='viol'?'3919 (Violences Femmes Info, 24h/24, gratuit, anonyme)':r.theme==='harc'?'3018 (harcèlement, 7j/7 de 9h à 23h) ou 119 si un enfant est en danger':'3114 (24h/24, gratuit)';const L=wrap('Certaines de tes réponses signalent une situation préoccupante. Si tu es en danger, appelle le 112 (ou le 17). Pour parler à quelqu’un maintenant : '+sos+'.',9.5,1,CW-12);
+const h=L.length*LH(9.5)+7;d.setFillColor(253,236,234);d.setDrawColor(217,83,79);d.roundedRect(M,y,CW,h,3.5,3.5,'FD');font(9.5,1,[122,30,30]);d.text(L,M+6,y+6);y+=h+G}
+{const S=wrap(pdfSummary(r,an),9.5,0,CW-12);const h=26+S.length*LH(9.5);box(M,y,CW,h);head('Ton résultat',M,y);
+d.setFillColor(...hex(LVC));d.roundedRect(W-M-46,y+3.5,40,8,4,4,'F');font(9.5,1,[255,255,255]);d.text(LV[r.lv][0],W-M-26,y+8.8,{align:'center'});
+d.setFillColor(236,234,244);d.roundedRect(M+6,y+14,CW-12,4,2,2,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+6,y+14,Math.max(4,(CW-12)*r.sc/r.max),4,2,2,'F');
+font(9.5,0);d.text(S,M+6,y+24);y+=h+G}
+{const hard=an.hard.slice(0,3),easy=an.easy.slice(0,2);
+const fmt=o=>({q:wrap('« '+o.t.replace(/\.$/,'')+' »',9,0,HW-12),a:'Ta réponse : '+SC[o.a]});
+const H=hard.map(fmt),E=easy.map(fmt);const hh=L=>L.reduce((s,o)=>s+o.q.length*LH(9)+LH(8.5)+2.5,0);
+const h=Math.max(16+hh(H),16+hh(E),24);
+box(M,y,HW,h);head('Ce qui ressort de tes réponses',M,y);let z=y+15;
+if(!H.length){font(9,0,MU);d.text(wrap('Aucune difficulté fréquente dans tes réponses.',9,0,HW-12),M+6,z)}
+H.forEach(o=>{d.setFillColor(...hex(LVC));d.circle(M+7.2,z-1.2,1.1,'F');font(9,0,TX);d.text(o.q,M+10,z);z+=o.q.length*LH(9);font(8.5,1,hex(LVC));d.text(o.a,M+10,z);z+=LH(8.5)+2.5});
+const x2=M+HW+G;box(x2,y,HW,h);head('Tes points d’appui',x2,y);z=y+15;
+if(!E.length){font(9,0,MU);d.text(wrap('Chaque petit pas compte : ce bilan est déjà une façon de prendre soin de toi.',9,0,HW-12),x2+6,z)}
+E.forEach(o=>{d.setFillColor(47,158,107);d.circle(x2+7.2,z-1.2,1.1,'F');font(9,0,TX);d.text(o.q,x2+10,z);z+=o.q.length*LH(9);font(8.5,1,[47,158,107]);d.text(o.a,x2+10,z);z+=LH(8.5)+2.5});
+y+=h+G}
+{const A=an.tips.map(t=>wrap(t,9.5,0,CW-22));const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0);box(M,y,CW,h);head('Mes conseils personnalisés',M,y);let z=y+16;
+A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});y+=h+G}
+const avail=297-14-y;
+{const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2)).slice(0,3);
+const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
+const maxP=Math.max(0,Math.min(5,Math.floor((avail-18)/10.5)));const picks=maxP?await pdfPicks(r.theme,maxP):null;
+const rowsR=(picks||[]).map(x=>({nm:wrap(x.name,9.5,1,HW-12)[0],tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
+let hL=14;const keepL=[];for(const o of rowsL){const add=LH(10)+o.L.length*LH(8.5)+2.5;if(hL+add>avail)break;hL+=add;keepL.push(o)}
+const hR=rowsR.length?18+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
+box(M,y,HW,h);head('Numéros vérifiés',M,y);let z=y+15;keepL.forEach(o=>{font(10,1,INK);d.text(o.n,M+6,z);z+=LH(10);font(8.5,0,MU);d.text(o.L,M+6,z);z+=o.L.length*LH(8.5)+2.5});
+const x2=M+HW+G;box(x2,y,HW,h);
+if(rowsR.length){head('À contacter près de '+place,x2,y);font(7.5,0,MU);d.text('Les plus proches (annuaires officiels RPPS / FINESS)',x2+6,y+12.5);z=y+18.5;
+rowsR.forEach(o=>{font(9.5,1,TX);d.text(o.nm,x2+6,z);if(o.tel){font(9,1,INK);d.text(o.tel,x2+HW-6,z,{align:'right'})}z+=LH(9.5)+.6;font(8.5,0,MU);d.text(o.info,x2+6,z);z+=LH(9.5)+2.6})}
+else{head('Vers qui te tourner',x2,y);const C=(CATS[r.theme]||CATS_DEFAULT).slice(0,4).map(c=>c[0]);const L=wrap(C.join(', ')+'. Indique ta ville sur la page de résultat avant de télécharger pour voir ici les plus proches.',9,0,HW-12);font(9,0,TX);d.text(L.slice(0,Math.max(1,Math.floor((h-16)/LH(9)))),x2+6,y+15)}
+y+=h}
+font(7.5,0,MU);d.text('Urgence : 112  ·  SAMU 15  ·  Prévention du suicide 3114 (24h/24, gratuit)   —   Bilan indicatif, pas un diagnostic  ·  gio4064.github.io/ma-boussole',W/2,291,{align:'center'});
 const fname='mon-bilan-'+r.date.replace(/\//g,'-')+'.pdf';
 if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:fname,data:d.output('blob')})}else d.save(fname);m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(await hGet(user.name,'mb_hist_'+user.hash,[])).filter(e=>!(e.date===res.date&&e.theme===res.theme));await hSet(user.name,'mb_hist_'+user.hash,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){console.error(e);m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
 const AGES=[["enfant","Enfant (8-12)"],["ado","Ado (13-17)"],["adulte","Adulte (18-64)"],["senior","65 ans et +"]];
