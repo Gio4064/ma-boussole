@@ -1236,8 +1236,8 @@ d.setFillColor(...hex(LVC));d.roundedRect(W-M-46,y+3.5,40,8,4,4,'F');font(9.5,1,
 d.setFillColor(236,234,244);d.roundedRect(M+6,y+14,CW-12,4,2,2,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+6,y+14,Math.max(4,(CW-12)*r.sc/r.max),4,2,2,'F');
 font(9.5,0);d.text(S,M+6,y+24);y+=h+G}
 {const SCL=scaleOf(r.age);
-const N=an.neg.map(o=>({t:wrap(o.txt,9.5,1,HW-14),ex:wrap('Ex. : « '+o.ex.t.replace(/\.$/,'')+' » — '+ansLabel(o.ex.q,o.ex.a,r.age),8,0,HW-14)}));
-const P=an.pos.map(t=>wrap(t,9.5,0,HW-14));
+const N=an.neg.slice(0,2).map(o=>({t:wrap(o.txt,9.5,1,HW-14),ex:wrap('Ex. : « '+o.ex.t.replace(/\.$/,'')+' » — '+ansLabel(o.ex.q,o.ex.a,r.age),8,0,HW-14)}));
+const P=an.pos.slice(0,2).map(t=>wrap(t,9.5,0,HW-14));
 const hN=16+N.reduce((s,o)=>s+o.t.length*LH(9.5)+o.ex.length*LH(8)+3,0),hP=16+P.reduce((s,L)=>s+L.length*LH(9.5)+3,0);
 const h=Math.max(hN,hP,26);
 box(M,y,HW,h);head('Ce qui ressort de tes réponses',M,y);let z=y+15.5;
@@ -1256,7 +1256,7 @@ const x2=M+HW+G;box(x2,y,HW,h);head('Mes exercices',x2,y);z=y+16;
 X.forEach(o=>{d.setDrawColor(...hex(T.c1));d.setLineWidth(.5);d.roundedRect(x2+6.5,z-3.1,3.4,3.4,.8,.8,'S');font(9.5,1,TX);d.text(o.t,x2+13,z);z+=o.t.length*LH(9.5)+.4;font(7.5,0,MU);d.text(o.w,x2+13,z);z+=LH(7.5)+2.8});
 font(7.5,1,INK);d.text(fit(user?'Suivi jour après jour dans ton dossier.':'À suivre dans ton dossier Ma Boussole.',HW-12,7.5,1),x2+6,y+h-4);
 y+=h+G}
-if(297-14-y<52){d.addPage();d.addImage(pdfBg(T,false),'JPEG',0,0,210,297);y=18}
+if(297-14-y<40){d.addPage();d.addImage(pdfBg(T,false),'JPEG',0,0,210,297);y=18}
 const avail=297-14-y;
 {const rc=recoFor(r);const idx=THEME_HOTLINE_IDX[r.theme];let lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));if(rc.line)lines=[rc.line].concat(lines.filter(l=>l[0]!==rc.line[0]));lines=lines.slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
