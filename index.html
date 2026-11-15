@@ -515,14 +515,67 @@ function legalV(){$('v').innerHTML=`<div class="card"><h2>Mentions et confidenti
 <h3>Mineurs</h3><p>Avant 15 ans, la création d’un compte doit se faire avec l’accord d’un parent ou d’un adulte responsable.</p>
 <h3>Urgence</h3><p>Cet outil n’est pas un service d’urgence. En danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b> (24h/24, gratuit).</p>
 <h3>Responsabilité</h3><p>Les repères affichés sont indicatifs. Les liens vers des professionnels sont fournis à titre informatif ; vérifie toujours leur diplôme ou leur inscription à l’ordre.</p><h3>Éditeur et hébergeur</h3><p>Site édité à titre non professionnel par un particulier, dont l’identité a été communiquée à l’hébergeur.<br>Hébergeur : GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p><h3>Services utilisés</h3><p>L’adresse e-mail saisie pour recevoir un code de connexion est transmise au service d’envoi EmailJS. La recherche d’aide envoie la ville saisie à la Base Adresse Nationale (api-adresse.data.gouv.fr) et, pour certaines catégories, à OpenStreetMap (Photon, Overpass). Les annuaires sont téléchargés depuis GitHub. Aucun de ces services ne reçoit tes réponses aux bilans.</p><h3>Sources des annuaires</h3><p>Professionnels de santé : RPPS – Annuaire Santé (Agence du numérique en santé). Établissements : FINESS (ministère de la Santé). Avocats : Annuaire des avocats de France (Conseil national des barreaux). Communes : geo.api.gouv.fr. Données publiées sous Licence Ouverte (Etalab), mises à jour chaque mois${dataUpdated?' (dernière mise à jour : '+dataUpdated+')':''}. Seuls les professionnels avec un lieu d’exercice déclaré sont affichés ; un arrêt d’activité récent peut ne pas encore y figurer.</p><h3>Sortie rapide</h3><p>Le bouton « Quitter vite », en bas à droite, ou deux appuis rapides sur la touche Échap, remplacent immédiatement le site par une page neutre. Pour ne laisser aucune trace dans l’historique, utilise la navigation privée.</p></div>`;if(!dataUpdated)dataIndex().then(()=>{if(dataUpdated&&document.querySelector('.card h2')&&/Mentions/.test(document.querySelector('.card h2').textContent))legalV()})}
-async function pdf(){const m=$('msg');try{const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});let y=20;const L=18;
-const ln=(s,z,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(z);d.splitTextToSize(s,174).forEach(l=>{if(y>280){d.addPage();y=20}d.text(l,L,y);y+=z*.45+1.6})};
-ln('Ma Boussole - '+res.label+' du '+res.date,17,1);y+=3;
-if(res.sec)ln('IMPORTANT : si tu es en danger, appelle le 112 (urgence) ou le 3114 (24h/24, gratuit).',11,1);
-ln('Résultat : '+LV[res.lv][0],11);y+=3;
-ln('Conseils',13,1);(BADV[res.theme]||[]).forEach(a=>ln('- '+a,11));y+=2;
-ln('Ce bilan est indicatif et ne constitue pas un diagnostic.',9);
-if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:'mon-bilan.pdf',data:d.output('blob')})}else d.save('mon-bilan.pdf');m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(await hGet(user.name,'mb_hist_'+user.hash,[])).filter(e=>!(e.date===res.date&&e.theme===res.theme));await hSet(user.name,'mb_hist_'+user.hash,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
+const PDF_THEME={
+conf:{c1:'#f4a640',c2:'#e8724f',ink:'#7a3d12',motif:'sun'},
+harc:{c1:'#5b6cd6',c2:'#3a4296',ink:'#2a3080',motif:'shield'},
+viol:{c1:'#a45dc9',c2:'#d9548f',ink:'#5e2471',motif:'shield'},
+anx:{c1:'#2a9d8f',c2:'#4f8fd6',ink:'#14524b',motif:'waves'},
+hum:{c1:'#6c7ae0',c2:'#f2a35e',ink:'#33397a',motif:'dawn'},
+soc:{c1:'#2f9e6b',c2:'#7cc6a0',ink:'#16553a',motif:'links'},
+add:{c1:'#1f7a8c',c2:'#e8914f',ink:'#0f3f49',motif:'chain'},
+ali:{c1:'#6a994e',c2:'#b5c95a',ink:'#2f4a20',motif:'leaves'}};
+function pdfBg(T,withHeader){const W=1240,H=1754,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+const bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fbfaff');bg.addColorStop(1,T.c1+'22');g.fillStyle=bg;g.fillRect(0,0,W,H);
+const hh=withHeader?470:0;
+if(withHeader){const hg=g.createLinearGradient(0,0,W,hh);hg.addColorStop(0,T.c1);hg.addColorStop(1,T.c2);g.fillStyle=hg;g.beginPath();g.moveTo(0,0);g.lineTo(W,0);g.lineTo(W,hh-60);g.quadraticCurveTo(W*.55,hh+40,0,hh-20);g.closePath();g.fill()}
+const draw=(cx,cy,R,col,alpha)=>{g.save();g.globalAlpha=alpha;g.strokeStyle=col;g.fillStyle=col;g.lineWidth=R*.06;g.lineCap='round';
+switch(T.motif){
+case'sun':g.beginPath();g.arc(cx,cy,R*.42,0,7);g.fill();for(let i=0;i<14;i++){const a=i/14*Math.PI*2;g.beginPath();g.moveTo(cx+Math.cos(a)*R*.55,cy+Math.sin(a)*R*.55);g.lineTo(cx+Math.cos(a)*R*.95,cy+Math.sin(a)*R*.95);g.stroke()}break;
+case'shield':g.beginPath();g.moveTo(cx,cy-R);g.quadraticCurveTo(cx+R*.85,cy-R*.75,cx+R*.8,cy-R*.6);g.quadraticCurveTo(cx+R*.8,cy+R*.5,cx,cy+R);g.quadraticCurveTo(cx-R*.8,cy+R*.5,cx-R*.8,cy-R*.6);g.quadraticCurveTo(cx-R*.85,cy-R*.75,cx,cy-R);g.stroke();
+g.beginPath();const h=R*.3;g.moveTo(cx,cy+h*1.1);g.bezierCurveTo(cx-h*2,cy-h*.2,cx-h*.9,cy-h*1.6,cx,cy-h*.5);g.bezierCurveTo(cx+h*.9,cy-h*1.6,cx+h*2,cy-h*.2,cx,cy+h*1.1);g.fill();break;
+case'waves':for(let k=0;k<5;k++){g.beginPath();for(let x=-R;x<=R;x+=4){const y=cy-R*.5+k*R*.25+Math.sin((x/R)*Math.PI*1.6+k)*R*.09;x==-R?g.moveTo(cx+x,y):g.lineTo(cx+x,y)}g.stroke()}break;
+case'dawn':g.beginPath();g.arc(cx,cy+R*.15,R*.45,Math.PI,0);g.fill();for(let i=0;i<7;i++){const a=Math.PI+(i+.5)/7*Math.PI;g.beginPath();g.moveTo(cx+Math.cos(a)*R*.6,cy+R*.15+Math.sin(a)*R*.6);g.lineTo(cx+Math.cos(a)*R*.9,cy+R*.15+Math.sin(a)*R*.9);g.stroke()}g.beginPath();g.moveTo(cx-R,cy+R*.2);g.lineTo(cx+R,cy+R*.2);g.stroke();break;
+case'links':[[-.38,0],[.38,0],[0,-.4],[0,.4]].forEach(([dx,dy])=>{g.beginPath();g.arc(cx+dx*R,cy+dy*R,R*.42,0,7);g.stroke()});break;
+case'chain':g.beginPath();g.ellipse(cx-R*.42,cy+R*.1,R*.42,R*.22,-.5,0,7);g.stroke();g.beginPath();g.ellipse(cx+R*.42,cy-R*.1,R*.42,R*.22,-.5,.6,5.4);g.stroke();break;
+case'leaves':for(let i=0;i<5;i++){const a=-Math.PI/2+(i-2)*.45;g.save();g.translate(cx,cy+R*.6);g.rotate(a+Math.PI/2);g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(R*.32,-R*.55,0,-R*1.05);g.quadraticCurveTo(-R*.32,-R*.55,0,0);g.fill();g.restore()}break}
+g.restore()};
+if(withHeader){draw(W-230,210,210,'#ffffff',.28);draw(W-470,90,70,'#ffffff',.18)}
+draw(W-150,H-170,190,T.c1,.10);draw(140,H-420,90,T.c2,.08);
+return c.toDataURL('image/jpeg',.88)}
+function pdfSummary(r){const t='« '+r.label+' »';return[
+'Sur le thème '+t+', tes réponses montrent que tu sembles plutôt bien en ce moment. Continue ce qui te fait du bien, et refais ce bilan si la situation change.',
+'Sur le thème '+t+', tes réponses montrent quelques signaux à surveiller. En parler tôt, à un professionnel ou à une ligne d’écoute, peut éviter que la situation s’installe.',
+'Sur le thème '+t+', tes réponses montrent que cela pèse fortement en ce moment. Un accompagnement par un professionnel ou une structure spécialisée serait vraiment utile : tu n’as pas à porter cela seul·e.'][r.lv]}
+async function pdfPicks(theme){if(!place)return null;try{const ref=await geoOf(place);if(!ref)return null;const cats=(CATS[theme]||CATS_DEFAULT).filter(c=>DATA_CAT[c[1].toLowerCase()]).slice(0,3);
+const out=[];for(const[label,t]of cats){const L=await dataSearch(ref,curKm(),DATA_CAT[t.toLowerCase()]);if(L&&L.length)sortRes(L.slice()).slice(0,2).forEach(x=>out.push({cat:label,x}))}return out}catch(e){return null}}
+async function pdf(){const m=$('msg');try{m.textContent='Préparation du PDF…';const r=res,T=PDF_THEME[r.theme]||PDF_THEME.hum,LVC=['#2f9e6b','#e0a030','#d9534f'][r.lv];
+const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});const W=210,M=16,CW=W-2*M;
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const bg1=pdfBg(T,true),bg2=pdfBg(T,false);d.addImage(bg1,'JPEG',0,0,210,297);
+d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(10);d.text('MA BOUSSOLE  ·  MON BILAN',M,18);
+d.setFontSize(30);d.text(d.splitTextToSize(r.label,140),M,38);d.setFont('helvetica','normal');d.setFontSize(11);d.text('Bilan du '+r.date+'  ·  '+BQ[r.theme].length+' questions',M,52);
+let y=78;
+const page=()=>{d.addPage();d.addImage(bg2,'JPEG',0,0,210,297);y=20};
+const card=(h,fn)=>{if(y+h>282)page();d.setFillColor(255,255,255);d.setDrawColor(228,226,238);d.setLineWidth(.3);d.roundedRect(M,y,CW,h,4,4,'FD');fn(y);y+=h+6};
+const txt=(s,size,bold,col,maxw)=>{d.setFont('helvetica',bold?'bold':'normal');d.setFontSize(size);d.setTextColor(...(col||[37,36,45]));return d.splitTextToSize(s,maxw||CW-16)};
+const h2=(s,yy)=>{d.setFont('helvetica','bold');d.setFontSize(13);d.setTextColor(...hex(T.ink));d.text(s,M+8,yy)};
+if(r.sec){const L=txt('Certaines de tes réponses signalent une situation préoccupante. Si tu es en danger, appelle le 112 (ou le 17). Pour parler à quelqu’un maintenant : 3114, 24h/24, gratuit.',10.5,true,[122,30,30]);
+if(y+L.length*5+12>282)page();d.setFillColor(253,236,234);d.setDrawColor(217,83,79);d.roundedRect(M,y,CW,L.length*5+10,4,4,'FD');d.setTextColor(122,30,30);d.text(L,M+8,y+8);y+=L.length*5+16}
+card(36,yy=>{h2('Résultat',yy+10);d.setFillColor(...hex(LVC));d.roundedRect(W-M-52,yy+4,44,9,4.5,4.5,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(10.5);d.text(LV[r.lv][0],W-M-30,yy+10,{align:'center'});
+d.setFillColor(236,234,244);d.roundedRect(M+8,yy+18,CW-16,5,2.5,2.5,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+8,yy+18,Math.max(5,(CW-16)*r.sc/r.max),5,2.5,2.5,'F');
+d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(106,104,120);d.text('Score : '+r.sc+' / '+r.max+'  ·  repère indicatif, pas un diagnostic',M+8,yy+30)});
+{const L=txt(pdfSummary(r),11,false);card(16+L.length*5.2,yy=>{h2('En bref',yy+10);txt('',11);d.text(L,M+8,yy+18)})}
+{const A=(BADV[r.theme]||[]).map(a=>txt(a,10.5,false,null,CW-30));const h=14+A.reduce((s,l)=>s+l.length*5+4,0);card(h,yy=>{h2('Mes conseils',yy+10);let z=yy+19;A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+12,z-1.4,3.2,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(9);d.text(String(i+1),M+12,z-.3,{align:'center'});d.setTextColor(37,36,45);d.setFont('helvetica','normal');d.setFontSize(10.5);d.text(L,M+19,z);z+=L.length*5+4})})}
+const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));
+{const rows=lines.map(([n,ds])=>({n,L:txt(ds,9.5,false,null,CW-58)}));const h=14+rows.reduce((s,o)=>s+Math.max(1,o.L.length)*4.6+3,0);card(h,yy=>{h2('Numéros vérifiés pour ce thème',yy+10);let z=yy+18;rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(11);d.setTextColor(...hex(T.ink));d.text(o.n,M+8,z);d.setFont('helvetica','normal');d.setFontSize(9.5);d.setTextColor(74,72,88);d.text(o.L,M+50,z);z+=Math.max(1,o.L.length)*4.6+3})})}
+const picks=await pdfPicks(r.theme);
+if(picks&&picks.length){const rows=picks.map(({cat,x})=>{const info=[x.prof,[x.addr||x.ville].filter(Boolean).join(''),x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join('  ·  ');return{nm:x.name,info:txt(info,9,false,null,CW-60),tel:x.phone||'',cat}});
+const h=18+rows.reduce((s,o)=>s+5+o.info.length*4.2+3,0);card(h,yy=>{h2('Professionnels à contacter près de '+place,yy+10);d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(106,104,120);d.text('Les plus proches selon les annuaires officiels (RPPS, FINESS). Vérifie avant de te déplacer.',M+8,yy+15.5);let z=yy+23;
+rows.forEach(o=>{d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(37,36,45);d.text(d.splitTextToSize(o.nm,CW-60)[0],M+8,z);if(o.tel){d.setTextColor(...hex(T.ink));d.text(o.tel,W-M-8,z,{align:'right'})}d.setFont('helvetica','normal');d.setFontSize(9);d.setTextColor(106,104,120);d.text(o.info,M+8,z+4.6);z+=5+o.info.length*4.2+3})})}
+else{const C=(CATS[r.theme]||CATS_DEFAULT).slice(0,5).map(c=>c[0]);const L=txt('Vers qui te tourner : '+C.join(', ')+'. Retrouve les plus proches de chez toi sur gio4064.github.io/ma-boussole (rubrique « Trouver de l’aide »).',10.5,false);card(16+L.length*5.2,yy=>{h2('Professionnels à contacter',yy+10);txt('',10.5);d.text(L,M+8,yy+18)})}
+if(y>270)page();d.setFont('helvetica','normal');d.setFontSize(8.5);d.setTextColor(106,104,120);d.text('Urgence : 112  ·  SAMU 15  ·  Prévention du suicide 3114 (24h/24, gratuit)',M,286);d.text('Ce bilan est indicatif et ne constitue pas un diagnostic.  ·  gio4064.github.io/ma-boussole',M,291);
+const fname='ma-boussole-'+r.theme+'-'+r.date.replace(/\//g,'-')+'.pdf';
+if(window.claude&&claude.use){const dl=await claude.use('downloads');if(!dl){m.textContent='Téléchargement indisponible ici.';return}await dl.save({filename:fname,data:d.output('blob')})}else d.save(fname);m.textContent='PDF prêt.';if($('delAfter')&&$('delAfter').checked&&user){const h=(await hGet(user.name,'mb_hist_'+user.hash,[])).filter(e=>!(e.date===res.date&&e.theme===res.theme));await hSet(user.name,'mb_hist_'+user.hash,h);m.textContent='PDF prêt. Ce bilan a été retiré de ton historique.'}}catch(e){console.error(e);m.textContent=(e&&e.code=='declined')?'Annulé.':'Erreur PDF.'}}
 const AGES=[["enfant","Enfant (8-12)"],["ado","Ado (13-17)"],["adulte","Adulte (18-64)"],["senior","65 ans et +"]];
 let age='adulte';
 function ecoute(){const c={enfant:["<b>119</b> : Allô Enfance en danger, gratuit, 24h/24","<b>3018</b> : harcèlement à l’école et sur internet, 7j/7 de 9h à 23h"],ado:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>Fil Santé Jeunes</b> (12-25 ans) : 0 800 235 236, 7j/7 de 9h à 23h","<b>3018</b> : harcèlement à l’école et en ligne, 7j/7 de 9h à 23h","<b>119</b> : si tu es en danger chez toi"],adulte:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme 24h/24"],senior:["<b>3114</b> : prévention du suicide, 24h/24, gratuit","<b>SOS Amitié</b> : 09 72 39 40 50, écoute anonyme 24h/24","<b>3133</b> : maltraitance envers les personnes âgées ou handicapées (gratuit, 7j/7 de 9h à 20h)"]}[age];return'<div class="card"><h3>Écoute immédiate (France)</h3><ul>'+c.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'}
