@@ -552,9 +552,9 @@ soc:[[[7,19],"Si l’isolement t’inquiète ou te fait penser que personne ne r
 add:[[[9],"Ne conduis jamais après avoir consommé : prévois un retour autrement avant de sortir."],[[1,17,15],"Arrêter seul·e est difficile : un CSAPA accompagne gratuitement et de façon confidentielle."],[[0,11],"Repère les moments où l’envie arrive (stress, ennui, solitude) et prépare une alternative pour chacun."],[[3,7,8],"Fixe-toi une limite précise avant de commencer (quantité, durée, budget) et note si tu l’as tenue."],[[4],"Le manque peut se soulager : un médecin peut proposer un accompagnement adapté."],[[10],"Pour les jeux d’argent, fixe un plafond de dépenses ou demande une interdiction volontaire de jeux."],[[12,13,5,18],"Note une semaine l’impact concret sur ton sommeil, ton travail et tes relations, pour en parler à un professionnel."],[[2,6,14,16],"Parler à un proche de confiance de ta consommation réelle allège souvent la culpabilité."]],
 ali:[[[3,4],"Vomissements, laxatifs ou repas sautés ont des effets sur la santé : parles-en rapidement à ton médecin."],[[2,11],"Mange à heures régulières (3 repas et une collation) : sauter un repas augmente le risque de perdre le contrôle ensuite."],[[10,12,18,19],"La FFAB (09 69 325 900) et un diététicien ou un psychologue spécialisé peuvent t’accompagner."],[[0,5,9,15],"Range la balance quelque temps et note plutôt ton énergie et ton humeur."],[[1,6,14],"Note chaque jour une chose que ton corps t’a permis de faire."],[[7,16,17],"Commence par partager un repas simple avec une seule personne de confiance."],[[8],"Bouge pour le plaisir ou la santé, jamais pour « compenser » un repas."]]};
 function pdfAnalyse(r){const Q=BQ[r.theme]||[],A=r.ans||[];const items=Q.map((x,i)=>{const a=A[i];if(a==null)return null;const v=x.r?3-a:a;return{i,t:x.t,a,v,rev:!!x.r}}).filter(Boolean);
-const hard=items.filter(o=>o.v>=2).sort((p,q)=>q.v-p.v||p.i-q.i);const easy=items.filter(o=>o.v===0).sort((p,q)=>(q.rev-p.rev)||p.i-q.i);
+const hard=items.filter(o=>o.v>=2).sort((p,q)=>q.v-p.v||p.i-q.i);const easy=items.filter(o=>o.v===0&&(o.rev||!['viol','harc'].includes(r.theme))).sort((p,q)=>(q.rev-p.rev)||p.i-q.i);
 const vOf={};items.forEach(o=>vOf[o.i]=o.v);
-const tips=(PDF_TIPS[r.theme]||[]).map(([ids,t],k)=>({t,w:Math.max(...ids.map(i=>vOf[i]??0)),k})).filter(o=>o.w>=2).sort((p,q)=>q.w-p.w||p.k-q.k).map(o=>o.t);
+const tips=(PDF_TIPS[r.theme]||[]).map(([ids,t],k)=>({t,w:Math.max(...ids.map(i=>vOf[i]??0)),k})).filter(o=>o.w>=2).sort((p,q)=>p.k-q.k).map(o=>o.t);
 (BADV[r.theme]||[]).forEach(t=>{if(tips.length<3&&!tips.includes(t))tips.push(t)});
 return{hard,easy,tips:tips.slice(0,3),n:items.length}}
 function pdfSummary(r,an){const t='« '+r.label+' »',n=an.hard.length;
@@ -599,7 +599,7 @@ const avail=297-14-y;
 {const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2)).slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
 const maxP=Math.max(0,Math.min(5,Math.floor((avail-18)/10.5)));const picks=maxP?await pdfPicks(r.theme,maxP):null;
-const rowsR=(picks||[]).map(x=>({nm:wrap(x.name,9.5,1,HW-12)[0],tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
+const rowsR=(picks||[]).map(x=>({nm:(()=>{const w=x.phone?HW-44:HW-12;const L=wrap(x.name,9.5,1,w);return L.length>1?L[0].replace(/\s*\S*$/,'')+'…':L[0]})(),tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
 let hL=14;const keepL=[];for(const o of rowsL){const add=LH(10)+o.L.length*LH(8.5)+2.5;if(hL+add>avail)break;hL+=add;keepL.push(o)}
 const hR=rowsR.length?18+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
 box(M,y,HW,h);head('Numéros vérifiés',M,y);let z=y+15;keepL.forEach(o=>{font(10,1,INK);d.text(o.n,M+6,z);z+=LH(10);font(8.5,0,MU);d.text(o.L,M+6,z);z+=o.L.length*LH(8.5)+2.5});
