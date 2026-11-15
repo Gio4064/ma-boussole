@@ -583,7 +583,7 @@ d.setFillColor(...hex(LVC));d.roundedRect(W-M-46,y+3.5,40,8,4,4,'F');font(9.5,1,
 d.setFillColor(236,234,244);d.roundedRect(M+6,y+14,CW-12,4,2,2,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+6,y+14,Math.max(4,(CW-12)*r.sc/r.max),4,2,2,'F');
 font(9.5,0);d.text(S,M+6,y+24);y+=h+G}
 {const hard=an.hard.slice(0,3),easy=an.easy.slice(0,2);
-const fmt=o=>({q:wrap('« '+o.t.replace(/\.$/,'')+' »',9,0,HW-12),a:'Ta réponse : '+SC[o.a]});
+const fmt=o=>({q:wrap('« '+o.t.replace(/\.$/,'')+' »',9,0,HW-12),a:o.v===0&&!o.rev?'« Jamais » : pas de difficulté ici':'Ta réponse : '+SC[o.a]});
 const H=hard.map(fmt),E=easy.map(fmt);const hh=L=>L.reduce((s,o)=>s+o.q.length*LH(9)+LH(8.5)+2.5,0);
 const h=Math.max(16+hh(H),16+hh(E),24);
 box(M,y,HW,h);head('Ce qui ressort de tes réponses',M,y);let z=y+15;
