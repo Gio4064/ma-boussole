@@ -265,7 +265,8 @@ $('v').innerHTML=`${(themeCur==='viol'||themeCur==='harc')&&qi===0?EXIT_TIP:''}<
 function fin(){const Q=qset(themeCur);let sc=0,sec=false;
 Q.forEach((x,i)=>{const v=x.r?3-ans[i]:ans[i];sc+=v;if(x.sec&&ans[i]>0)sec=true});
 const meta=BTHEMES.find(t=>t[0]==themeCur),max=Q.length*3;
-res={theme:themeCur,label:meta[1],date:new Date().toLocaleDateString('fr-FR'),sc,max,lv:lvl(sc,max),sec,ans:ans.slice(0,Q.length),age};aideThemeSel=themeCur;
+let lv=lvl(sc,max);if(sec)lv=2;else if(['viol','harc'].includes(themeCur)&&Q.some((x,i)=>!x.r&&ans[i]===3))lv=Math.max(lv,1);
+res={theme:themeCur,label:meta[1],date:new Date().toLocaleDateString('fr-FR'),sc,max,lv,sec,ans:ans.slice(0,Q.length),age};aideThemeSel=themeCur;
 if(user){hGet(user.name,'mb_hist_'+user.hash,[]).then(h=>{h.push({date:res.date,theme:themeCur,label:meta[1],sc:res.sc,max:res.max,lv:res.lv});hSet(user.name,'mb_hist_'+user.hash,h)})}
 resV()}
 function resV(){nav('');const r=res;
