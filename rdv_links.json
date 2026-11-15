@@ -1,0 +1,250 @@
+{
+ "note": "Liens de prise de RDV vérifiés (relevés à la main sur les listes publiques Doctolib, ou envoyés par les praticiens). Clé de correspondance : nom en minuscules sans accents + département.",
+ "updated": "2026-11-15",
+ "deps": [
+  "40"
+ ],
+ "links": [
+  {
+   "url": "https://www.doctolib.fr/psychologue/soustons/manon-depierrois?pid=practice-629483",
+   "slug": "manon-depierrois"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/soustons/marta-rodriguez?pid=practice-543077",
+   "slug": "marta-rodriguez"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/soustons/celine-bourie?pid=practice-378285",
+   "slug": "celine-bourie"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/bayonne/alain-lavielle-fortabat?pid=practice-892502",
+   "slug": "alain-lavielle-fortabat"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/soorts-hossegor/madeleine-mouthuy?pid=practice-775359",
+   "slug": "madeleine-mouthuy"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/paris/sara-marie-dahdah?pid=practice-723272",
+   "slug": "sara-marie-dahdah"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-vincent-de-tyrosse/aurelie-sierra?pid=practice-491748",
+   "slug": "aurelie-sierra"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/dax/charlene-gonzalez?pid=practice-621433",
+   "slug": "charlene-gonzalez"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-vincent-de-tyrosse/virginie-chambrier?pid=practice-883095",
+   "slug": "virginie-chambrier"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-vincent-de-tyrosse/elodie-guerrier-leon?pid=practice-66645",
+   "slug": "elodie-guerrier-leon"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/angresse/magali-babonneau?pid=practice-602935",
+   "slug": "magali-babonneau"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/bordeaux/sarah-lemaire?pid=practice-473232",
+   "slug": "sarah-lemaire"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/soorts-hossegor/chloe-nuns?pid=practice-339096",
+   "slug": "chloe-nuns"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/bordeaux/margot-gourmelen?pid=practice-361592",
+   "slug": "margot-gourmelen"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/paris/cendrine-gaymard-bosom?pid=practice-709573",
+   "slug": "cendrine-gaymard-bosom"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/capbreton/marine-lemoine-plaisir?pid=practice-815740",
+   "slug": "marine-lemoine-plaisir"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/capbreton/jeanne-gaffie-habashi?pid=practice-698026",
+   "slug": "jeanne-gaffie-habashi"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/benesse-maremne/maeva-derval?pid=practice-352041",
+   "slug": "maeva-derval"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/benesse-maremne/carmen-salomone?pid=practice-665304",
+   "slug": "carmen-salomone"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/capbreton/patricia-babin?pid=practice-98467",
+   "slug": "patricia-babin"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/capbreton/lea-ledru?pid=practice-695300",
+   "slug": "lea-ledru"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/capbreton/zineb-haili?pid=practice-821103",
+   "slug": "zineb-haili"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/angresse/flora-de-almeida?pid=practice-652998",
+   "slug": "flora-de-almeida"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saubrigues/annaick-sagot?pid=practice-278400",
+   "slug": "annaick-sagot"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/labenne/shila-soccalingame?pid=practice-485228",
+   "slug": "shila-soccalingame"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/labenne/marie-bouteloux-bayonne?pid=practice-692532",
+   "slug": "marie-bouteloux-bayonne"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-paul-les-dax/sandra-torres-saint-paul-les-dax?pid=practice-894014",
+   "slug": "sandra-torres-saint-paul-les-dax"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/dax/manon-cavalerie?pid=practice-644316",
+   "slug": "manon-cavalerie"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-paul-les-dax/fanny-lassalle-blanc?pid=practice-808866",
+   "slug": "fanny-lassalle-blanc"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/dax/sabine-pache?pid=practice-404155",
+   "slug": "sabine-pache"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/dax/sandrine-de-sousa-dax?pid=practice-759173",
+   "slug": "sandrine-de-sousa-dax"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/biaudos/patricia-lopes-biaudos?pid=practice-416640",
+   "slug": "patricia-lopes-biaudos"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/dax/virginie-lafitte?pid=practice-749797",
+   "slug": "virginie-lafitte"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saugnac-et-cambran/emilie-arrechea?pid=practice-540300",
+   "slug": "emilie-arrechea"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-paul-les-dax/lucie-petit-donat?pid=practice-881379",
+   "slug": "lucie-petit-donat"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/ondres/virag-lacotte?pid=practice-848194",
+   "slug": "virag-lacotte"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychologue/saint-lon-les-mines/yoann-lamourane-cagnotte?pid=practice-814530",
+   "slug": "yoann-lamourane-cagnotte"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychiatre/soustons/elodie-vedrenne?pid=practice-116785",
+   "slug": "elodie-vedrenne"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychiatre/soorts-hossegor/jean-michel-dubroca?pid=practice-122762",
+   "slug": "jean-michel-dubroca"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychiatre/narrosse/marie-stark?pid=practice-786196",
+   "slug": "marie-stark"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychiatre/saint-vincent-de-tyrosse/anais-baert?pid=practice-225828",
+   "slug": "anais-baert"
+  },
+  {
+   "url": "https://www.doctolib.fr/psychiatre/benesse-maremne/ahcene-metiba?pid=practice-760898",
+   "slug": "ahcene-metiba"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/stephane-allaire?pid=practice-108635",
+   "slug": "stephane-allaire"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/fanny-mathieu-dufour?pid=practice-543586",
+   "slug": "fanny-mathieu-dufour"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/paul-dufour-soustons?pid=practice-543586",
+   "slug": "paul-dufour-soustons"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/maylis-saudo?pid=practice-543586",
+   "slug": "maylis-saudo"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/josephine-coste-noble?pid=practice-543586",
+   "slug": "josephine-coste-noble"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/benedicte-plantec-lamothe?pid=practice-543586",
+   "slug": "benedicte-plantec-lamothe"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/christel-gachen-coy?pid=practice-543586",
+   "slug": "christel-gachen-coy"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/leonie-castaignos?pid=practice-543586",
+   "slug": "leonie-castaignos"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/soustons/karen-leparc-capbreton?pid=practice-543586",
+   "slug": "karen-leparc-capbreton"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/vieux-boucau-les-bains/francois-delage?pid=practice-25394",
+   "slug": "francois-delage"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/vieux-boucau-les-bains/mathieu-ah-sing?pid=practice-426928",
+   "slug": "mathieu-ah-sing"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/vieux-boucau-les-bains/eric-hiltenbrand-vieux-boucau-les-bains?pid=practice-151653",
+   "slug": "eric-hiltenbrand-vieux-boucau-les-bains"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/tosse/celia-vidal-tosse?pid=practice-622589",
+   "slug": "celia-vidal-tosse"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/tosse/ludovic-laurent?pid=practice-559370",
+   "slug": "ludovic-laurent"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/angresse/sylvie-celbert-tran-dinh?pid=practice-546925",
+   "slug": "sylvie-celbert-tran-dinh"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/seignosse/valerie-besset-seignosse?pid=practice-589123",
+   "slug": "valerie-besset-seignosse"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/messanges/matthieu-raynal?pid=practice-25712",
+   "slug": "matthieu-raynal"
+  },
+  {
+   "url": "https://www.doctolib.fr/medecin-generaliste/seignosse/corinne-barbera?pid=practice-291863",
+   "slug": "corinne-barbera"
+  }
+ ],
+ "manual": {}
+}

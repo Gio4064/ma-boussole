@@ -116,6 +116,14 @@ button.big{padding:14px 22px;font-size:1rem}
 .pc-btn:hover{border-color:currentColor}
 .pc-doc{background:#107aca;border-color:#107aca;color:#fff}.pc-doc:hover{background:#0d66a9;color:#fff}
 .pc-alt{font-size:.82rem;margin-top:2px}
+.pc-doc-q{background:transparent;color:#107aca;border-color:#107aca}.pc-doc-q:hover{background:#107aca;color:#fff}
+.pc-claim{all:unset;cursor:pointer;font-size:.8rem;color:var(--mu);text-decoration:underline;margin-top:4px}.pc-claim:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+#rdvModal{position:fixed;inset:0;z-index:60;background:rgba(10,14,40,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+#rdvModal.hide{display:none}
+.rdv-dlg{background:var(--card,#fff);color:var(--tx);border-radius:16px;padding:20px;max-width:460px;width:100%;display:flex;flex-direction:column;gap:10px;max-height:90vh;overflow:auto}
+.rdv-dlg h3{margin:0}.rdv-dlg label{display:flex;flex-direction:column;gap:6px;font-weight:600}.rdv-dlg input[type=url]{min-height:44px;padding:8px 10px;border:1.5px solid var(--bd);border-radius:10px;font:inherit}
+.rdv-ck{flex-direction:row!important;align-items:flex-start;font-weight:400!important}.rdv-ck input{margin-top:3px}
+.rdv-err{color:#c0392b;margin:0;min-height:1em}
 </style>
 </head>
 <body>
@@ -358,7 +366,7 @@ function bboxKm(ref,b){return kmBetween(ref,{lat:Math.min(Math.max(ref.lat,b[0])
 async function dataSearch(ref,km,cat){const idx=await dataIndex();if(!idx||!idx.cats||!idx.cats[cat])return null;
 const deps=Object.keys(idx.cats[cat]).filter(d=>idx.deps[d]&&bboxKm(ref,idx.deps[d])<=km+3);
 const lists=await Promise.all(deps.map(d=>{const k=cat+'/'+d;if(!dataCache[k])dataCache[k]=dataGet(k+'.json');return dataCache[k]}));
-const out=[];for(const L of lists){if(!L)continue;for(const r of L){const d=kmBetween(ref,{lat:r[5],lon:r[6]});if(d<=km)out.push({name:r[0],prof:r[1],addr:[r[2],[r[3],r[4]].filter(Boolean).join(' ')].filter(Boolean).join(', '),ville:r[4],phone:r[7],mail:r[8],mode:r[9],struct:r[10],lat:r[5],lon:r[6],d,src:DATA_SRC[cat]||'off'})}}
+const out=[];for(const L of lists){if(!L)continue;for(const r of L){const d=kmBetween(ref,{lat:r[5],lon:r[6]});if(d<=km)out.push({name:r[0],prof:r[1],addr:[r[2],[r[3],r[4]].filter(Boolean).join(' ')].filter(Boolean).join(', '),ville:r[4],cp:r[3],phone:r[7],mail:r[8],mode:r[9],struct:r[10],lat:r[5],lon:r[6],d,src:DATA_SRC[cat]||'off'})}}
 return out}
 function mergeRes(ref,km,...lists){const out=[];
 for(const L of lists){if(!L)continue;for(const x of L){if(x.lat==null)continue;x.d=kmBetween(ref,{lat:x.lat,lon:x.lon});if(x.d>km)continue;
@@ -375,11 +383,36 @@ function cardHtml(x,ico){const ext='https://www.google.com/maps/search/'+encodeU
 const telHref=x.phone?'tel:'+x.phone.replace(/[^0-9+]/g,''):'';const findTel='https://www.google.com/search?q='+encodeURIComponent([x.name,x.prof&&x.prof.split(' — ')[0],x.ville].filter(Boolean).join(' '));
 const same=x.ville&&placeCity()&&plNorm(x.ville)===placeCity();const dl=doctolibOf(x);
 const dist=same?'à '+esc(x.ville):(x.d!=null?(x.mode&&x.mode!=='E'&&x.src!=='osm'?'≈ ':'à ')+x.d.toFixed(1).replace('.',',')+' km':'');
-return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b><span class="mu">${esc(x.prof||(mapCur?mapCur.label:''))}</span>${dist?`<span class="pc-dist">📍 ${dist}</span>`:''}${x.mode?`<span class="mu">${esc(MODE_LBL[x.mode]||'')}${x.struct?' — '+esc(x.struct):''}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:`<a href="${findTel}" target="_blank" rel="noopener">☎️ Trouver le numéro ↗</a>`}${x.mail?`<a href="mailto:${esc(x.mail)}">✉️ ${esc(x.mail)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}${SRC_LBL[x.src]?`<span class="badge-off">✔ ${SRC_LBL[x.src]}</span>`:''}<div class="pc-btns"><a class="pc-btn" href="${ext}" target="_blank" rel="noopener">🗺️ Voir sur Google Maps</a>${dl?`<a class="pc-btn pc-doc" href="${dl.profile}" target="_blank" rel="noopener">📅 Prendre RDV sur Doctolib</a>`:''}</div>${dl?`<span class="pc-alt mu">Sa fiche Doctolib s’affiche en premier résultat si elle y est inscrite. Sinon : <a href="${dl.list}" target="_blank" rel="noopener">tous les ${esc(dl.label)} à ${esc(x.ville)} sur Doctolib</a></span>`:''}<span class="pc-links"><a href="${dir}" target="_blank" rel="noopener">🧭 Itinéraire ↗</a></span></div></div>`}
+return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b><span class="mu">${esc(x.prof||(mapCur?mapCur.label:''))}</span>${dist?`<span class="pc-dist">📍 ${dist}</span>`:''}${x.mode?`<span class="mu">${esc(MODE_LBL[x.mode]||'')}${x.struct?' — '+esc(x.struct):''}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:`<a href="${findTel}" target="_blank" rel="noopener">☎️ Trouver le numéro ↗</a>`}${x.mail?`<a href="mailto:${esc(x.mail)}">✉️ ${esc(x.mail)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}${SRC_LBL[x.src]?`<span class="badge-off">✔ ${SRC_LBL[x.src]}</span>`:''}<div class="pc-btns"><a class="pc-btn" href="${ext}" target="_blank" rel="noopener">🗺️ Voir sur Google Maps</a>${dl?(dl.direct?`<a class="pc-btn pc-doc" href="${dl.profile}" target="_blank" rel="noopener">📅 Prendre RDV en ligne</a>`:`<a class="pc-btn pc-doc pc-doc-q" href="${dl.profile}" target="_blank" rel="noopener">🔎 Chercher sur Doctolib</a>`):''}</div>${dl?(dl.direct?`<span class="pc-alt mu">✔ Lien de rendez-vous vérifié</span>`:`<span class="pc-alt mu">Sa fiche s’affiche en premier résultat si elle est sur Doctolib. Sinon : <a href="${dl.list}" target="_blank" rel="noopener">tous les ${esc(dl.label)} à ${esc(x.ville)}</a> ou appelez le cabinet.</span>`):''}${dl&&!dl.direct&&RDV_CONTACT?`<button class="pc-claim" onclick="rdvClaim(${cardRef(x)})">Vous êtes ce professionnel ? Ajoutez votre lien de RDV</button>`:''}<span class="pc-links"><a href="${dir}" target="_blank" rel="noopener">🧭 Itinéraire ↗</a></span></div></div>`}
+
+let RDV=null;
+function loadRdv(){if(RDV)return;RDV={links:[],deps:[],manual:{}};fetch('rdv_links.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j){RDV=j;if(osmList&&osmList.length&&$('resGrid'))renderResults(false)}}).catch(()=>{})}
+function rdvLinkOf(x,n){if(!RDV)return null;const dep=String(x.cp||'').slice(0,2);if(!(RDV.deps||[]).includes(dep))return null;
+const key=n+'|'+dep;if(RDV.manual&&RDV.manual[key])return RDV.manual[key];
+const m=(RDV.links||[]).find(l=>l.slug===n||l.slug.startsWith(n+'-'));return m?m.url:null}
+const RDV_CONTACT='';
+function rdvClaim(i){const x=(window._cardRefs||[])[i];if(!x)return;const box=$('rdvModal');if(!box)return;
+box.innerHTML=`<div class="rdv-dlg" role="dialog" aria-modal="true" aria-labelledby="rdvT"><h3 id="rdvT">Ajouter votre lien de rendez-vous</h3>
+<p class="mu">Pour <b>${esc(x.name)}</b> — ${esc(x.prof||'')}, ${esc(x.ville||'')}. Votre lien remplacera la recherche sur votre fiche, après vérification.</p>
+<label>Lien de prise de RDV (Doctolib, Maiia, Keldoc, votre site…)<input id="rdvUrl" type="url" inputmode="url" placeholder="https://www.doctolib.fr/…"></label>
+<label class="rdv-ck"><input id="rdvOk" type="checkbox"> Je suis ce professionnel (ou son secrétariat) et j’accepte que ce lien soit affiché sur Ma Boussole.</label>
+<p id="rdvErr" class="rdv-err" role="alert"></p>
+<div class="pc-btns"><button class="s" onclick="rdvClose()">Annuler</button><button onclick="rdvSend(${i})">Préparer l’e-mail</button></div></div>`;
+box.classList.remove('hide');setTimeout(()=>{const u=$('rdvUrl');if(u)u.focus()},30)}
+function rdvClose(){const b=$('rdvModal');if(b){b.classList.add('hide');b.innerHTML=''}}
+function rdvSend(i){const x=(window._cardRefs||[])[i];const u=($('rdvUrl').value||'').trim(),ok=$('rdvOk').checked,err=$('rdvErr');
+let url;try{url=new URL(u)}catch(e){}
+if(!url||url.protocol!=='https:'){err.textContent='Collez un lien complet qui commence par https://';return}
+if(!ok){err.textContent='Cochez la case pour confirmer.';return}
+const body=`Bonjour,\n\nMerci d’afficher ce lien de prise de rendez-vous sur Ma Boussole :\n\nPraticien : ${x.name}\nProfession : ${x.prof||''}\nAdresse : ${x.addr||''}\nLien : ${url.href}\n\nJe confirme être ce professionnel (ou son secrétariat).\n`;
+location.href='mailto:'+RDV_CONTACT+'?subject='+encodeURIComponent('Lien RDV — '+x.name)+'&body='+encodeURIComponent(body);
+err.textContent='';$('rdvModal').querySelector('.rdv-dlg').insertAdjacentHTML('beforeend','<p class="mu">Votre messagerie s’ouvre avec l’e-mail prêt : il reste à l’envoyer. Merci !</p>')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const b=document.getElementById('rdvModal');if(b&&!b.classList.contains('hide'))rdvClose()}});
 const DOC_SPE=[[/^psychologue/i,'psychologue','psychologues'],[/^psychoth/i,'psychotherapeute','psychothérapeutes'],[/^psychiatr/i,'psychiatre','psychiatres'],[/^m[ée]decin g[ée]n[ée]raliste/i,'medecin-generaliste','médecins généralistes'],[/^di[ée]t[ée]ticien/i,'dieteticien','diététiciens'],[/^sage-femme/i,'sage-femme','sages-femmes'],[/^addictolog/i,'addictologue','addictologues']];
 function docSlug(t){return String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/^(docteur|dr\.?)\s+/,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-function doctolibOf(x){if(!x||!x.prof||!x.ville||!(x.mode==='L'||x.mode==='B'))return null;const m=DOC_SPE.find(([r])=>r.test(x.prof));if(!m)return null;const v=docSlug(x.ville),n=docSlug(x.name);if(!v||!n)return null;
-const who=String(x.name).replace(/^(docteur|dr\.?)\s+/i,'');return{profile:'https://www.google.com/search?q='+encodeURIComponent('site:doctolib.fr '+who+' '+x.ville),list:`https://www.doctolib.fr/${m[1]}/${v}`,label:m[2]}}
+function cardRef(x){const a=window._cardRefs||(window._cardRefs=[]);let i=a.indexOf(x);if(i<0){a.push(x);i=a.length-1}return i}
+function doctolibOf(x){loadRdv();if(!x||!x.prof||!x.ville||!(x.mode==='L'||x.mode==='B'))return null;const m=DOC_SPE.find(([r])=>r.test(x.prof));if(!m)return null;const v=docSlug(x.ville),n=docSlug(x.name);if(!v||!n)return null;
+const who=String(x.name).replace(/^(docteur|dr\.?)\s+/i,'');const direct=rdvLinkOf(x,n);if(direct)return{direct:true,profile:direct,list:`https://www.doctolib.fr/${m[1]}/${v}`,label:m[2]};return{direct:false,profile:'https://www.google.com/search?q='+encodeURIComponent('site:doctolib.fr '+who+' '+x.ville),list:`https://www.doctolib.fr/${m[1]}/${v}`,label:m[2]}}
 function renderResults(pending){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box)return;
 if(more)more.classList.toggle('hide',!pending);
 if(!osmList.length){if(pending){box.innerHTML='<p class="mu" style="padding:8px">Recherche des établissements…</p>';if(empty)empty.classList.add('hide');return}
@@ -609,5 +642,6 @@ try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigat
 try{const pf=store.g('mb_pref');if(pf){place=pf.place||'';if(pf.km)kmSel=String(pf.km);if(pf.sort)resSort=pf.sort}}catch(e){}
 go('home');
 </script>
+<div id="rdvModal" class="hide"></div>
 </body>
 </html>
