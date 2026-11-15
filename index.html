@@ -19,13 +19,6 @@ body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no
 .topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sizebtn{margin-left:auto;flex:none}
 .side{display:none}
-.side .brand{display:flex;align-items:center;gap:9px;font:700 1.12rem/1.2 system-ui;margin:6px 8px 18px;color:var(--tx)}
-.side button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;color:var(--tx);font:500 .95rem system-ui;margin:1px 0}
-.side button:hover{background:var(--ac2)}
-.side button.on{background:var(--ac2);color:var(--ac);font-weight:700;box-shadow:inset 3px 0 0 0 var(--accent)}
-.side button.sub{font-size:.83rem;padding:6px 10px;color:var(--mu);font-weight:500}
-.side button.sub:hover{color:var(--ac);background:var(--ac2)}
-.side .bottom{margin-top:auto;font-size:.78rem;line-height:1.55;color:var(--mu);padding:12px;border-top:1px solid var(--bd)}
 .rail{display:none}
 .rail a{text-decoration:none}
 .rail .qlink{display:flex;gap:10px;align-items:flex-start;padding:7px 0}
@@ -33,11 +26,11 @@ body{margin:0;background:var(--bg) url(img/fond-clair.svg) center/cover fixed no
 .rail .qlink b{color:var(--tx);display:block;font-size:.92rem}
 .rail .qlink small{color:var(--mu);font-size:.8rem}
 @media(min-width:900px){
-.side{display:flex;flex-direction:column;width:232px;flex:none;padding:22px 12px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;border-right:1px solid var(--bd)}
+.side{display:flex;flex-direction:column;width:264px;flex:none;padding:22px 12px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;border-right:1px solid var(--bd)}
 #nav,.mobile-brand{display:none}
 .content{padding:30px 36px 90px;max-width:1000px;margin:0 auto}
 }
-@media(min-width:1200px){
+@media(min-width:1360px){
 .rail{display:flex;flex-direction:column;gap:14px;width:290px;flex:none;padding:30px 24px 30px 6px;position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto}
 }
 .grid2{display:grid;grid-template-columns:1fr;gap:12px}
@@ -46,7 +39,7 @@ h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.25rem;margin:.3em 0 .5em}h3{fon
 .card{background:var(--card);box-shadow:0 6px 24px rgba(60,60,120,.08);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0}
 .mu{color:var(--mu);font-size:.9rem}.priv{background:var(--ac2);border-radius:12px;padding:10px 12px;font-size:.9rem}
 .warn{background:var(--wa);color:var(--wt);border-radius:12px;padding:12px 14px;margin:12px 0}
-nav{display:flex;gap:6px;overflow-x:auto;margin:8px 0}nav button{flex:none}
+
 button{font:600 .95rem system-ui,sans-serif;border:0;border-radius:12px;padding:11px 16px;cursor:pointer;background:var(--ac);color:#fff;margin:4px 6px 4px 0}
 button.s{background:var(--ac2);color:var(--ac)}button.on{outline:2px solid var(--ac)}
 input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;margin:4px 0 10px}
@@ -208,7 +201,7 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .care-h{font-size:1.3rem;margin:4px 4px 12px}
 .care-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .care-grid .card{margin:0}
-@media (max-width:1199px){.home-care{display:block}}
+@media (max-width:1359px){.home-care{display:block}}
 .foot{margin:22px 0 10px;padding:20px 4px 6px;border-top:1px solid var(--bd);display:grid;gap:10px}
 .foot-brand b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.05rem;margin-right:8px}.foot-brand span{color:var(--mu);font-size:.88rem}
 .foot-links{display:flex;flex-wrap:wrap;gap:6px 18px}.foot-links a{color:var(--tx);font-size:.88rem;font-weight:600;text-decoration:none}.foot-links a:hover{color:var(--ac);text-decoration:underline}
@@ -247,7 +240,7 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .plan-hero h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 8px}
 .topbar{gap:10px}.topbar .mz{margin-left:auto}
 .mz{position:relative}
-.mz-pill{display:inline-flex;align-items:center;gap:2px;height:46px;box-sizing:border-box;padding:4px 5px 4px 4px;border-radius:999px;background:var(--card);border:1px solid var(--bd);box-shadow:0 6px 18px -10px rgba(30,30,70,.35);transition:border-color .2s}
+.mz-pill{flex:none;display:inline-flex;align-items:center;gap:2px;height:46px;box-sizing:border-box;padding:4px 5px 4px 4px;border-radius:999px;background:var(--card);border:1px solid var(--bd);box-shadow:0 6px 18px -10px rgba(30,30,70,.35);transition:border-color .2s}
 .mz-pill:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--bd))}
 .mz-bubble{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:9px;height:36px;padding:0 4px 0 0;border-radius:999px;color:var(--tx);min-width:0}
 .mz-bubble:focus-visible,.mz-mini:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
@@ -307,9 +300,9 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .mz-tt{flex:1;display:flex;flex-direction:column;font:600 .84rem system-ui,sans-serif;min-width:0}.mz-tt small{font-weight:400;color:var(--mu);font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mz-list .sel .mz-tt{color:var(--ac)}
 .mz-q-d{font:500 .74rem system-ui,sans-serif;color:var(--mu);font-variant-numeric:tabular-nums}
-@media (max-width:640px){.mz-pt{display:none}.mz-bubble{padding:0}.mz-panel{background:var(--card);position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px);width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center}}
+@media (max-width:640px){.mz-pt{display:none}.mz-bubble{padding:0}.mz-panel{background:var(--card);position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px + var(--tbh,0px));width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center}}
 @media (prefers-reduced-motion:reduce){.mz-eq i{animation:none;height:9px}.mz-panel{animation:none}.mz-cover,.mz-play,.mz-pl-c,.mz-prog i{transition:none}}
-.qa-btn{display:inline-flex;align-items:center;gap:8px;margin:0;height:46px;box-sizing:border-box;padding:0 18px 0 14px;border-radius:999px;background:var(--ac);color:#fff;font:650 .95rem system-ui,sans-serif;border:0;box-shadow:0 8px 20px -10px color-mix(in srgb,var(--ac) 75%,transparent);transition:filter .15s}
+.qa-btn{display:inline-flex;align-items:center;gap:8px;margin:0;height:46px;white-space:nowrap;flex:none;box-sizing:border-box;padding:0 18px 0 14px;border-radius:999px;background:var(--ac);color:#fff;font:650 .95rem system-ui,sans-serif;border:0;box-shadow:0 8px 20px -10px color-mix(in srgb,var(--ac) 75%,transparent);transition:filter .15s}
 .qa-btn:hover{filter:brightness(1.08)}.qa-btn:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
 .qa-av{display:none}
 .qa-btn.in{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:0 16px 0 5px;box-shadow:0 6px 18px -10px rgba(30,30,70,.35)}
@@ -381,16 +374,103 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .qa-ok{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#2f9e6b;color:#fff;margin-bottom:14px;animation:qaPop .5s cubic-bezier(.34,1.56,.64,1)}
 @keyframes qaPop{from{transform:scale(.3);opacity:0}}
 .qa-done h2{font:800 1.3rem "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 6px;color:var(--tx)}.qa-done p{color:var(--mu);margin:0;font-size:.9rem}
-@media (max-width:640px){.qa-panel{position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px);width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center;padding:24px 18px 18px}.qa-btn.in #qaLbl{display:none}.qa-btn.in{padding:0 5px}.qa-otp{gap:6px}.qa-otp input{height:52px}}
+@media (max-width:640px){.qa-panel{position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px + var(--tbh,0px));width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center;padding:24px 18px 18px}.qa-btn.in #qaLbl{display:none}.qa-btn.in{padding:0 5px}.qa-otp{gap:6px}.qa-otp input{height:52px}}
 @media (prefers-reduced-motion:reduce){.qa-panel,.qa-ok,.qa-otp.bad{animation:none}.qa-ind,.qa-go,.qa-f input,.qa-f label,.qa-otp input{transition:none}}
+:root{--tbh:0px}
+kbd{font:600 .7rem system-ui,sans-serif;border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;padding:1px 6px;background:var(--card);color:var(--mu)}
+html.noscroll{overflow:hidden}
+.brand{display:flex;align-items:center;gap:10px;font:800 1.16rem/1.1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.01em;color:var(--tx);text-decoration:none;margin:4px 8px 22px}
+.brand:focus-visible{outline:3px solid var(--ac);outline-offset:4px;border-radius:8px}
+.nv{display:block;margin:0}.nv-g{margin:0 0 16px}
+.nv-h{margin:0 12px 6px;font:600 .76rem system-ui,sans-serif;color:var(--mu)}
+.nv-row{position:relative;display:flex;align-items:center;border-radius:12px;transition:background .15s}
+.nv-row:hover{background:color-mix(in srgb,var(--ac) 8%,transparent)}
+.nv-b{all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:12px;font:550 .94rem system-ui,sans-serif;color:var(--tx)}
+.nv-b span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nv-b svg{flex:none;color:var(--mu);transition:color .15s}
+.nv-it.on>.nv-row{background:var(--card);box-shadow:0 1px 2px rgba(30,30,70,.06),0 6px 16px -10px rgba(30,30,70,.35)}
+.nv-it.on>.nv-row::before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--ac)}
+.nv-it.on .nv-b{font-weight:700}.nv-it.on .nv-b svg{color:var(--ac)}
+.nv-t{all:unset;cursor:pointer;flex:none;width:32px;height:32px;margin-right:4px;display:grid;place-items:center;border-radius:9px;color:var(--mu);transition:background .15s,color .15s}
+.nv-t:hover{background:var(--ac2);color:var(--tx)}
+.nv-t svg{transition:transform .22s cubic-bezier(.3,.7,.3,1)}.nv-it.open .nv-t svg{transform:rotate(180deg)}
+.nv-b:focus-visible,.nv-t:focus-visible,.nv-sub button:focus-visible{outline:3px solid var(--ac);outline-offset:-2px}
+.nv-sub{display:flex;flex-direction:column;margin:3px 0 8px 20px;padding-left:12px;border-left:1.5px solid var(--bd);animation:nvIn .2s ease-out}
+.nv-sub[hidden]{display:none}
+@keyframes nvIn{from{opacity:0;transform:translateY(-4px)}}
+.nv-sub button{all:unset;box-sizing:border-box;cursor:pointer;padding:6px 10px;border-radius:8px;font:500 .86rem system-ui,sans-serif;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s,background .15s}
+.nv-sub button:hover{color:var(--tx);background:color-mix(in srgb,var(--ac) 8%,transparent)}
+.side-sos{margin-top:auto;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,#d9534f 6%,var(--card));border:1px solid color-mix(in srgb,#d9534f 20%,var(--bd))}
+.side-sos p{margin:0 0 6px;font:650 .82rem system-ui,sans-serif;color:var(--tx)}
+.side-sos a{display:flex;align-items:baseline;gap:10px;padding:3px 0;text-decoration:none;color:var(--tx);border-radius:6px}
+.side-sos a b{font:800 1.05rem "Bricolage Grotesque",system-ui,sans-serif;min-width:40px}.side-sos a span{font-size:.76rem;color:var(--mu)}
+.side-sos a:hover b{color:#c0392b}
+.side-foot{font-size:.74rem;color:var(--mu);margin:12px 6px 0;line-height:1.55}.side-foot a{color:var(--mu)}
+.topbar{flex-wrap:nowrap;gap:10px;margin-bottom:16px}
+.tb-ic{all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;color:var(--tx);transition:background .15s}
+.tb-ic:hover{background:var(--ac2)}.tb-ic:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.menu-btn{display:none}
+.srch{all:unset;box-sizing:border-box;cursor:text;flex:0 1 400px;min-width:0;height:46px;display:flex;align-items:center;gap:10px;padding:0 8px 0 16px;border-radius:999px;background:var(--card);border:1px solid var(--bd);color:var(--mu);font:500 .9rem system-ui,sans-serif;box-shadow:0 6px 18px -12px rgba(30,30,70,.3);transition:border-color .15s}
+.srch:hover{border-color:color-mix(in srgb,var(--ac) 45%,var(--bd))}.srch:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.srch svg{flex:none}.srch-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srch-k{flex:none}
+.tabbar{display:none}
+.drawer{position:fixed;inset:0;z-index:80}.drawer[hidden]{display:none}
+.drawer-bg{position:absolute;inset:0;background:rgba(14,14,32,.42);opacity:0;transition:opacity .25s}
+.drawer.in .drawer-bg{opacity:1}
+.drawer-p{position:absolute;left:0;top:0;bottom:0;width:min(330px,88vw);box-sizing:border-box;background:var(--card);box-shadow:20px 0 60px -20px rgba(0,0,0,.4);transform:translateX(-102%);transition:transform .26s cubic-bezier(.3,.7,.3,1);display:flex;flex-direction:column;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0px));overflow:auto}
+.drawer.in .drawer-p{transform:none}
+.drawer-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.drawer-h .brand{margin:0 4px}
+.drawer .srch{flex:none;width:100%;margin:0 0 16px;height:44px}.drawer .nv-it.on>.nv-row::before{left:-14px}
+.drawer .nv-it.on>.nv-row{background:var(--ac2);box-shadow:none}
+.drawer .side-sos{margin-top:8px}
+.cmdk{position:fixed;inset:0;z-index:95}.cmdk[hidden]{display:none}
+.cmdk-bg{position:absolute;inset:0;background:rgba(14,14,32,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.cmdk-p{position:relative;margin:min(12vh,110px) auto 0;width:min(620px,calc(100vw - 24px));max-height:min(70vh,560px);display:flex;flex-direction:column;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:20px;box-shadow:0 40px 80px -24px rgba(0,0,0,.5);overflow:hidden;animation:qaIn .18s ease-out}
+.cmdk-in{display:flex;align-items:center;gap:12px;padding:4px 14px 4px 18px;border-bottom:1px solid var(--bd);color:var(--mu)}
+.cmdk-in input{flex:1;min-width:0;width:auto;height:56px;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;font:500 1.05rem system-ui,sans-serif;color:var(--tx);outline:0}
+.cmdk-esc{all:unset;cursor:pointer;font:600 .72rem system-ui,sans-serif;color:var(--mu);border:1px solid var(--bd);border-radius:6px;padding:3px 7px}.cmdk-esc:focus-visible{outline:3px solid var(--ac)}
+.cmdk-l{overflow:auto;padding:4px 8px 8px;overscroll-behavior:contain}
+.cmdk-gh{font:650 .74rem system-ui,sans-serif;color:var(--mu);padding:12px 10px 4px}
+.cmdk-o{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:12px;cursor:pointer}
+.cmdk-o.act{background:var(--ac2)}
+.cmdk-ic{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--tx) 5%,transparent);font-size:1.1rem}
+.cmdk-t{flex:1;min-width:0;display:flex;flex-direction:column}.cmdk-t b{font:600 .92rem system-ui,sans-serif}.cmdk-t small{font-size:.78rem;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmdk-ret{opacity:0;color:var(--mu)}.cmdk-o.act .cmdk-ret{opacity:1}
+.cmdk-f{display:flex;gap:18px;padding:10px 16px;border-top:1px solid var(--bd);font-size:.74rem;color:var(--mu)}.cmdk-f kbd{margin-right:2px}
+.cmdk-empty{padding:30px 18px;text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--mu);font-size:.88rem}.cmdk-empty b{color:var(--tx)}
+@media(min-width:900px){.side{width:264px;padding:22px 14px 18px;background:color-mix(in srgb,var(--card) 50%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}}
+@media(max-width:899px){
+:root{--tbh:64px}
+.content{padding-bottom:calc(100px + var(--tbh))}
+.topbar{position:sticky;top:0;z-index:50;margin:-16px -16px 14px;padding:10px 12px;gap:8px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid color-mix(in srgb,var(--bd) 70%,transparent)}
+.menu-btn{display:grid}
+.mobile-brand{display:flex!important;align-items:center;gap:8px;flex:1;min-width:0;margin:0;font:800 1.1rem "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.01em;cursor:pointer;white-space:nowrap}
+.mobile-brand svg{width:30px;height:30px;margin:0!important;flex:none}
+.topbar .mz{margin-left:0}
+.topbar>.srch{flex:none;width:42px;height:42px;padding:0;justify-content:center;border-radius:12px;box-shadow:none}
+.topbar>.srch .srch-t,.topbar>.srch .srch-k{display:none}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:55;height:calc(var(--tbh) + env(safe-area-inset-bottom,0px));padding:6px 4px env(safe-area-inset-bottom,0px);box-sizing:border-box;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border-top:1px solid var(--bd)}
+.tabbar button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:600 .7rem system-ui,sans-serif;color:var(--mu);border-radius:12px}
+.tabbar svg{padding:3px 16px;border-radius:999px;box-sizing:content-box;transition:background .2s}
+.tabbar button.on{color:var(--ac)}.tabbar button.on svg{background:var(--ac2)}
+.tabbar button:focus-visible{outline:3px solid var(--ac);outline-offset:-3px}
+#quickExit{bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + var(--tbh) + 4px)}
+}
+@media(max-width:520px){.qa-btn:not(.in) #qaLbl{display:none}.qa-btn:not(.in){width:42px;height:42px;padding:0;justify-content:center;border-radius:12px}.mz-pill{height:42px}.mz-thumb{width:32px;height:32px}.mz-mini{width:30px;height:30px}}
+@media(max-width:520px){.topbar{gap:6px;padding:10px}.tb-ic,.topbar>.srch{width:40px;height:40px}.qa-btn:not(.in){width:40px;height:40px}.mobile-brand{font-size:1rem}.mobile-brand svg{width:28px;height:28px}}
+@media(max-width:370px){.mobile-brand span{display:none}}
+@media(max-width:640px){.cmdk-p{margin-top:10px;max-height:calc(100vh - 20px - var(--tbh))}.cmdk-f{display:none}}
+@media (prefers-reduced-motion:reduce){.drawer-p,.drawer-bg,.nv-t svg{transition:none}.nv-sub,.cmdk-p{animation:none}}
 </style>
 </head>
 <body>
 <div class="shell">
-<aside class="side"><div class="brand"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</div><div id="side"></div><div class="bottom">🔒 Vos réponses restent sur cet appareil.<br>Urgence immédiate : 112 ou 15<br>Besoin de parler : 3114 (24h/24, gratuit)</div></aside>
+<aside class="side" aria-label="Menu principal"><a class="brand" href="#" onclick="go('home');return false"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg><span>Ma Boussole</span></a><nav class="nv" id="side" aria-label="Rubriques"></nav>
+<div class="side-sos"><p>Besoin de parler maintenant ?</p><a href="tel:3114"><b>3114</b><span>Écoute 24h/24, gratuit</span></a><a href="tel:112"><b>112</b><span>Danger immédiat</span></a></div>
+<p class="side-foot"><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a><br>Tes réponses restent sur cet appareil.</p></aside>
 <main class="content">
-<div class="topbar"><h1 class="mobile-brand"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true" style="vertical-align:middle;margin-right:8px"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg>Ma Boussole</h1>
-<nav id="nav"></nav><div class="mz" id="mz">
+<div class="topbar"><button class="tb-ic menu-btn" id="menuBtn" onclick="drawer(true)" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="drawer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button><h1 class="mobile-brand" onclick="go('home')"><svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg><span>Ma Boussole</span></h1>
+<button class="srch" id="srchBtn" onclick="cmdk(true)" aria-label="Rechercher dans Ma Boussole" aria-haspopup="dialog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><span class="srch-t">Rechercher un thème, un outil, un numéro…</span><kbd class="srch-k" id="srchK">Ctrl K</kbd></button><div class="mz" id="mz">
 <div class="mz-pill"><button class="mz-bubble" id="mzBubble" onclick="mzOpen()" aria-expanded="false" aria-controls="mzPanel" title="Musique apaisante"><span class="mz-thumb g-all" id="mzThumb" aria-hidden="true"></span><span class="mz-pt"><span class="mz-lbl">Musique apaisante</span><small class="mz-lbl2"></small></span></button><button class="mz-mini" id="mzMini" onclick="mzToggle()" aria-label="Lancer la musique"><svg id="mzMI" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"></svg></button></div>
 <div class="mz-panel" id="mzPanel" role="dialog" aria-label="Lecteur de musique apaisante" hidden>
 <div class="mz-head"><div class="mz-cover g-all" id="mzCover" aria-hidden="true"></div><div class="mz-meta"><b class="mz-title" id="mzTitle"></b><small class="mz-sub" id="mzSub"></small></div><button class="mz-x" onclick="mzOpen(false)" aria-label="Fermer le lecteur"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
@@ -412,6 +492,13 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <div id="v"></div>
 <footer class="foot"><div class="foot-brand"><b>Ma Boussole</b><span>Bilan et orientation en santé mentale, gratuit et confidentiel.</span></div><nav class="foot-links" aria-label="Pied de page"><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="goSub('ressources','res-numeros');return false">Numéros vérifiés</a><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a></nav><p class="foot-note">Outil d’auto-évaluation et d’orientation : il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. Danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b>, 24h/24, gratuit.</p></footer>
 </main>
+<div class="drawer" id="drawer" hidden><div class="drawer-bg" onclick="drawer(false)"></div><div class="drawer-p" role="dialog" aria-modal="true" aria-label="Menu"><div class="drawer-h"><a class="brand" href="#" onclick="go('home');navClose();return false"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#5b6cd6"/><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="22"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffb86b"/><circle cx="256" cy="256" r="18" fill="#4a58c4"/></svg><span>Ma Boussole</span></a><button class="tb-ic drawer-x" onclick="drawer(false)" aria-label="Fermer le menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<button class="srch srch-d" onclick="navClose();setTimeout(()=>cmdk(true),260)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><span class="srch-t">Rechercher…</span></button>
+<nav class="nv" id="drawerNav" aria-label="Rubriques"></nav>
+<div class="side-sos"><p>Besoin de parler maintenant ?</p><a href="tel:3114"><b>3114</b><span>Écoute 24h/24, gratuit</span></a><a href="tel:112"><b>112</b><span>Danger immédiat</span></a></div>
+<p class="side-foot"><a href="#" onclick="go('legal');navClose();return false">Mentions et confidentialité</a></p></div></div>
+<nav class="tabbar" id="tabbar" aria-label="Navigation rapide"></nav>
+<div class="cmdk" id="cmdk" hidden><div class="cmdk-bg" onclick="cmdk(false)"></div><div class="cmdk-p" role="dialog" aria-modal="true" aria-label="Rechercher dans Ma Boussole"><div class="cmdk-in"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="cmdkQ" type="text" role="combobox" aria-expanded="true" aria-controls="cmdkL" aria-autocomplete="list" aria-label="Que cherches-tu ?" placeholder="Que cherches-tu ? angoisse, dormir, psychologue…" autocomplete="off" maxlength="80"><button class="cmdk-esc" onclick="cmdk(false)">Échap</button></div><div class="cmdk-l" id="cmdkL" role="listbox" aria-label="Résultats"></div><div class="cmdk-f"><span><kbd>↑</kbd><kbd>↓</kbd> pour choisir</span><span><kbd>Entrée</kbd> pour ouvrir</span></div></div></div>
 <button id="quickExit" type="button" onclick="quickExit()" title="Quitter immédiatement le site (ou appuie deux fois sur Échap)">✕ Quitter vite</button>
 <aside class="rail" aria-label="Outils et ressources">
 <section class="card w-breath"><div class="w-head"><h3>Respire avec moi</h3><span class="w-tag">1 min</span></div><p class="mu w-sub">Cohérence cardiaque : 5 secondes pour inspirer, 5 pour expirer. Ça calme le cœur et les pensées.</p><div class="br-stage"><div class="br-orb"><span class="br-txt">Prêt·e ?</span></div></div><div class="br-row"><button class="w-btn br-btn" onclick="breathToggle(this)">Commencer</button><span class="mu br-left" aria-live="polite"></span></div></section>
@@ -493,19 +580,11 @@ add:["Note ce qui déclenche l’envie de consommer : ennui, stress, habitude so
 ali:["Ce questionnaire ne remplace pas un avis médical : un médecin ou un·e diététicien·ne peut faire un bilan complet.","La Fédération Française Anorexie Boulimie propose une écoute par des personnes formées, sans jugement.","Limite la comparaison avec les réseaux sociaux : les images y sont souvent retouchées."]
 };
 const hash=async(p,s)=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
-const NAV_ICO={home:'🏠',bilan:'🧭',suivi:'📈',aide:'📍',outils:'🧰',compte:'👤',ressources:'📚',legal:'📄'};
-const SUB={outils:[['Mon plan de sécurité','plan'],['Ancrage 5-4-3-2-1','ancrage']],aide:[['Rechercher une ville','aide-recherche'],['Résultats','resWrap']],ressources:[['Numéros vérifiés','res-numeros']]};
 function goSub(parent,anchor){if(anchor==='plan'){go('plan');return}if(anchor==='ancrage'){ancrageOpen();return}go(parent);setTimeout(()=>{const el=document.getElementById(anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},60)}
-function nav(on){const t=[["home","Accueil"],["bilan","Bilan"],["suivi","Suivi"],["aide","Trouver de l’aide"],["outils","Boîte à outils"],["compte",user?"👤 "+esc(user.prenom||user.name):"Compte"],["ressources","Ressources"],["legal","Mentions"]];
-$('nav').innerHTML=t.map(x=>`<button class="${x[0]==on?'':'s'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
-const sd=$('side');if(sd)sd.innerHTML=t.map(x=>{const ico=(x[0]==='compte'&&user)?'':NAV_ICO[x[0]]||'';const subs=SUB[x[0]];
-const subHtml=subs?('<div style="margin:0 0 4px 28px;display:flex;flex-direction:column;gap:1px">'+subs.map(s=>`<button class="sub" onclick="goSub('${x[0]}','${s[1]}')">${s[0]}</button>`).join('')+'</div>'):'';
-return `<button class="${x[0]==on?'on':''}" onclick="go('${x[0]}')">${ico?`<span aria-hidden="true">${ico}</span>`:''}${x[1]}</button>${subHtml}`}).join('')}
 function quickExit(){try{if(window.mzStop)mzStop(true);}catch(e){}try{document.body.innerHTML='';document.title='Météo'}catch(e){}window.location.replace('https://www.google.com/search?q=m%C3%A9t%C3%A9o')}
 document.addEventListener('keydown',e=>{const t=e.target;if(!t||t.getAttribute('role')!=='tab')return;const ks=['point','aide','lire','espace'];const i=ks.indexOf(homeTab);if(e.key==='ArrowRight'){e.preventDefault();setHomeTab(ks[(i+1)%4])}else if(e.key==='ArrowLeft'){e.preventDefault();setHomeTab(ks[(i+3)%4])}});
-let escAt=0;document.addEventListener('keydown',e=>{if(e.key==='Escape'){const md=document.getElementById('modal'),mp=document.getElementById('mzPanel'),qp=document.getElementById('qaPanel'),rm=document.getElementById('rdvModal');if((md&&!md.hidden)||(mp&&!mp.hidden)||(qp&&!qp.classList.contains('hide')&&qp.offsetParent)){escAt=0;return}const n=Date.now();if(n-escAt<600)quickExit();escAt=n}});
+let escAt=0;document.addEventListener('keydown',e=>{if(e.key==='Escape'){const md=document.getElementById('modal'),mp=document.getElementById('mzPanel'),qp=document.getElementById('qaPanel'),rm=document.getElementById('rdvModal');const dw=document.getElementById('drawer'),ck=document.getElementById('cmdk');if((md&&!md.hidden)||(mp&&!mp.hidden)||(qp&&!qp.classList.contains('hide')&&qp.offsetParent)||(dw&&!dw.hidden)||(ck&&!ck.hidden)){escAt=0;return}const n=Date.now();if(n-escAt<600)quickExit();escAt=n}});
 const EXIT_TIP='<div class="exit-tip">🔒 Besoin de partir vite ? Le bouton <b>« ✕ Quitter vite »</b> en bas à droite (ou deux fois la touche Échap) remplace le site par une page météo. Pour ne pas laisser de trace, utilise la navigation privée.</div>';
-function qaLabel(){const l=$('qaLbl');if(l)l.textContent=user?(user.prenom||'Mon espace'):'Se connecter'}
 function go(p){nearSlots=[];nav(p);qaLabel();window[p+'V']();window.scrollTo(0,0)}
 let homeTab='point',curArt=null;
 const FEEL=[["conf","🌱","Je doute de moi","Confiance en soi"],["harc","🛑","On se moque de moi, on me harcèle","Harcèlement"],["viol","🛡️","J’ai peur de quelqu’un de proche","Violences"],["anx","🌊","Je stresse tout le temps","Anxiété & stress"],["hum","🌧️","Je n’ai plus goût à rien","Humeur, mal-être"],["soc","🤝","Je me sens seul·e","Isolement"],["add","🔗","Je n’arrive pas à arrêter","Alcool, écrans, jeu…"],["ali","🍽️","Mon rapport à la nourriture m’inquiète","Alimentation"]];
@@ -571,7 +650,7 @@ function lireV(){const x=ARTICLES.find(a=>a.id===curArt)||ARTICLES[0];
 $('v').innerHTML=`<article class="card art-page"><button class="s" onclick="homeTab='lire';go('home')">‹ Tous les articles</button><div class="ico" aria-hidden="true" style="font-size:2.2rem;margin-top:12px">${x.ico}</div><h2>${x.t}</h2>${x.c}${x.cta||x.theme?`<div class="hero-cta" style="margin-top:16px">${x.cta?`<button onclick="openAide('${x.cta[1]}')">${x.cta[0]}</button>`:''}${x.theme?`<button class="s" onclick="startTheme('${x.theme}')">Faire le point sur ce thème</button>`:''}</div>`:''}${x.src?`<p class="mu" style="font-size:.8rem;margin-top:18px">Sources : ${x.src.map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`).join(' · ')}</p>`:''}</article><div class="card"><h3 style="margin-top:0">À lire aussi</h3><div class="tiles art">${ARTICLES.filter(a=>a.id!==x.id).slice(0,3).map(a=>`<button class="tile" onclick="readArt('${a.id}')"><span class="ico" aria-hidden="true">${a.ico}</span><b>${a.t}</b><span class="tile-more">Lire ›</span></button>`).join('')}</div></div>`}
 function bilanV(){themeCur=null;$('v').innerHTML=`<div class="card"><h2>Fais le point, par thème</h2><p>Choisis un thème : une série de 20 questions concrètes, 3 minutes, pour obtenir des repères clairs et une orientation adaptée à ta situation.</p><div class="priv">🔒 Tes réponses restent sur cet appareil. Aucun serveur, aucun envoi.</div><div style="margin-top:12px"><span class="mu" style="font-size:.9rem;margin-right:6px">Je suis :</span>${AGES.map(a=>`<button class="chip ${a[0]==age?'on':''}" aria-pressed="${a[0]==age}" onclick="setAge('${a[0]}');bilanV()">${a[1]}</button>`).join('')}<p class="mu" style="margin:6px 0 0;font-size:.85rem">Les questions sont adaptées à ton âge.</p></div></div><div class="grid2" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px">${BTHEMES.map(x=>`<button class="s" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:16px;text-align:left;width:100%;margin:0" onclick="startTheme('${x[0]}')"><span style="font-size:1.7rem">${x[2]}</span><b style="font-size:1rem;color:var(--tx)">${x[1]}</b><span class="mu" style="font-size:.82rem">${x[3]}</span></button>`).join('')}</div>`}
 let bilanPlace='';
-function startTheme(k){themeCur=k;ans=[];qi=0;res=null;bilanPlace='';q()}
+function startTheme(k){themeCur=k;ans=[];qi=0;res=null;bilanPlace='';nav('bilan');q();window.scrollTo(0,0)}
 function placeStep(){const kid=age==='enfant';const lbl=BTHEMES.find(t=>t[0]==themeCur)[1];
 $('v').innerHTML=`<div class="card" id="placeStep"><div class="mu">${esc(lbl)} — Dernière question (facultative)</div><div class="bar"><i style="width:100%;background:var(--ac)"></i></div>
 <h2>${kid?'Dans quelle ville ou quel village habites-tu ?':'Où habites-tu ?'}</h2><p class="mu" style="margin-top:0">${kid?'Si tu ne sais pas, tu peux demander à un adulte. ':''}On s’en sert seulement pour te montrer, dans ton résultat et ton PDF, les professionnels les plus proches de chez toi. Ça reste sur ton appareil.</p>
@@ -1317,7 +1396,7 @@ document.addEventListener('click',e=>{const m=document.getElementById('mz');cons
 setTimeout(()=>{let v=55;try{const x=localStorage.getItem('mb_mzvol');if(x!=null&&/^\d{1,3}$/.test(x))v=Math.min(100,+x)}catch(e){}const el=$('mzVol');if(el){el.value=v;el.style.setProperty('--v',v+'%')}mzUI()},0);
 
 /* ===== Boîte à outils, ancrage, plan de sécurité, FAQ ===== */
-const TOOLS=[['breath','🫁','Respirer 1 minute','Cohérence cardiaque guidée',"toolBreath()"],['ancrage','🖐️','Ancrage 5-4-3-2-1','Revenir au présent quand l’angoisse monte',"ancrageOpen()"],['plan','🛟','Mon plan de sécurité','Préparer à l’avance quoi faire si ça va très mal',"go('plan')"],['music','🎧','Musique apaisante','Playlist chill, composée en direct',"mzOpen(true);mzOn||mzPlay()"]];
+const TOOLS=[['breath','🫁','Respirer 1 minute','Cohérence cardiaque guidée',"toolBreath()"],['ancrage','🖐️','Ancrage 5-4-3-2-1','Revenir au présent quand l’angoisse monte',"ancrageOpen()"],['plan','🛟','Mon plan de sécurité','Préparer à l’avance quoi faire si ça va très mal',"go('plan')"],['music','🎧','Musique apaisante','Playlist chill, composée en direct',"setTimeout(()=>{mzOpen(true);mzOn||mzPlay()},0)"]];
 function toolboxHtml(){return`<section class="toolbox" aria-labelledby="tbT"><div class="sec-h"><h2 id="tbT">Ta boîte à outils</h2><a href="#" onclick="go('outils');return false">Tout voir</a></div><div class="tb-grid">${TOOLS.map(t=>`<button class="tb" onclick="${t[4]}"><span class="tb-i" aria-hidden="true">${t[1]}</span><span class="tb-t"><b>${t[2]}</b><small>${t[3]}</small></span></button>`).join('')}</div></section>`}
 const FAQ=[['Est-ce que c’est vraiment gratuit et anonyme ?','Oui. Ma Boussole est gratuit, sans inscription obligatoire. Tes réponses restent sur ton appareil : aucun serveur ne les reçoit.'],
 ['Est-ce que le bilan est un diagnostic ?','Non. C’est un repère pour t’aider à y voir plus clair et à trouver vers qui te tourner. Seul un professionnel de santé peut poser un diagnostic.'],
@@ -1353,6 +1432,67 @@ d.setTextColor(192,57,43);d.setFont('helvetica','bold');d.setFontSize(10);d.text
 function outilsV(){$('v').innerHTML=`<section class="card"><h2>Boîte à outils</h2><p class="mu" style="margin:0">Des exercices courts pour souffler, revenir au présent et te préparer aux moments difficiles. Tout reste sur ton appareil.</p></section>
 <div class="tb-grid tb-big">${TOOLS.map(t=>`<button class="tb" onclick="${t[4]}"><span class="tb-i" aria-hidden="true">${t[1]}</span><span class="tb-t"><b>${t[2]}</b><small>${t[3]}</small></span></button>`).join('')}</div>
 <div class="care-grid" style="margin-top:14px">${document.querySelector('.rail .w-breath')?.outerHTML||''}${document.querySelector('.rail .w-mood')?.outerHTML||''}${document.querySelector('.rail .w-tip')?.outerHTML||''}</div>`;setTimeout(()=>{moodRender();tipShow()},0)}
+
+/* ===== Navigation : menu latéral, tiroir mobile, barre d'onglets ===== */
+const NV_I={home:'<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',compass:'<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',pin:'<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',book:'<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/>',chart:'<path d="M4 19V5M4 19h16M8 15l3.5-4 3 2.5L19 8"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',chev:'<path d="m6 9 6 6 6-6"/>'};
+function navIco(n,z){return`<svg width="${z||20}" height="${z||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NV_I[n]}</svg>`}
+function goLire(){homeTab='lire';go('home');setTimeout(()=>{const t=$('homeTabs');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+const NAV=[
+{h:'S’orienter',items:[
+ {id:'home',l:'Accueil',i:'home'},
+ {id:'bilan',l:'Faire le point',i:'compass',sub:()=>BTHEMES.map(t=>[t[1],`startTheme('${t[0]}')`])},
+ {id:'aide',l:'Trouver de l’aide',i:'pin',pages:['ressources'],sub:()=>[['Près de chez moi',"go('aide')"],['Un ou une psychologue',"openAide('psychologue')"],['Un CMP gratuit',"openAide('centre médico-psychologique')"],['Un médecin généraliste',"openAide('médecin généraliste')"],['Numéros d’écoute vérifiés',"goSub('ressources','res-numeros')"]]}]},
+{h:'Prendre soin de toi',items:[
+ {id:'outils',l:'Boîte à outils',i:'heart',pages:['plan'],sub:()=>[['Respirer 1 minute','toolBreath()'],['Ancrage 5-4-3-2-1','ancrageOpen()'],['Mon plan de sécurité',"go('plan')"],['Musique apaisante','setTimeout(()=>mzOpen(true),0)']]},
+ {id:'lire',l:'Comprendre',i:'book',go:'goLire()',sub:()=>ARTICLES.map(a=>[a.t.split(' : ')[0],`readArt('${a.id}')`])}]},
+{h:'Mon espace',items:[
+ {id:'suivi',l:'Mon suivi',i:'chart'},
+ {id:'compte',l:()=>user?(user.prenom||'Mon compte'):'Mon compte',i:'user'}]}];
+let navOpen={},navCur='home';
+function navGroupOf(p){for(const g of NAV)for(const it of g.items)if(it.id===p||(it.pages||[]).includes(p))return it.id;return null}
+function navHtml(pref){const cur=navGroupOf(navCur);return NAV.map(g=>`<div class="nv-g"><p class="nv-h">${g.h}</p>${g.items.map(it=>{const on=cur===it.id,subs=it.sub?it.sub():null,open=!!subs&&(navOpen[it.id]??on),lab=typeof it.l==='function'?it.l():it.l,sid=pref+'-'+it.id;
+return`<div class="nv-it${on?' on':''}${open?' open':''}" data-id="${it.id}" data-l="${esc(lab)}"><div class="nv-row"><button class="nv-b" onclick="${it.go||`go('${it.id}')`};navClose()"${on?' aria-current="page"':''}>${navIco(it.i)}<span>${esc(lab)}</span></button>${subs?`<button class="nv-t" onclick="navToggle('${it.id}')" aria-expanded="${open}" aria-controls="${sid}" aria-label="${open?'Replier':'Déplier'} : ${esc(lab)}">${navIco('chev',16)}</button>`:''}</div>${subs?`<div class="nv-sub" id="${sid}"${open?'':' hidden'}>${subs.map(([l,a])=>`<button onclick="navClose();${a}">${esc(l)}</button>`).join('')}</div>`:''}</div>`}).join('')}</div>`).join('')}
+function navToggle(id){const cur=navGroupOf(navCur),v=!(navOpen[id]??(cur===id));navOpen[id]=v;document.querySelectorAll(`.nv-it[data-id="${id}"]`).forEach(el=>{el.classList.toggle('open',v);const t=el.querySelector('.nv-t');if(t){t.setAttribute('aria-expanded',v);t.setAttribute('aria-label',(v?'Replier':'Déplier')+' : '+el.dataset.l)}const sb=el.querySelector('.nv-sub');if(sb)sb.hidden=!v})}
+const TABS=[['home','Accueil','home'],['bilan','Bilan','compass'],['aide','Aide','pin'],['outils','Outils','heart'],['compte','Moi','user']];
+function tabbarRender(){const t=$('tabbar');if(!t)return;const cur=navGroupOf(navCur);t.innerHTML=TABS.map(([id,l,i])=>{const on=cur===id||(id==='compte'&&cur==='suivi')||(id==='home'&&cur==='lire');return`<button class="${on?'on':''}" onclick="go('${id}')"${on?' aria-current="page"':''}>${navIco(i,22)}<span>${l}</span></button>`}).join('')}
+function navRender(){const s=$('side');if(s)s.innerHTML=navHtml('sd');const d=$('drawerNav');if(d)d.innerHTML=navHtml('dr');tabbarRender()}
+function nav(on){if(on)navCur=on;navRender()}
+function drawer(v){const d=$('drawer'),b=$('menuBtn');if(!d)return;if(v){d.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));if(b)b.setAttribute('aria-expanded','true');document.documentElement.classList.add('noscroll');setTimeout(()=>{const x=d.querySelector('.drawer-x');if(x)x.focus()},60)}
+else{if(d.hidden)return;d.classList.remove('in');if(b){b.setAttribute('aria-expanded','false');b.focus({preventScroll:true})}document.documentElement.classList.remove('noscroll');setTimeout(()=>{if(!d.classList.contains('in'))d.hidden=true},260)}}
+function navClose(){const d=$('drawer');if(d&&!d.hidden)drawer(false)}
+
+/* ===== Recherche (Ctrl K) ===== */
+const nz=x=>String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const CK_KW={conf:'estime de soi doute timide timidite complexe nul confiance',harc:'harcelement moquerie moqueries ecole college lycee cyber reseaux insulte rumeur',viol:'violence violences coups conjugal peur maison agression sexuel viol emprise frappe',anx:'angoisse anxiete stress panique crise inquiet nervosite peur dormir endormir insomnie sommeil',hum:'triste tristesse deprime depression moral fatigue idees noires suicide envie de rien sommeil',soc:'solitude seul seule isolement amis personne',add:'alcool drogue cannabis ecrans jeux jeu video addiction tabac vape cigarette paris',ali:'nourriture manger poids anorexie boulimie regime corps'};
+const CK_TKW={breath:'respirer respiration calme coherence cardiaque stress angoisse dormir sommeil',ancrage:'panique angoisse crise present calmer',plan:'crise suicide securite urgence idees noires',music:'musique dormir sommeil detente relaxation chill'};
+const CK_TF={breath:()=>toolBreath(),ancrage:()=>ancrageOpen(),plan:()=>go('plan'),music:()=>{mzOpen(true);mzOn||mzPlay()}};
+let ckItems=null,ckRes=[],ckI=0,ckLast=null;
+function ckBuild(){if(ckItems)return ckItems;ckItems=[
+...BTHEMES.map(t=>({g:'Faire le point',ic:t[2],t:t[1],d:t[3],k:CK_KW[t[0]]||'',f:()=>startTheme(t[0])})),
+...HELP_TILES.map(h=>({g:'Trouver de l’aide',ic:h[0],t:h[1],d:h[2],k:h[3]+' trouver pres de chez moi',f:()=>openAide(h[3])})),
+...TOOLS.map(t=>({g:'Boîte à outils',ic:t[1],t:t[2],d:t[3],k:CK_TKW[t[0]]||'',f:CK_TF[t[0]]})),
+...ARTICLES.map(a=>({g:'Comprendre',ic:a.ico,t:a.t,d:a.r,k:'article lire',f:()=>readArt(a.id)})),
+...THEMES.flatMap(([cat,items])=>items.map(([n,d])=>({g:'Numéros d’écoute',ic:'📞',t:n,d,k:cat+' appeler telephone numero ecoute ligne',f:()=>goSub('ressources','res-numeros')}))),
+...[['home','🏠','Accueil'],['suivi','📈','Mon suivi'],['compte','👤','Mon compte'],['legal','📄','Mentions et confidentialité']].map(([pg,ic,l])=>({g:'Pages',ic,t:l,d:'',k:'',f:()=>go(pg)}))];
+ckItems.forEach(x=>{x.n=nz(x.t);x.s=nz(x.t+' '+x.d+' '+x.k+' '+x.g)});return ckItems}
+function ckSearch(q){const it=ckBuild(),w=nz(q).split(/\s+/).filter(Boolean);
+if(!w.length){const pick=['Respirer 1 minute','Je stresse','3114','Un ou une psychologue','Ancrage 5-4-3-2-1','Mon plan de sécurité'];return pick.map(p=>it.find(x=>x.t.startsWith(p)||x.t===p)).filter(Boolean).map(x=>({...x,g:'Suggestions'}))}
+return it.filter(x=>w.every(t=>x.s.includes(t))).map(x=>({x,sc:(x.n.startsWith(w[0])?3:0)+(x.n.includes(w[0])?2:0)})).sort((a,b)=>b.sc-a.sc).slice(0,24).map(o=>o.x)}
+function ckRender(){const L=$('cmdkL'),q=$('cmdkQ').value;ckRes=ckSearch(q);if(ckI>=ckRes.length)ckI=0;
+if(!ckRes.length){L.innerHTML=`<div class="cmdk-empty"><b>Aucun résultat pour « ${esc(q)} »</b><span>Essaie un autre mot, ou appelle le <a href="tel:3114">3114</a> si tu as besoin de parler maintenant.</span></div>`;$('cmdkQ').removeAttribute('aria-activedescendant');return}
+const order=[];ckRes.forEach(x=>{if(!order.includes(x.g))order.push(x.g)});const byG=order.map(g=>[g,ckRes.filter(x=>x.g===g)]);ckRes=byG.flatMap(([,a])=>a);
+let k=0;L.innerHTML=byG.map(([g,a])=>`<div class="cmdk-gh" role="presentation">${g}</div>`+a.map(x=>{const i=k++;return`<div class="cmdk-o${i===ckI?' act':''}" role="option" id="ck-${i}" aria-selected="${i===ckI}" onclick="ckRun(${i})" onmousemove="ckHi(${i})"><span class="cmdk-ic" aria-hidden="true">${x.ic}</span><span class="cmdk-t"><b>${esc(x.t)}</b>${x.d?`<small>${esc(x.d)}</small>`:''}</span><span class="cmdk-ret" aria-hidden="true">↵</span></div>`}).join('')).join('');
+$('cmdkQ').setAttribute('aria-activedescendant','ck-'+ckI)}
+function ckHi(i){if(i===ckI)return;ckI=i;document.querySelectorAll('.cmdk-o').forEach((o,j)=>{o.classList.toggle('act',j===i);o.setAttribute('aria-selected',j===i)});$('cmdkQ').setAttribute('aria-activedescendant','ck-'+i);const o=$('ck-'+i);if(o)o.scrollIntoView({block:'nearest'})}
+function ckRun(i){const x=ckRes[i];if(!x)return;cmdk(false,true);navClose();setTimeout(()=>x.f(),0)}
+function cmdk(v,keep){const c=$('cmdk');if(!c)return;if(v){if(!c.hidden)return;ckLast=document.activeElement;c.hidden=false;const q=$('cmdkQ');q.value='';ckI=0;ckRender();document.documentElement.classList.add('noscroll');setTimeout(()=>q.focus(),20)}else{if(c.hidden)return;c.hidden=true;document.documentElement.classList.remove('noscroll');if(!keep&&ckLast&&ckLast.focus)ckLast.focus({preventScroll:true})}}
+document.addEventListener('keydown',e=>{const c=$('cmdk');const open=c&&!c.hidden;
+if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();cmdk(!open);return}
+if(!open&&e.key==='/'&&!/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName||''))&&!e.target.isContentEditable){e.preventDefault();cmdk(true);return}
+if(open){if(e.key==='Escape'){e.preventDefault();cmdk(false);return}if(e.key==='ArrowDown'){e.preventDefault();ckHi(Math.min(ckRes.length-1,ckI+1))}else if(e.key==='ArrowUp'){e.preventDefault();ckHi(Math.max(0,ckI-1))}else if(e.key==='Enter'){e.preventDefault();ckRun(ckI)}else if(e.key==='Tab'){e.preventDefault();$('cmdkQ').focus()}return}
+const d=$('drawer');if(d&&!d.hidden&&e.key==='Escape'){drawer(false)}});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='cmdkQ'){ckI=0;ckRender()}});
+setTimeout(()=>{const k=$('srchK');if(k&&/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent))k.textContent='⌘ K';navRender()},0);
 
 go('home');
 </script>
