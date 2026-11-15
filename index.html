@@ -648,13 +648,13 @@ A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(
 const avail=297-14-y;
 {const rc=recoFor(r);const idx=THEME_HOTLINE_IDX[r.theme];let lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));if(rc.line)lines=[rc.line].concat(lines.filter(l=>l[0]!==rc.line[0]));lines=lines.slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
-const maxP=Math.max(0,Math.min(5,Math.floor((avail-26)/10.5)));const picks=maxP?await pdfPicks(rc,maxP):null;
+const maxP=Math.max(0,Math.min(5,Math.floor((avail-30)/10.5)));const picks=maxP?await pdfPicks(rc,maxP):null;
 const rowsR=(picks||[]).map(x=>({nm:(()=>{const w=x.phone?HW-42:HW-12;font(9.5,1);let t=String(x.name);if(d.getTextWidth(t)<=w)return t;while(t.length>3&&d.getTextWidth(t+'…')>w)t=t.slice(0,-1);return t.trim()+'…'})(),tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
 let hL=14;const keepL=[];for(const o of rowsL){const add=LH(10)+o.L.length*LH(8.5)+2.5;if(hL+add>avail)break;hL+=add;keepL.push(o)}
-const hR=rowsR.length?26+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
+const hR=rowsR.length?30+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
 box(M,y,HW,h);head('Numéros vérifiés',M,y);let z=y+15;keepL.forEach(o=>{font(10,1,INK);d.text(o.n,M+6,z);z+=LH(10);font(8.5,0,MU);d.text(o.L,M+6,z);z+=o.L.length*LH(8.5)+2.5});
 const x2=M+HW+G;box(x2,y,HW,h);
-if(rowsR.length){head('Ton aide conseillée',x2,y);font(8.5,1,TX);d.text(d.splitTextToSize(rc.title+' près de '+place,HW-12)[0],x2+6,y+13);font(7.5,0,MU);const wy=d.splitTextToSize(rc.why,HW-12).slice(0,2);d.text(wy,x2+6,y+17);z=y+18.5+wy.length*3.4+2;
+if(rowsR.length){head('Ton aide conseillée',x2,y);font(8.5,1,TX);d.text(d.splitTextToSize(rc.title+' près de '+place,HW-12)[0],x2+6,y+13);font(7.5,0,MU);const wy=d.splitTextToSize(rc.why,HW-12).slice(0,3);d.text(wy,x2+6,y+17);z=y+18.5+wy.length*3.4+2;
 rowsR.forEach(o=>{font(9.5,1,TX);d.text(o.nm,x2+6,z);if(o.tel){font(9,1,INK);d.text(o.tel,x2+HW-6,z,{align:'right'})}z+=LH(9.5)+.6;font(8.5,0,MU);d.text(o.info,x2+6,z);z+=LH(9.5)+2.6})}
 else{head(rc.cat?'Ton aide conseillée':'Si un jour tu en as besoin',x2,y);const L=wrap(rc.cat?rc.title+' : '+rc.why+' Indique ta ville sur la page de résultat avant de télécharger pour voir ici les plus proches.':'Pas de besoin particulier d’après tes réponses. Si la situation change, refais ce bilan : Ma Boussole t’indiquera l’aide la plus adaptée près de chez toi.',9,0,HW-12);font(9,0,TX);d.text(L.slice(0,Math.max(1,Math.floor((h-16)/LH(9)))),x2+6,y+15)}
 y+=h}
