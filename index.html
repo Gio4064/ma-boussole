@@ -291,7 +291,7 @@ const WHY={'centre médico-psychologique':minor?'Gratuit, avec des psychologues 
 'hébergement urgence':'Pour être mis·e à l’abri rapidement si tu dois quitter ton logement. Appelle aussi le 115 (gratuit, 24h/24).',
 'csapa addictologie':'Gratuit et confidentiel : une équipe spécialisée pour réduire ou arrêter, à ton rythme.',
 'diététicien':'Pour retrouver une alimentation régulière et apaisée, sans régime.'};
-let c=null,line=null;const sec=r.sec,lv=r.lv;
+let c=null,line=null,why=null;const sec=r.sec,lv=r.lv;
 const T=r.theme;
 if(lv===0&&!sec){const L0={conf:null,harc:minor?['3018','harcèlement, gratuit, 7j/7 de 9h à 23h']:null,viol:minor?['119','enfance en danger, 24h/24, gratuit']:['3919','Violences Femmes Info, 24h/24, gratuit']};
 return{intro:'Tes réponses ne montrent pas de difficulté importante sur ce thème. Continue ce qui te fait du bien, et refais ce bilan si la situation change.',cat:null,line:L0[T]||null}}
@@ -299,16 +299,16 @@ switch(T){
 case'conf':c=minor&&lv===2?CMP:PSY;break;
 case'harc':c=minor||sec?CMP:PSY;line=minor?['3018','harcèlement à l’école et en ligne, gratuit, 7j/7 de 9h à 23h']:['3018','harcèlement en ligne, gratuit, 7j/7 de 9h à 23h'];break;
 case'viol':if(minor){c=CMP;line=['119','enfance en danger, 24h/24, gratuit, ne s’affiche pas sur la facture']}else{c=(sec||hi(/peur|coup|menace|sécurité|frapp/i))&&lv===2?HEB:ASS;line=['3919','Violences Femmes Info, 24h/24, gratuit, anonyme']}break;
-case'anx':c=hi(/palpitation|cœur|panique|souffle|vertige/i)?MG:lv===2?CMP:PSY;break;
+case'anx':if(hi(/palpitation|cœur|panique|souffle|vertige/i)){c=MG;why='Tu as signalé des palpitations, un souffle court ou des crises de panique : ton médecin peut écarter une cause physique et t’orienter.'}else c=lv===2?CMP:PSY;break;
 case'hum':c=sec||lv===2?CMP:(minor?CMP:MG);line=sec?['3114','prévention du suicide, 24h/24, gratuit']:null;break;
 case'soc':c=minor?CMP:lv===2?PSY:ASS;line=minor?null:['SOS Amitié','09 72 39 40 50, écoute 24h/24'];break;
 case'add':c=kid?MG:CSAPA;break;
-case'ali':c=hi(/vomi|laxatif|saute des repas|sauter/i)||lv===2?MG:(minor?MG:DIET);line=['FFAB','09 69 325 900, lun, mar, jeu, ven 16h-18h'];break;
+case'ali':if(hi(/vomi|laxatif|saute des repas|sauter/i)){c=MG;why='Tu as signalé des repas sautés ou des vomissements : ton médecin peut vérifier ta santé et t’orienter vers une équipe spécialisée.'}else c=lv===2||minor?MG:DIET;line=['FFAB','09 69 325 900, lun, mar, jeu, ven 16h-18h'];break;
 default:c=PSY}
 if(sec&&!line)line=minor?['119','24h/24, gratuit']:['3114','24h/24, gratuit'];
 if(T==='hum'&&minor&&!sec)line=['Fil Santé Jeunes','0 800 235 236, 7j/7 de 9h à 23h, gratuit'];
 const intro=lv===2||sec?'Tes réponses montrent que ce thème pèse fortement en ce moment. Voici <b>l’aide la plus adaptée</b> à ta situation :':'Tes réponses montrent des signaux à surveiller. En parler tôt peut éviter que ça s’installe. Voici <b>l’aide la plus adaptée</b> :';
-return{intro,cat:[c[1],c[0]],title:c[1],why:WHY[c[0]]||'',line}}
+return{intro,cat:[c[1],c[0]],title:c[1],why:why||WHY[c[0]]||'',line}}
 function catList(){return [['Toutes les catégories','__all'],...(CATS[aideThemeSel]||CATS_DEFAULT)]}
 let aideKeepCat=false;
 function aideV(){if(!aideKeepCat)catSel=null;aideKeepCat=false;place='';osmList=[];resGroups=null;resPage=1;resFilter='all';osmGen++;const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
