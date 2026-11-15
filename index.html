@@ -613,7 +613,7 @@ const avail=297-14-y;
 {const idx=THEME_HOTLINE_IDX[r.theme];const lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2)).slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
 const maxP=Math.max(0,Math.min(5,Math.floor((avail-18)/10.5)));const picks=maxP?await pdfPicks(r.theme,maxP):null;
-const rowsR=(picks||[]).map(x=>({nm:(()=>{const w=x.phone?HW-44:HW-12;const L=wrap(x.name,9.5,1,w);return L.length>1?L[0].replace(/\s*\S*$/,'')+'…':L[0]})(),tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
+const rowsR=(picks||[]).map(x=>({nm:(()=>{const w=x.phone?HW-42:HW-12;font(9.5,1);let t=String(x.name);if(d.getTextWidth(t)<=w)return t;while(t.length>3&&d.getTextWidth(t+'…')>w)t=t.slice(0,-1);return t.trim()+'…'})(),tel:x.phone||'',info:wrap([String(x.prof||'').split(' — ')[0],x.ville,x.d!=null?(Math.round(x.d*10)/10+' km').replace('.',','):''].filter(Boolean).join(' · '),8.5,0,HW-12)[0]}));
 let hL=14;const keepL=[];for(const o of rowsL){const add=LH(10)+o.L.length*LH(8.5)+2.5;if(hL+add>avail)break;hL+=add;keepL.push(o)}
 const hR=rowsR.length?18+rowsR.length*(LH(9.5)*2+3.2):14+LH(9)*4;const h=Math.min(avail,Math.max(hL,hR));
 box(M,y,HW,h);head('Numéros vérifiés',M,y);let z=y+15;keepL.forEach(o=>{font(10,1,INK);d.text(o.n,M+6,z);z+=LH(10);font(8.5,0,MU);d.text(o.L,M+6,z);z+=o.L.length*LH(8.5)+2.5});
