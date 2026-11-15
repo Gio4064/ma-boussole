@@ -1145,7 +1145,7 @@ $('mz').classList.toggle('on',mzOn);const sh=$('mzShuf');sh.setAttribute('aria-p
 $('mzGr').innerHTML=MZG.map(([k,l])=>`<button class="${mzGr===k?'on':''}" aria-pressed="${mzGr===k}" onclick="mzGroup('${k}')">${l}</button>`).join('');$('mzList').innerHTML=MZ.map((x,i)=>(mzGr!=='all'&&x.g!==mzGr)?'':`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})"><span class="mz-n">${i===mzI&&mzOn?'<span class="mz-eq"><i></i><i></i><i></i></span>':({ete:'☀️',det:'🍃',dodo:'🌙'})[x.g]}</span><span class="mz-tt">${x.n}<small>${x.d}</small></span></button>`).join('');
 $('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t.n:'Musique apaisante'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('mzPanel');if(p&&!p.hidden){mzOpen(false);document.getElementById('mzBubble').focus()}}});
-document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(m&&p&&!p.hidden&&!m.contains(e.target))mzOpen(false)});
+document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(!m||!p||p.hidden)return;const path=e.composedPath?e.composedPath():[];if(path.includes(m)||!e.target.isConnected||m.contains(e.target))return;mzOpen(false)});
 setTimeout(()=>{try{const v=localStorage.getItem('mb_mzvol');if(v!=null)$('mzVol').value=v}catch(e){}mzUI()},0);
 
 /* ===== Boîte à outils, ancrage, plan de sécurité, FAQ ===== */
