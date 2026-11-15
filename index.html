@@ -102,6 +102,15 @@ button.big{padding:14px 22px;font-size:1rem}
 .checks li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:var(--ac2);color:var(--ac);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
 .art-page h2{margin:6px 0 12px;font-size:1.6rem;line-height:1.2}
 .art-page p,.art-page li{line-height:1.6;max-width:68ch}
+.res-band{grid-column:1/-1;margin:10px 0 0;font-size:.95rem;color:var(--tx);display:flex;align-items:center;gap:10px}
+.res-band::after{content:"";flex:1;height:1px;background:var(--bd)}
+.res-count{grid-column:1/-1;margin:2px 0 0;font-size:.88rem;color:var(--mu)}
+.pager{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:14px 0 4px}
+.pager button{margin:0;min-width:44px;min-height:44px}
+.pager button[disabled]{opacity:.45;cursor:default}
+.pager-nums{display:flex;gap:4px;align-items:center}
+.pager-of{font-size:.85rem;width:100%;text-align:center}
+@media(min-width:620px){.pager-of{width:auto;margin:0 6px}}
 </style>
 </head>
 <body>
@@ -351,7 +360,7 @@ for(const L of lists){if(!L)continue;for(const x of L){if(x.lat==null)continue;x
 const dup=out.find(y=>y.name.toLowerCase()===x.name.toLowerCase()&&Math.abs(y.lat-x.lat)<.003&&Math.abs(y.lon-x.lon)<.003);
 if(dup){if(x.src==='ameli')dup.src='ameli';if(!dup.phone&&x.phone)dup.phone=x.phone;if(!dup.site&&x.site)dup.site=x.site;if(!dup.addr&&x.addr)dup.addr=x.addr}else out.push({...x})}}
 return out.sort((a,b)=>a.d-b.d).slice(0,40)}
-let resShown=30,resFilter='all';
+let resShown=30,resFilter='all',resPage=1;const PAGE_SIZE=9;
 const RES_FILTERS=[['all','Tous'],['L','Cabinets libéraux'],['pub','Structures (hôpital, centre, association)']];
 function resFiltered(){return resFilter==='all'?osmList:osmList.filter(x=>resFilter==='L'?x.mode==='L':(x.mode==='S'||x.mode==='E'||x.mode==='B'))}
 const MODE_LBL={L:'Libéral · indépendant',S:'Salarié·e',B:'Bénévole',E:'Établissement'};
@@ -369,8 +378,18 @@ box.innerHTML='';if(empty){empty.innerHTML=(osmErr?'Le service de recherche rép
 if(empty)empty.classList.add('hide');
 const ico=catIcon(mapCur?mapCur.t:'');const hasModes=osmList.some(x=>x.mode==='L')&&osmList.some(x=>x.mode&&x.mode!=='L');
 const L=resFiltered();
-const chips=hasModes?`<div class="res-chips" style="grid-column:1/-1">${RES_FILTERS.map(([k,l])=>`<button class="chip ${resFilter===k?'on':''}" onclick="resFilter='${k}';resShown=30;renderResults(false)">${l}</button>`).join('')}</div>`:'';
-box.innerHTML=chips+L.slice(0,resShown).map(x=>cardHtml(x,ico)).join('')+(L.length>resShown?`<button class="s" style="grid-column:1/-1;margin:4px 0" onclick="resShown+=30;renderResults(false)">Voir plus (${L.length-resShown} autres)</button>`:'')}
+const chips=hasModes?`<div class="res-chips" style="grid-column:1/-1">${RES_FILTERS.map(([k,l])=>`<button class="chip ${resFilter===k?'on':''}" aria-pressed="${resFilter===k}" onclick="resFilter='${k}';resPage=1;renderResults(false)">${l}</button>`).join('')}</div>`:'';
+const pages=Math.max(1,Math.ceil(L.length/PAGE_SIZE));if(resPage>pages)resPage=pages;if(resPage<1)resPage=1;
+const from=(resPage-1)*PAGE_SIZE,slice=L.slice(from,from+PAGE_SIZE);
+let html='',lastBand='';for(const x of slice){const b=(resSort==='dist'||!resSort)?distBand(x):'';if(b&&b!==lastBand){html+=`<h4 class="res-band">${b}</h4>`;lastBand=b}html+=cardHtml(x,ico)}
+const info=`<p class="res-count">${L.length?`Résultats <b>${from+1}–${from+slice.length}</b> sur ${L.length}`:'Aucun résultat avec ce filtre'}</p>`;
+box.innerHTML=chips+info+html+pager(pages)}
+function distBand(x){const pc=placeCity();if(x.ville&&pc&&plNorm(x.ville)===pc)return'Dans ta commune ('+esc(x.ville)+')';const d=x.d;if(d==null)return'Plus loin';
+for(const [m,l] of [[5,'À moins de 5 km'],[10,'Entre 5 et 10 km'],[20,'Entre 10 et 20 km'],[30,'Entre 20 et 30 km'],[50,'Entre 30 et 50 km']])if(d<=m)return l;return'Entre 50 et 100 km'}
+function pager(pages){if(pages<=1)return'';const nums=[];for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-resPage)<=1)nums.push(i);else if(nums.at(-1)!=='…')nums.push('…')}
+return`<nav class="pager" aria-label="Pages de résultats"><button class="s" onclick="goPage(${resPage-1})" ${resPage===1?'disabled':''}>‹ Précédent</button><span class="pager-nums">${nums.map(n=>n==='…'?'<span class="mu">…</span>':`<button class="${n===resPage?'':'s'}" aria-current="${n===resPage?'page':'false'}" onclick="goPage(${n})">${n}</button>`).join('')}</span><span class="pager-of mu">Page ${resPage} / ${pages}</span><button class="s" onclick="goPage(${resPage+1})" ${resPage===pages?'disabled':''}>Suivant ›</button></nav>`}
+function goPage(n){resPage=n;renderResults(false);const w=$('resWrap');if(w)w.scrollIntoView({behavior:'smooth',block:'start'})}
+
 const MODE_RANK={L:0,E:1,S:2,B:3};
 const KM_OPTS=[5,10,20,30,50,100];
 const SORT_OPTS=[['dist','Les plus proches'],['tel','Avec téléphone d’abord'],['lib','Cabinets libéraux d’abord'],['name','Nom (A → Z)']];
@@ -397,7 +416,7 @@ if(res.every(g=>!g.list)){body.innerHTML='<p class="mu">Les annuaires sont momen
 body.innerHTML=res.map(g=>{const ico=catIcon(g.t),L=g.list?sortRes(g.list):[];const tq=g.t.replace(/'/g,"\\'");
 return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${L.length?L.length+' à moins de '+km+' km':'aucun à moins de '+km+' km'}</span></h3>${L.length?`<div class="grid">${L.slice(0,3).map(x=>cardHtml(x,ico)).join('')}</div>`:''}<button class="s" style="margin:8px 0 0" onclick="openAide('${tq}')">${L.length>3?'Voir les '+L.length+' ▸':'Chercher plus loin ▸'}</button></div>`}).join('')+updNote()}
 function openAide(t){if(!catList().some(c=>c[1]===t))aideThemeSel=null;catSel=t;go('aide')}
-function resortResults(){if(resGroups){resGroups.forEach(g=>{if(g.list)sortRes(g.list)});renderGroups()}else if(osmList.length){sortRes(osmList);renderResults(false)}}
+function resortResults(){resPage=1;if(resGroups){resGroups.forEach(g=>{if(g.list)sortRes(g.list)});renderGroups()}else if(osmList.length){sortRes(osmList);renderResults(false)}}
 let lastRef=null,resGroups=null,resOthers=[];
 function renderGroups(){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box||!resGroups)return;if(more)more.classList.add('hide');
 if(resGroups.every(g=>!g.list)){box.innerHTML='';if(empty){empty.innerHTML='Les annuaires officiels sont momentanément indisponibles. Choisis une catégorie précise dans la liste, ou consulte <a href="https://www.sante.fr" target="_blank" rel="noopener">sante.fr</a>.';empty.classList.remove('hide')}return}
@@ -407,7 +426,7 @@ return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g
 +(resOthers.length?`<div class="res-group"><h3>Autres aides (recherche OpenStreetMap)</h3><div style="display:flex;flex-wrap:wrap;gap:6px">${resOthers.map(([l,t])=>`<button class="chip" style="margin:0" onclick="pickCat('${t.replace(/'/g,"\\'")}')">${esc(l)}</button>`).join('')}</div></div>`:'')}
 function pickCat(t){catSel=t;const sel=$('plCat');if(sel)sel.value=t;aideSearch()}
 async function runSearch(km){if(!mapCur||!place)return;
-const myGen=++osmGen;resShown=30;resFilter='all';
+const myGen=++osmGen;resShown=30;resFilter='all';resPage=1;
 const setTitle=(k,n)=>{const t=$('resTitle');if(t)t.innerHTML='<b style="color:var(--tx)">'+esc(mapCur.label)+'</b> près de « '+esc(place)+' »'+(n!=null?' <span class="mu">— '+n+' résultat'+(n>1?'s':'')+' dans un rayon de '+k+' km'+'</span>'+updNote():'')};
 setTitle(km,null);$('resWrap').classList.remove('hide');osmList=[];osmErr=false;renderResults(true);
 const ref=lastRef&&lastRef.q===place?lastRef:await geoOf(place);if(myGen!==osmGen)return;
