@@ -309,6 +309,80 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .mz-q-d{font:500 .74rem system-ui,sans-serif;color:var(--mu);font-variant-numeric:tabular-nums}
 @media (max-width:640px){.mz-pt{display:none}.mz-bubble{padding:0}.mz-panel{background:var(--card);position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px);width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center}}
 @media (prefers-reduced-motion:reduce){.mz-eq i{animation:none;height:9px}.mz-panel{animation:none}.mz-cover,.mz-play,.mz-pl-c,.mz-prog i{transition:none}}
+.qa-btn{display:inline-flex;align-items:center;gap:8px;margin:0;height:46px;box-sizing:border-box;padding:0 18px 0 14px;border-radius:999px;background:var(--ac);color:#fff;font:650 .95rem system-ui,sans-serif;border:0;box-shadow:0 8px 20px -10px color-mix(in srgb,var(--ac) 75%,transparent);transition:filter .15s}
+.qa-btn:hover{filter:brightness(1.08)}.qa-btn:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.qa-av{display:none}
+.qa-btn.in{background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:0 16px 0 5px;box-shadow:0 6px 18px -10px rgba(30,30,70,.35)}
+.qa-btn.in .qa-ic{display:none}
+.qa-btn.in .qa-av{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,var(--ac),color-mix(in srgb,var(--ac) 45%,var(--accent)));color:#fff;font:800 .8rem "Bricolage Grotesque",system-ui,sans-serif}
+.qa-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:72;width:372px;max-width:calc(100vw - 24px);box-sizing:border-box;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:24px;padding:26px 24px 20px;box-shadow:0 30px 70px -22px rgba(20,20,60,.5);transform-origin:top right;animation:qaIn .2s ease-out;text-align:left}
+.qa-panel::before{content:"";position:absolute;left:0;right:0;top:0;height:150px;border-radius:24px 24px 0 0;background:radial-gradient(90% 120% at 10% 0%,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%),radial-gradient(70% 100% at 100% 0%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 70%);pointer-events:none}
+.qa-panel.hide{display:none}
+@keyframes qaIn{from{opacity:0;transform:translateY(-6px) scale(.98)}}
+.qa-head,.qa-tabs,.qa-form,.qa-trust,.qa-otp,.qa-me,.qa-done{position:relative}
+.qa-x{all:unset;cursor:pointer;position:absolute;right:12px;top:12px;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;color:var(--mu);z-index:2}.qa-x:hover{background:var(--ac2);color:var(--tx)}.qa-x:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+.qa-head{text-align:center;margin-bottom:18px}
+.qa-logo{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:16px;background:linear-gradient(140deg,var(--ac),color-mix(in srgb,var(--ac) 55%,#2b2766));box-shadow:0 12px 24px -10px color-mix(in srgb,var(--ac) 80%,transparent);margin-bottom:12px}
+.qa-head h2{font:800 1.45rem/1.15 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 6px;color:var(--tx)}
+.qa-head p{margin:0 auto;color:var(--mu);font-size:.88rem;line-height:1.5;max-width:32ch}
+.qa-head p b{color:var(--tx);word-break:break-all}.qa-head p a{color:var(--ac);font-weight:650}
+.qa-tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--tx) 6%,transparent);margin-bottom:16px}
+.qa-tabs button{all:unset;cursor:pointer;position:relative;z-index:1;text-align:center;padding:9px 6px;border-radius:10px;font:650 .86rem system-ui,sans-serif;color:var(--mu);transition:color .2s}
+.qa-tabs button[aria-selected="true"]{color:var(--tx)}.qa-tabs button:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+.qa-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:10px;background:var(--card);box-shadow:0 2px 8px -2px rgba(30,30,70,.25);transition:transform .25s cubic-bezier(.3,.7,.3,1)}.qa-ind.r{transform:translateX(100%)}
+.qa-form{display:flex;flex-direction:column;gap:10px}
+.qa-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qa-f{position:relative}
+.qa-f input{width:100%;box-sizing:border-box;height:54px;margin:0;padding:22px 14px 6px;border:1.5px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);font:500 1rem system-ui,sans-serif;transition:border-color .15s,box-shadow .15s}
+.qa-f.ic input{padding-left:44px}
+.qa-f svg{position:absolute;left:15px;top:50%;translate:0 -50%;color:var(--mu);pointer-events:none;transition:color .15s}
+.qa-f label{position:absolute;left:15px;top:50%;translate:0 -50%;color:var(--mu);font-size:.95rem;pointer-events:none;transition:top .15s ease,font-size .15s ease,color .15s;white-space:nowrap}
+.qa-f.ic label{left:44px}
+.qa-f input:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 16%,transparent)}
+.qa-f:focus-within svg,.qa-f input:focus+label{color:var(--ac)}
+.qa-f input:focus+label,.qa-f input:not(:placeholder-shown)+label{top:15px;font-size:.72rem;font-weight:650}
+.qa-ck{position:relative;display:flex;gap:10px;align-items:flex-start;font-size:.8rem;line-height:1.4;color:var(--mu);cursor:pointer;margin:2px}
+.qa-ck input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.qa-box{flex:none;width:20px;height:20px;box-sizing:border-box;border-radius:6px;border:1.5px solid var(--bd);display:grid;place-items:center;color:transparent;background:var(--card);transition:background .15s,border-color .15s,color .15s;margin-top:1px}
+.qa-ck input:checked+.qa-box{background:var(--ac);border-color:var(--ac);color:#fff}
+.qa-ck input:focus-visible+.qa-box{outline:3px solid var(--ac);outline-offset:2px}
+.qa-go{all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:52px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:14px;background:var(--tx);color:var(--card);font:700 .98rem system-ui,sans-serif;margin-top:4px;box-shadow:0 12px 24px -12px rgba(0,0,0,.55);transition:transform .12s,opacity .2s}
+.qa-go:hover{transform:translateY(-1px)}.qa-go:active{transform:none}.qa-go:focus-visible{outline:3px solid var(--ac);outline-offset:3px}
+.qa-go svg{transition:transform .2s}.qa-go:hover svg{transform:translateX(3px)}
+.qa-go.busy{opacity:.85;cursor:progress}.qa-go.busy svg{display:none}
+.qa-go.busy::after{content:"";width:16px;height:16px;box-sizing:border-box;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:qaSpin .7s linear infinite}
+@keyframes qaSpin{to{transform:rotate(360deg)}}
+.qa-msg{display:none;align-items:flex-start;gap:8px;margin:2px 0 0;padding:10px 12px;border-radius:12px;font-size:.83rem;line-height:1.4}
+.qa-msg.err{display:flex;background:color-mix(in srgb,#d9534f 10%,var(--card));color:color-mix(in srgb,#d9534f 75%,var(--tx))}
+.qa-msg.ok{display:flex;background:color-mix(in srgb,#2f9e6b 12%,var(--card));color:color-mix(in srgb,#2f9e6b 70%,var(--tx))}
+.qa-msg svg{flex:none;margin-top:1px}.qa-msg a{color:inherit;font-weight:700}
+.qa-trust{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--bd)}
+.qa-trust li{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--mu);font-weight:600}
+.qa-otp{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}
+.qa-otp input{width:100%;box-sizing:border-box;height:58px;margin:0;padding:0;text-align:center;border:1.5px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);font:700 1.45rem "Bricolage Grotesque",system-ui,sans-serif;caret-color:var(--ac);transition:border-color .15s,box-shadow .15s,transform .15s}
+.qa-otp input:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 16%,transparent);transform:translateY(-1px)}
+.qa-otp.bad{animation:qaShake .4s}.qa-otp.bad input{border-color:#d9534f}
+@keyframes qaShake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.qa-small{text-align:center;font-size:.8rem;color:var(--mu);margin:14px 0 0;line-height:1.55}
+.qa-link{all:unset;cursor:pointer;color:var(--ac);font-weight:650;text-decoration:underline;text-underline-offset:2px}.qa-link:disabled{color:var(--mu);cursor:default;text-decoration:none}
+.qa-link:focus-visible{outline:2px solid var(--ac);outline-offset:2px;border-radius:4px}
+.qa-me{display:flex;align-items:center;gap:14px;margin:2px 0 16px;padding-right:30px}
+.qa-avbig{flex:none;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,var(--ac),color-mix(in srgb,var(--ac) 45%,var(--accent)));color:#fff;font:800 1.2rem "Bricolage Grotesque",system-ui,sans-serif;box-shadow:0 10px 22px -10px color-mix(in srgb,var(--ac) 80%,transparent)}
+.qa-me-t{min-width:0}.qa-me-t b{display:block;font:700 1.12rem "Bricolage Grotesque",system-ui,sans-serif}.qa-me-t small{display:block;color:var(--mu);font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qa-menu{position:relative;display:flex;flex-direction:column;gap:2px;margin:0 -8px}
+.qa-menu button{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px;border-radius:12px;font:600 .92rem system-ui,sans-serif;color:var(--tx)}
+.qa-menu button:hover{background:var(--ac2)}.qa-menu button:focus-visible{outline:3px solid var(--ac);outline-offset:-1px}
+.qa-menu button>svg{margin-left:auto;color:var(--mu)}
+.qa-mi{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--ac2);color:var(--ac)}
+.qa-safe{position:relative;display:flex;align-items:center;gap:8px;margin:14px 0 12px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,#2f9e6b 9%,var(--card));color:color-mix(in srgb,#2f9e6b 70%,var(--tx));font-size:.8rem;font-weight:600}
+.qa-out{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:14px;border:1.5px solid var(--bd);font:650 .9rem system-ui,sans-serif;color:var(--tx);transition:border-color .15s,color .15s}
+.qa-out:hover{border-color:#d9534f;color:#c0392b}.qa-out:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.qa-done{text-align:center;padding:18px 0 8px}
+.qa-ok{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#2f9e6b;color:#fff;margin-bottom:14px;animation:qaPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes qaPop{from{transform:scale(.3);opacity:0}}
+.qa-done h2{font:800 1.3rem "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 6px;color:var(--tx)}.qa-done p{color:var(--mu);margin:0;font-size:.9rem}
+@media (max-width:640px){.qa-panel{position:fixed;left:12px;right:12px;top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 54px);width:auto;max-width:none;max-height:calc(100vh - 90px);overflow:auto;transform-origin:bottom center;padding:24px 18px 18px}.qa-btn.in #qaLbl{display:none}.qa-btn.in{padding:0 5px}.qa-otp{gap:6px}.qa-otp input{height:52px}}
+@media (prefers-reduced-motion:reduce){.qa-panel,.qa-ok,.qa-otp.bad{animation:none}.qa-ind,.qa-go,.qa-f input,.qa-f label,.qa-otp input{transition:none}}
 </style>
 </head>
 <body>
@@ -334,7 +408,7 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <button class="mz-qbtn" id="mzQBtn" onclick="mzQueue()" aria-expanded="false" aria-controls="mzList"><span>Morceaux<small id="mzQN"></small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
 <div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux de la playlist" hidden></div>
 </div></div>
-<div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="hide" style="position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(30,30,70,.16);padding:14px;z-index:40"></div></div></div>
+<div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="dialog" aria-expanded="false" aria-controls="qaPanel"><span class="qa-av" aria-hidden="true"></span><svg class="qa-ic" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="qa-panel hide" role="dialog" aria-labelledby="qaT"></div></div></div></div>
 <div id="v"></div>
 <footer class="foot"><div class="foot-brand"><b>Ma Boussole</b><span>Bilan et orientation en santé mentale, gratuit et confidentiel.</span></div><nav class="foot-links" aria-label="Pied de page"><a href="#" onclick="go('bilan');return false">Faire le point</a><a href="#" onclick="go('aide');return false">Trouver de l’aide</a><a href="#" onclick="goSub('ressources','res-numeros');return false">Numéros vérifiés</a><a href="#" onclick="go('legal');return false">Mentions et confidentialité</a></nav><p class="foot-note">Outil d’auto-évaluation et d’orientation : il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. Danger immédiat : <b>112</b> ou <b>15</b>. Besoin de parler : <b>3114</b>, 24h/24, gratuit.</p></footer>
 </main>
@@ -804,7 +878,7 @@ function rmPro(i){const pros=store.g('mb_pros')||[];pros.splice(i,1);store.s('mb
 async function suiviV(){if(!user){$('v').innerHTML='<div class="card"><h2>Suivi</h2><p>Crée un espace de suivi sur cet appareil pour voir ton évolution bilan après bilan.</p><button onclick="go(\'compte\')">Créer mon espace</button></div>';return}
 const h=await hGet(user.name,'mb_hist_'+user.hash,[]);$('v').innerHTML='<div class="card"><h2>Mon évolution</h2>'+(h.length?h.slice(-12).reverse().map(e=>{const lbl=e.label||'Bilan';const lv=e.lv!=null?e.lv:0,L=LV[lv],pct=e.max?(e.sc/e.max*100):0;return `<div class="row"><span>${esc(lbl)} <span class="mu">— ${e.date}</span></span><span class="pill" style="background:${L[1]}">${L[0]}</span></div><div class="bar"><i style="width:${pct}%;background:${L[1]}"></i></div>`}).join(''):'<p>Aucun bilan pour l’instant.</p>')+'<p class="mu">Une barre haute signale plus de difficulté sur ce thème.</p></div>'}
 async function compteV(){if(user){const h=await hGet(user.name,'mb_hist_'+user.hash,[]);$('v').innerHTML=`<div class="card"><h2>👤 ${esc(user.prenom?(user.prenom+' '+(user.nom||'')).trim():user.name)}</h2><p class="mu">${esc(user.name)} — espace enregistré uniquement sur cet appareil (pas de serveur), <b>chiffré</b> avec une clé dérivée de ton adresse e-mail. ${h.length} bilan(s) enregistré(s).</p><button class="s" onclick="expData()">⬇️ Exporter mes données (JSON)</button><button class="s" onclick="user=null;go('home')">Se déconnecter</button><button class="s" onclick="if(confirm('Supprimer définitivement ton compte et ton historique ?'))delAcc()" style="background:var(--hi);color:#fff">🗑️ Supprimer mon espace et mes données</button></div>`;return}
-$('v').innerHTML=`<div class="card"><h2>Mon espace de suivi</h2><p>Connecte-toi ou inscris-toi en un instant grâce à l’icône 👤 en haut de la page : une adresse e-mail et un code à 6 chiffres suffisent, pas de mot de passe à retenir.</p><div class="priv">🔒 Tout reste chiffré et enregistré uniquement sur cet appareil, jamais sur un serveur.</div><button onclick="qaOpen('login')">👤 Se connecter / s’inscrire</button></div>`}
+$('v').innerHTML=`<div class="card"><h2>Mon espace de suivi</h2><p>Une adresse e-mail et un code à 6 chiffres suffisent : pas de mot de passe à retenir.</p><div class="priv">🔒 Tout reste chiffré et enregistré uniquement sur cet appareil, jamais sur un serveur.</div><div class="next-actions"><button onclick="openAcct('signup')">Créer mon espace</button><button class="s" onclick="openAcct('login')">J’ai déjà un compte</button></div></div>`}
 async function delAcc(){store.d('mb_acc_'+user.hash);store.d('mb_hist_'+user.hash);user=null;res=null;go('home')}
 async function expData(){const h=await hGet(user.name,'mb_hist_'+user.hash,[]);const blob=new Blob([JSON.stringify({compte:user.name,historique:h},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mes-donnees.json';a.click();URL.revokeObjectURL(u)}
 function legalV(){$('v').innerHTML=`<div class="card"><h2>Mentions et confidentialité</h2>
@@ -1034,43 +1108,76 @@ let qaMode='login',pendingAuth=null;
 const EMAIL_RX=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function genCode(){const a=new Uint32Array(1);crypto.getRandomValues(a);return String(100000+a[0]%900000)}
 let sendLog=[];
-async function sendCode(email,code,prenom){const now=Date.now();sendLog=sendLog.filter(t=>now-t<3600000);if(sendLog.length>=5||(sendLog.length&&now-sendLog[sendLog.length-1]<45000))return false;sendLog.push(now);
-if(EMAILJS_SERVICE_ID&&EMAILJS_TEMPLATE_ID&&EMAILJS_PUBLIC_KEY){try{const r=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EMAILJS_SERVICE_ID,template_id:EMAILJS_TEMPLATE_ID,user_id:EMAILJS_PUBLIC_KEY,template_params:{email,passcode:code,time:new Date(Date.now()+10*60000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),prenom:prenom||''}})});return r.ok}catch(e){return false}}
-return false}
-function qaClose(){const p=$('qaPanel');if(p)p.classList.add('hide')}
-function qaOpen(mode){qaMode=mode||'login';qaRender();const p=$('qaPanel');if(p)p.classList.remove('hide')}
+async function sendCode(email,code,prenom){const now=Date.now();sendLog=sendLog.filter(t=>now-t<3600000);if(sendLog.length>=5)return'limit';if(sendLog.length&&now-sendLog[sendLog.length-1]<45000)return'wait';
+if(!(EMAILJS_SERVICE_ID&&EMAILJS_TEMPLATE_ID&&EMAILJS_PUBLIC_KEY))return'demo';sendLog.push(now);
+try{const r=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:EMAILJS_SERVICE_ID,template_id:EMAILJS_TEMPLATE_ID,user_id:EMAILJS_PUBLIC_KEY,template_params:{email,passcode:code,time:new Date(Date.now()+10*60000).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),prenom:prenom||''}})});if(r.ok)return'ok';sendLog.pop();return'fail'}catch(e){sendLog.pop();return'fail'}}
+const QA_ERR={limit:'Trop de codes demandés. Réessaie dans une heure.',wait:'Un code vient d’être envoyé. Patiente quelques secondes avant d’en redemander un.',fail:'Impossible d’envoyer le code pour le moment. Vérifie ta connexion et réessaie.'};
+let qaResendAt=0,qaResTmr=null;
+const QA_I={x:'<path d="M6 6l12 12M18 6 6 18"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.5"/>',out:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"/>',chev:'<path d="m9 6 6 6-6 6"/>',folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',chart:'<path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/>',shield:'<path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/>'};
+function qaI(n,z){return`<svg width="${z||18}" height="${z||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${QA_I[n]}</svg>`}
+function qaInitials(){const a=(user&&(user.prenom||user.name)||'?').trim(),b=(user&&user.nom||'').trim();return((a[0]||'')+(b[0]||'')).toUpperCase()||'?'}
+function qaLabel(){const l=$('qaLbl'),b=$('qaBtn');if(!l)return;l.textContent=user?(user.prenom||'Mon espace'):'Se connecter';if(b){b.classList.toggle('in',!!user);const av=b.querySelector('.qa-av');if(av)av.textContent=user?qaInitials():''}}
+function qaMsg(html,type){const e=$('qaErr');if(!e)return;e.className='qa-msg'+(html?' '+(type||'err'):'');e.innerHTML=html?((type==='ok'?qaI('check',16):qaI('alert',16))+'<span>'+html+'</span>'):''}
+function qaBusy(on,label){const b=$('qaGo');if(!b)return;b.disabled=!!on;b.classList.toggle('busy',!!on);if(label)b.querySelector('span').textContent=label}
+function qaClose(back){const p=$('qaPanel');if(p&&!p.classList.contains('hide')){p.classList.add('hide');const b=$('qaBtn');if(b){b.setAttribute('aria-expanded','false');if(back)b.focus()}}clearInterval(qaResTmr)}
+function qaOpen(mode){qaMode=mode||'login';if(qaMode==='verify'&&!pendingAuth)qaMode='login';qaRender();const p=$('qaPanel');if(p){p.classList.remove('hide');$('qaBtn').setAttribute('aria-expanded','true');setTimeout(()=>{const f=p.querySelector('.qa-otp input,.qa-f input');if(f)f.focus()},40)}}
 function qaToggle(){const p=$('qaPanel');if(!p)return;if(p.classList.contains('hide'))qaOpen(qaMode);else qaClose()}
-function qaRender(){qaLabel();const p=$('qaPanel');if(!p)return;
-if(user){p.innerHTML=`<p style="margin:0 0 10px;word-break:break-all"><b>👤 ${esc(user.prenom?(user.prenom+' '+(user.nom||'')).trim():user.name)}</b></p><button class="s" style="width:100%;margin:2px 0" onclick="qaClose();go('compte')">📁 Mon espace & fichiers</button><button class="s" style="width:100%;margin:2px 0" onclick="user=null;qaClose();go('home')">Se déconnecter</button>`;return}
-if(qaMode==='signup'){p.innerHTML=`<label class="mu" style="display:block;font-size:.82rem">Nom</label><input type="text" id="qNom" autocomplete="off"><label class="mu" style="display:block;font-size:.82rem">Prénom</label><input type="text" id="qPre" autocomplete="off"><label class="mu" style="display:block;font-size:.82rem">Adresse e-mail</label><input type="text" id="qEm2" placeholder="prenom@exemple.fr" autocomplete="off"><label style="display:flex;gap:6px;align-items:flex-start;font-size:.78rem;margin:2px 0 10px"><input type="checkbox" id="qCk" style="width:auto;margin-top:2px">J’accepte que mes réponses soient enregistrées sur cet appareil.</label><button style="width:100%" onclick="qaSendSignup()">Recevoir mon code</button><p class="mu" id="qaErr" style="margin:6px 0 0;font-size:.82rem"></p><p class="mu" style="margin-top:10px;font-size:.8rem">Déjà inscrit·e ? <a href="#" onclick="qaOpen('login');return false">Se connecter</a></p>`;return}
-if(qaMode==='verify'&&pendingAuth){p.innerHTML=`<p style="margin:0 0 8px;font-size:.85rem">Code envoyé à<br><b style="word-break:break-all">${esc(pendingAuth.email)}</b></p><input type="text" id="qCode" inputmode="numeric" maxlength="6" placeholder="••••••" style="text-align:center;letter-spacing:4px;font-size:1.1rem" onkeydown="if(event.key=='Enter')qaVerify()"><button style="width:100%" onclick="qaVerify()">Valider le code</button><p class="mu" id="qaErr" style="margin:6px 0 0;font-size:.82rem"></p><p class="mu" style="margin-top:8px;font-size:.8rem"><a href="#" onclick="qaResend();return false">Renvoyer le code</a> · <a href="#" onclick="qaOpen('login');return false">Annuler</a></p>`;return}
-p.innerHTML=`<label class="mu" style="display:block;font-size:.82rem">Adresse e-mail</label><input type="text" id="qEm" placeholder="prenom@exemple.fr" autocomplete="off" onkeydown="if(event.key=='Enter')qaLogin()"><button style="width:100%" onclick="qaLogin()">Recevoir un code de connexion</button><p class="mu" id="qaErr" style="margin:6px 0 0;font-size:.82rem"></p><p class="mu" style="margin-top:10px;font-size:.8rem">Pas encore de compte ? <a href="#" onclick="qaOpen('signup');return false">Inscription</a></p>`}
-async function qaLogin(){const em=$('qEm').value.trim(),er=$('qaErr');er.innerHTML='';
-if(!EMAIL_RX.test(em)){er.textContent='Adresse e-mail invalide.';return}
-const h=await emailHashHex(em),rec=store.g('mb_acc_'+h);
-if(!rec){er.innerHTML='Aucun espace pour cette adresse. <a href="#" onclick="qaOpen(\'signup\');return false">S’inscrire</a>';return}
-const a=await decBlob(em,rec);
-if(!a){er.textContent='Espace introuvable ou illisible sur cet appareil.';return}
-const code=genCode();pendingAuth={email:em,hash:h,nom:a.nom,prenom:a.prenom,code,exp:Date.now()+10*60000,isNew:false};
-const ok=await sendCode(em,code,a.prenom);qaMode='verify';qaRender();
-if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.'}
-async function qaSendSignup(){const nom=$('qNom').value.trim(),pre=$('qPre').value.trim(),em=$('qEm2').value.trim(),er=$('qaErr');er.innerHTML='';
-if(!nom||!pre){er.textContent='Nom et prénom requis.';return}
-if(!EMAIL_RX.test(em)){er.textContent='Adresse e-mail invalide.';return}
-const h=await emailHashHex(em);
-if(store.g('mb_acc_'+h)){er.innerHTML='Un espace existe déjà pour cette adresse. <a href="#" onclick="qaOpen(\'login\');return false">Se connecter</a>';return}
-if(!$('qCk').checked){er.textContent='Coche la case de consentement pour créer ton espace.';return}
-const code=genCode();pendingAuth={email:em,hash:h,nom,prenom:pre,code,exp:Date.now()+10*60000,isNew:true};
-sendCode(em,code,pre).then(ok=>{qaMode='verify';qaRender();if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.'})}
-async function qaResend(){if(!pendingAuth)return;const code=genCode();pendingAuth.code=code;pendingAuth.exp=Date.now()+10*60000;
-const ok=await sendCode(pendingAuth.email,code,pendingAuth.prenom);qaRender();
-if(!ok)$('qaErr').innerHTML='Mode démo (envoi d’e-mail non configuré) — ton code est <b>'+code+'</b>.';else $('qaErr').textContent='Nouveau code envoyé.'}
-async function qaVerify(){const v=$('qCode').value.trim(),er=$('qaErr');if(!pendingAuth){qaOpen('login');return}
-if(Date.now()>pendingAuth.exp){er.textContent='Code expiré, redemande-en un.';return}
-pendingAuth.tries=(pendingAuth.tries||0)+1;if(pendingAuth.tries>5){pendingAuth=null;er.textContent='Trop d’essais. Redemande un nouveau code.';return}
-if(v!==pendingAuth.code){er.textContent='Code incorrect ('+(5-pendingAuth.tries)+' essai(s) restant(s)).';return}
+function qaField(id,label,type,ac,icon,extra){return`<div class="qa-f${icon?' ic':''}">${icon?qaI(icon,18):''}<input id="${id}" type="${type}" autocomplete="${ac}" placeholder=" " maxlength="${type==='email'?120:60}" ${extra||''}><label for="${id}">${label}</label></div>`}
+function qaRender(){qaLabel();const p=$('qaPanel');if(!p)return;clearInterval(qaResTmr);const X=`<button class="qa-x" onclick="qaClose(true)" aria-label="Fermer">${qaI('x',16)}</button>`;
+if(user){const full=(user.prenom?(user.prenom+' '+(user.nom||'')).trim():user.name);p.innerHTML=`${X}<div class="qa-me"><span class="qa-avbig">${esc(qaInitials())}</span><div class="qa-me-t"><b id="qaT">${esc(full)}</b><small>${esc(user.email||user.name)}</small></div></div>
+<nav class="qa-menu"><button onclick="qaClose();go('compte')"><span class="qa-mi">${qaI('folder')}</span>Mon espace et mes bilans${qaI('chev',16)}</button><button onclick="qaClose();go('suivi')"><span class="qa-mi">${qaI('chart')}</span>Mon suivi${qaI('chev',16)}</button><button onclick="qaClose();go('plan')"><span class="qa-mi">${qaI('shield')}</span>Mon plan de sécurité${qaI('chev',16)}</button></nav>
+<p class="qa-safe">${qaI('lock',15)}Tes données sont chiffrées et restent sur cet appareil.</p><button class="qa-out" onclick="user=null;qaClose();go('home')">${qaI('out',17)}Se déconnecter</button>`;return}
+const logo=`<span class="qa-logo"><svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="256" r="170" fill="none" stroke="#fff" stroke-width="30"/><path d="M256 110l52 146-52 36-52-36z" fill="#fff"/><path d="M256 402l-52-146 52-36 52 36z" fill="#ffd3a1"/></svg></span>`;
+const trust=`<ul class="qa-trust"><li>${qaI('key',14)}Sans mot de passe</li><li>${qaI('lock',14)}Chiffré sur ton appareil</li></ul>`;
+if(qaMode==='verify'&&pendingAuth){p.innerHTML=`${X}<div class="qa-head">${logo}<h2 id="qaT">Vérifie ta boîte mail</h2><p>Nous avons envoyé un code à 6 chiffres à<br><b>${esc(pendingAuth.email)}</b> · <a href="#" onclick="qaOpen('${pendingAuth.isNew?'signup':'login'}');return false">Modifier</a></p></div>
+<div class="qa-otp" role="group" aria-label="Code à 6 chiffres">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="${i?'off':'one-time-code'}" aria-label="Chiffre ${i+1} sur 6" data-i="${i}">`).join('')}</div>
+<button class="qa-go" id="qaGo" onclick="qaVerify()"><span>Valider</span>${qaI('arrow')}</button><p class="qa-msg" id="qaErr" role="alert"></p>
+<p class="qa-small">Rien reçu ? Regarde dans tes spams, ou <button class="qa-link" id="qaRes" onclick="qaResend()">renvoyer le code</button>.<br>Le code est valable 10 minutes.</p>`;qaOtpWire();qaResTick();return}
+const sign=qaMode==='signup';
+p.innerHTML=`${X}<div class="qa-head">${logo}<h2 id="qaT">${sign?'Crée ton espace':'Bon retour parmi nous'}</h2><p>${sign?'Garde l’historique de tes bilans et suis ton évolution, gratuitement.':'Retrouve tes bilans et ton suivi. On t’envoie un code, pas besoin de mot de passe.'}</p></div>
+<div class="qa-tabs" role="tablist" aria-label="Connexion ou inscription"><button role="tab" aria-selected="${!sign}" onclick="qaOpen('login')">Se connecter</button><button role="tab" aria-selected="${sign}" onclick="qaOpen('signup')">Créer un compte</button><i class="qa-ind${sign?' r':''}" aria-hidden="true"></i></div>
+<form class="qa-form" onsubmit="event.preventDefault();${sign?'qaSendSignup()':'qaLogin()'}" novalidate>
+${sign?`<div class="qa-row">${qaField('qPre','Prénom','text','given-name','')}${qaField('qNom','Nom','text','family-name','')}</div>${qaField('qEm2','Adresse e-mail','email','email','mail')}
+<label class="qa-ck"><input type="checkbox" id="qCk"><span class="qa-box">${qaI('check',13)}</span><span>J’accepte que mes bilans soient enregistrés, chiffrés, sur cet appareil.</span></label>`:qaField('qEm','Adresse e-mail','email','email','mail')}
+<button class="qa-go" id="qaGo" type="submit"><span>${sign?'Créer mon espace':'Recevoir mon code'}</span>${qaI('arrow')}</button><p class="qa-msg" id="qaErr" role="alert"></p></form>${trust}`}
+function qaOtpBoxes(){return[...document.querySelectorAll('.qa-otp input')]}
+function qaCode(){return qaOtpBoxes().map(x=>x.value).join('')}
+function qaOtpFill(start,digits){const B=qaOtpBoxes();let k=start;for(const d of digits){if(k>=B.length)break;B[k].value=d;k++}B[Math.min(k,B.length-1)].focus();if(qaCode().length===6)setTimeout(qaVerify,80)}
+function qaOtpWire(){qaOtpBoxes().forEach((b,i,B)=>{
+b.addEventListener('input',()=>{const d=b.value.replace(/\D/g,'');b.value='';if(d)qaOtpFill(i,d.split(''));b.parentNode.classList.remove('bad');qaMsg('')});
+b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0){B[i-1].value='';B[i-1].focus();e.preventDefault()}else if(e.key==='ArrowLeft'&&i>0){B[i-1].focus();e.preventDefault()}else if(e.key==='ArrowRight'&&i<5){B[i+1].focus();e.preventDefault()}else if(e.key==='Enter'){qaVerify()}});
+b.addEventListener('paste',e=>{const d=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);if(d){e.preventDefault();B.forEach(x=>x.value='');qaOtpFill(0,d.split(''))}});
+b.addEventListener('focus',()=>b.select())})}
+function qaResTick(){const r=$('qaRes');if(!r)return;const f=()=>{const left=Math.ceil((qaResendAt-Date.now())/1000);if(!$('qaRes')){clearInterval(qaResTmr);return}r.disabled=left>0;r.textContent=left>0?'renvoyer le code ('+left+' s)':'renvoyer le code';if(left<=0)clearInterval(qaResTmr)};f();qaResTmr=setInterval(f,1000)}
+function qaSent(res,code){if(res==='ok'){qaResendAt=Date.now()+45000;return true}if(res==='demo'){qaResendAt=Date.now()+45000;setTimeout(()=>qaMsg('Mode démo (envoi d’e-mail non configuré) : ton code est <b>'+code+'</b>.','ok'),0);return true}qaMsg(QA_ERR[res]||QA_ERR.fail);return false}
+async function qaLogin(){const em=$('qEm').value.trim();qaMsg('');
+if(!EMAIL_RX.test(em)){qaMsg('Cette adresse e-mail ne semble pas valide.');$('qEm').focus();return}
+qaBusy(true,'Envoi du code…');const h=await emailHashHex(em),rec=store.g('mb_acc_'+h);
+if(!rec){qaBusy(false,'Recevoir mon code');qaMsg('Aucun espace pour cette adresse sur cet appareil. <a href="#" onclick="qaOpen(\'signup\');return false">Créer un compte</a>');return}
+const a=await decBlob(em,rec);if(!a){qaBusy(false,'Recevoir mon code');qaMsg('Espace introuvable ou illisible sur cet appareil.');return}
+const code=genCode();const res=await sendCode(em,code,a.prenom);if(res!=='ok'&&res!=='demo'){qaBusy(false,'Recevoir mon code');qaMsg(QA_ERR[res]);return}
+pendingAuth={email:em,hash:h,nom:a.nom,prenom:a.prenom,code,exp:Date.now()+10*60000,isNew:false};qaOpen('verify');qaSent(res,code)}
+async function qaSendSignup(){const nom=$('qNom').value.trim(),pre=$('qPre').value.trim(),em=$('qEm2').value.trim();qaMsg('');
+if(!pre){qaMsg('Indique ton prénom.');$('qPre').focus();return}if(!nom){qaMsg('Indique ton nom.');$('qNom').focus();return}
+if(!EMAIL_RX.test(em)){qaMsg('Cette adresse e-mail ne semble pas valide.');$('qEm2').focus();return}
+if(!$('qCk').checked){qaMsg('Coche la case pour accepter l’enregistrement sur cet appareil.');$('qCk').focus();return}
+qaBusy(true,'Envoi du code…');const h=await emailHashHex(em);
+if(store.g('mb_acc_'+h)){qaBusy(false,'Créer mon espace');qaMsg('Un espace existe déjà pour cette adresse. <a href="#" onclick="qaOpen(\'login\');return false">Se connecter</a>');return}
+const code=genCode();const res=await sendCode(em,code,pre);if(res!=='ok'&&res!=='demo'){qaBusy(false,'Créer mon espace');qaMsg(QA_ERR[res]);return}
+pendingAuth={email:em,hash:h,nom,prenom:pre,code,exp:Date.now()+10*60000,isNew:true};qaOpen('verify');qaSent(res,code)}
+async function qaResend(){if(!pendingAuth||Date.now()<qaResendAt)return;const code=genCode();const res=await sendCode(pendingAuth.email,code,pendingAuth.prenom);
+if(res==='ok'||res==='demo'){pendingAuth.code=code;pendingAuth.exp=Date.now()+10*60000;pendingAuth.tries=0;qaOpen('verify');if(qaSent(res,code)&&res==='ok')qaMsg('Nouveau code envoyé.','ok')}else qaMsg(QA_ERR[res])}
+function qaOtpBad(msg){qaMsg(msg);const o=document.querySelector('.qa-otp');if(o){o.classList.remove('bad');void o.offsetWidth;o.classList.add('bad')}qaOtpBoxes().forEach(x=>x.value='');const f=qaOtpBoxes()[0];if(f)f.focus()}
+async function qaVerify(){if(!pendingAuth){qaOpen('login');return}const v=qaCode();
+if(v.length<6){qaOtpBad('Entre les 6 chiffres du code.');return}
+if(Date.now()>pendingAuth.exp){qaOtpBad('Ce code a expiré. Demande-en un nouveau.');return}
+pendingAuth.tries=(pendingAuth.tries||0)+1;if(pendingAuth.tries>5){pendingAuth.code=null;qaOtpBad('Trop d’essais. Demande un nouveau code.');return}
+if(!pendingAuth.code||v!==pendingAuth.code){qaOtpBad('Code incorrect. Il te reste '+(5-pendingAuth.tries)+' essai'+(5-pendingAuth.tries>1?'s':'')+'.');return}
 if(pendingAuth.isNew)await hSet(pendingAuth.email,'mb_acc_'+pendingAuth.hash,{nom:pendingAuth.nom,prenom:pendingAuth.prenom,email:pendingAuth.email});
-user={name:pendingAuth.email,email:pendingAuth.email,hash:pendingAuth.hash,nom:pendingAuth.nom,prenom:pendingAuth.prenom};pendingAuth=null;qaMode='login';qaClose();go('compte')}
+user={name:pendingAuth.email,email:pendingAuth.email,hash:pendingAuth.hash,nom:pendingAuth.nom,prenom:pendingAuth.prenom};const isNew=pendingAuth.isNew;pendingAuth=null;qaMode='login';qaLabel();
+const p=$('qaPanel');if(p){p.innerHTML=`<div class="qa-done"><span class="qa-ok">${qaI('check',30)}</span><h2 id="qaT">${isNew?'Ton espace est prêt':'Bon retour'}, ${esc(user.prenom||'')} !</h2><p>${isNew?'Tes prochains bilans seront enregistrés ici, chiffrés.':'Connexion réussie.'}</p></div>`}
+setTimeout(()=>{qaClose();go('compte')},1100)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('qaPanel');if(p&&!p.classList.contains('hide'))qaClose(true)}});
 document.addEventListener('mousedown',e=>{const w=$('qaWrap');if(w&&!w.contains(e.target))qaClose()});
 try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
 try{const pf=store.g('mb_pref');if(pf){place=pf.place||'';if(pf.km)kmSel=String(pf.km);if(pf.sort)resSort=pf.sort}}catch(e){}
