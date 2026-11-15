@@ -153,6 +153,34 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .cp-cap span{display:inline-block;padding:4px 12px;border-radius:999px;background:color-mix(in srgb,var(--ac) 8%,transparent);color:var(--ac)}
 @container (max-width:560px){.hero2-in{grid-template-columns:1fr;grid-template-areas:"k" "h" "z" "l" "c" "f" "s"}.compass{max-width:260px;justify-self:center;margin:22px 0 0}.hero2-lead{margin-top:18px}.hero2-facts{grid-template-columns:1fr}.hero2-facts div+div{padding-left:0;border-left:0;border-top:1px solid var(--bd)}.hero2-facts div{padding:10px 0}.hero2-cta button{width:100%;justify-content:center}}
 @media (prefers-reduced-motion:reduce){.needle{animation:none;transition:none}.hero2-cta button,.cp{transition:none}}
+
+.rail .card{margin:0}
+.rail h3{margin:0;font-size:1rem}
+.w-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.w-tag{font-size:.72rem;font-weight:700;color:var(--ac);background:var(--ac2);padding:3px 8px;border-radius:999px}
+.w-sub{font-size:.82rem;margin:0 0 10px;line-height:1.45}
+.w-btn{width:auto!important;margin:0!important;padding:8px 16px!important;border-radius:999px!important;background:var(--tx)!important;color:var(--card)!important;font:650 .85rem system-ui,sans-serif!important}
+.w-link{width:auto!important;margin:0!important;padding:2px 0!important;background:none!important;color:var(--ac)!important;font:600 .8rem system-ui,sans-serif!important;text-decoration:underline;text-underline-offset:3px}
+.br-stage{display:grid;place-items:center;height:150px;margin:2px 0 8px;border-radius:16px;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--ac) 10%,transparent),transparent 70%)}
+.br-orb{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;text-align:center;font:700 .82rem system-ui,sans-serif;color:#fff;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--ac) 70%,#fff),var(--ac));box-shadow:0 0 0 10px color-mix(in srgb,var(--ac) 14%,transparent),0 0 0 22px color-mix(in srgb,var(--ac) 7%,transparent);transition:transform 5s cubic-bezier(.45,0,.55,1)}
+.br-orb.on{transform:scale(.82)}.br-orb.on.in{transform:scale(1.32)}
+.br-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.md-pick{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:6px 0 10px}
+.md-b{width:auto!important;margin:0!important;padding:6px 0 4px!important;display:flex!important;flex-direction:column;align-items:center;gap:2px!important;border-radius:12px!important;background:transparent!important;border:1px solid transparent;transition:background .15s,border-color .15s}
+.md-b span{font-size:1.35rem;line-height:1}.md-b small{font-size:.62rem;color:var(--mu);white-space:nowrap}
+.md-b:hover{background:var(--ac2)!important}.md-b.on{background:var(--ac2)!important;border-color:var(--ac)}.md-b.on small{color:var(--ac);font-weight:700}
+.md-week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px 0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.md-d{display:flex;flex-direction:column;align-items:center;gap:2px}.md-d i{font-style:normal;font-size:.95rem;line-height:1.3;color:var(--mu)}.md-d small{font-size:.66rem;color:var(--mu)}.md-d.today small{color:var(--ac);font-weight:800}
+.md-msg{font-size:.84rem;line-height:1.45;margin:10px 0 4px;color:var(--tx)}.md-msg a{color:var(--ac)}
+.w-priv{font-size:.72rem;color:var(--mu);margin:4px 0 0}
+.w-tip{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--card)),var(--card) 70%)}
+.tp-txt{margin:4px 0 0;font:600 .98rem/1.45 "Bricolage Grotesque",system-ui,sans-serif;color:var(--tx);text-wrap:pretty}
+.w-sos{border:1px solid color-mix(in srgb,var(--hi) 35%,var(--bd));background:color-mix(in srgb,var(--hi) 6%,var(--card))}
+.w-sos h3{color:var(--hi);margin-bottom:6px}
+.sos-l{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--hi) 18%,transparent);color:var(--tx)}
+.sos-l:first-of-type{border-top:0}.sos-l b{font:800 1.15rem "Bricolage Grotesque",system-ui,sans-serif;min-width:44px;color:var(--tx)}.sos-l span{font-size:.8rem;color:var(--mu);line-height:1.35}
+.sos-l:hover b{color:var(--hi)}
+@media (prefers-reduced-motion:reduce){.br-orb{transition:none}}
 </style>
 </head>
 <body>
@@ -165,25 +193,36 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <p class="mu">Outil d’auto-évaluation et d’orientation. Il ne pose aucun diagnostic et ne remplace pas un professionnel de santé. En danger immédiat : 112 ou 15. Besoin de parler : 3114 (24h/24, gratuit).</p>
 </main>
 <button id="quickExit" type="button" onclick="quickExit()" title="Quitter immédiatement le site (ou appuie deux fois sur Échap)">✕ Quitter vite</button>
-<aside class="rail">
-<div class="card" style="text-align:center;padding:20px 16px">
-<svg width="150" height="104" viewBox="0 0 150 104" aria-hidden="true" style="display:block;margin:0 auto 6px">
-<path d="M30 8 L52 52 L30 96 L8 52 Z" fill="var(--ac2)"/>
-<path d="M75 0 L102 52 L75 104 L48 52 Z" fill="var(--ac)" opacity=".88"/>
-<path d="M118 22 L137 52 L118 82 L99 52 Z" fill="#ffb86b" opacity=".9"/>
-</svg>
-<p class="mu" style="margin:0">Chaque petit pas compte.</p>
-</div>
-<div class="card">
+<aside class="rail" aria-label="Outils et ressources">
+<section class="card w-breath" aria-labelledby="brT">
+<div class="w-head"><h3 id="brT">Respire avec moi</h3><span class="w-tag">1 min</span></div>
+<p class="mu w-sub">Cohérence cardiaque : 5 secondes pour inspirer, 5 pour expirer. Ça calme le cœur et les pensées.</p>
+<div class="br-stage"><div class="br-orb" id="brOrb"><span id="brTxt">Prêt·e ?</span></div></div>
+<div class="br-row"><button class="w-btn" id="brBtn" onclick="breathToggle()">Commencer</button><span class="mu" id="brLeft" aria-live="polite"></span></div>
+</section>
+<section class="card w-mood" aria-labelledby="mdT">
+<div class="w-head"><h3 id="mdT">Ta météo intérieure</h3><span class="w-tag">Aujourd’hui</span></div>
+<div class="md-pick" role="group" aria-label="Comment te sens-tu aujourd’hui ?" id="mdPick"></div>
+<div class="md-week" id="mdWeek" aria-label="Tes 7 derniers jours"></div>
+<p class="md-msg" id="mdMsg" aria-live="polite"></p>
+<p class="w-priv">🔒 Reste sur ton appareil.</p>
+</section>
+<section class="card w-tip" aria-labelledby="tpT">
+<div class="w-head"><h3 id="tpT">L’idée du jour</h3><button class="w-link" onclick="tipNext()">Une autre</button></div>
+<p class="tp-txt" id="tpTxt"></p>
+</section>
+<section class="card">
 <h3 style="margin-top:0">Ressources rapides</h3>
 <a class="qlink" href="https://www.psycom.org" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">📘</span><span><b>Psycom</b><small>Comprendre la santé mentale, en clair</small></span></a>
 <a class="qlink" href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">💬</span><span><b>Mon soutien psy</b><small>Séances remboursées avec un psychologue partenaire</small></span></a>
 <a class="qlink" href="https://www.sante.fr" target="_blank" rel="noopener"><span class="ico" aria-hidden="true">🗂️</span><span><b>Annuaire santé officiel</b><small>Trouver un professionnel vérifié près de chez soi</small></span></a>
-</div>
-<div class="card">
-<h3 style="margin-top:0">En cas d’urgence</h3>
-<p class="mu" style="margin:0">☎️ <b style="color:var(--tx)">112 ou 15</b> — danger immédiat<br>☎️ <b style="color:var(--tx)">3114</b> — écoute et prévention du suicide, 24h/24, gratuit, partout en France</p>
-</div>
+</section>
+<section class="card w-sos" aria-labelledby="sosT">
+<h3 id="sosT">En cas d’urgence</h3>
+<a class="sos-l" href="tel:112"><b>112</b><span>Danger immédiat (ou 15, SAMU)</span></a>
+<a class="sos-l" href="tel:3114"><b>3114</b><span>Prévention du suicide, 24h/24, gratuit</span></a>
+<a class="sos-l" href="tel:119"><b>119</b><span>Enfance en danger, 24h/24, gratuit</span></a>
+</section>
 </aside>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -891,6 +930,28 @@ document.addEventListener('mousedown',e=>{const w=$('qaWrap');if(w&&!w.contains(
 try{if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js')}catch(e){}
 try{const pf=store.g('mb_pref');if(pf){place=pf.place||'';if(pf.km)kmSel=String(pf.km);if(pf.sort)resSort=pf.sort}}catch(e){}
 go('home');
+
+/* ===== Rail : respiration, météo intérieure, idée du jour ===== */
+let brT=null,brEnd=0;
+function breathToggle(){const o=$('brOrb'),b=$('brBtn'),t=$('brTxt'),l=$('brLeft');if(!o)return;
+if(brT){clearInterval(brT);brT=null;o.classList.remove('on','in');t.textContent='Bien joué.';b.textContent='Recommencer';l.textContent='';return}
+brEnd=Date.now()+60000;b.textContent='Arrêter';o.classList.add('on');let ph=0;
+const step=()=>{const left=Math.ceil((brEnd-Date.now())/1000);if(left<=0){clearInterval(brT);brT=null;o.classList.remove('on','in');t.textContent='Bien joué.';b.textContent='Recommencer';l.textContent='Une minute pour toi.';return}
+const inhale=Math.floor((60-left)/5)%2===0;o.classList.toggle('in',inhale);t.textContent=inhale?'Inspire…':'Expire…';l.textContent=left+' s'};
+step();brT=setInterval(step,1000)}
+const MOODS=[['☀️','Bien'],['🌤️','Ça va'],['☁️','Bof'],['🌧️','Pas bien'],['⛈️','Très mal']];
+const MOOD_MSG=['Super. Note ce qui t’a fait du bien aujourd’hui, pour t’en souvenir les jours plus gris.','Tant mieux. Un petit moment pour toi ce soir ? Une marche, un appel à un proche, de la musique.','Les journées « bof » arrivent à tout le monde. Une minute de respiration ci-dessus peut aider.','Merci de l’avoir dit. <a href="#" onclick="startTheme(\'hum\');return false">Faire le point sur ton humeur</a> peut t’aider à savoir vers qui te tourner.','Tu n’as pas à rester seul·e avec ça. Appelle le <a href="tel:3114"><b>3114</b></a> (24h/24, gratuit), ou le <b>112</b> si tu es en danger.'];
+function moodGet(){try{return JSON.parse(localStorage.getItem('mb_mood')||'{}')}catch(e){return{}}}
+function dayKey(d){return d.toISOString().slice(0,10)}
+function moodSet(k){const m=moodGet();m[dayKey(new Date())]=k;const keep={};Object.keys(m).sort().slice(-30).forEach(x=>keep[x]=m[x]);try{localStorage.setItem('mb_mood',JSON.stringify(keep))}catch(e){}moodRender(true)}
+function moodRender(said){const P=$('mdPick'),W=$('mdWeek'),M=$('mdMsg');if(!P)return;const m=moodGet(),today=m[dayKey(new Date())];
+P.innerHTML=MOODS.map(([e,l],k)=>`<button class="md-b ${today===k?'on':''}" aria-pressed="${today===k}" onclick="moodSet(${k})" title="${l}"><span aria-hidden="true">${e}</span><small>${l}</small></button>`).join('');
+const J=['D','L','M','M','J','V','S'];let w='';for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const v=m[dayKey(d)];w+=`<span class="md-d ${i===0?'today':''}" title="${d.toLocaleDateString('fr-FR',{weekday:'long'})}${v!=null?' : '+MOODS[v][1]:''}"><i>${v!=null?MOODS[v][0]:'·'}</i><small>${J[d.getDay()]}</small></span>`}W.innerHTML=w;
+M.innerHTML=today!=null?MOOD_MSG[today]:'Comment te sens-tu aujourd’hui ? Un clic suffit.'}
+const TIPS=['Bois un grand verre d’eau et ouvre la fenêtre deux minutes. Le corps aide la tête.','Écris trois choses qui se sont bien passées aujourd’hui, même minuscules.','Envoie un message à quelqu’un à qui tu n’as pas parlé depuis longtemps.','Sors marcher 10 minutes à la lumière du jour, sans téléphone si tu peux.','Ce soir, coupe les écrans une heure avant de dormir.','Quand une pensée dure revient, demande-toi : « Qu’est-ce que je dirais à un ami ? »','Range une seule petite chose. Finir une tâche, même minuscule, redonne de l’élan.','Note ce qui t’inquiète sur un papier, puis pose-le. Ta tête n’a plus besoin de le retenir.','Fais une chose juste pour le plaisir aujourd’hui, sans but.','Demander de l’aide n’est pas un échec : c’est un choix courageux.','Mange à heure régulière aujourd’hui : l’humeur aime la routine.','Mets une chanson que tu aimes et écoute-la vraiment, sans rien faire d’autre.'];
+let tipI=null;function tipShow(){const t=$('tpTxt');if(!t)return;if(tipI==null){const d=new Date();tipI=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%TIPS.length}t.textContent=TIPS[tipI]}
+function tipNext(){tipI=((tipI??0)+1)%TIPS.length;tipShow()}
+document.addEventListener('DOMContentLoaded',()=>{moodRender();tipShow()});if(document.readyState!=='loading'){setTimeout(()=>{moodRender();tipShow()},0)}
 </script>
 </body>
 </html>
