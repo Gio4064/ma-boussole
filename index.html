@@ -277,6 +277,7 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 .plan-b textarea{width:100%;box-sizing:border-box;border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;background:var(--card);color:var(--tx);resize:vertical;min-height:72px}
 .plan-b textarea:focus{outline:2px solid var(--ac);border-color:transparent}
 .plan-hero h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:6px 0 8px}
+.mz-gr{display:flex;gap:4px;margin:12px 0 2px;overflow-x:auto;scrollbar-width:none}.mz-gr button{all:unset;cursor:pointer;white-space:nowrap;padding:6px 11px;border-radius:999px;font:600 .78rem system-ui,sans-serif;color:var(--mu);border:1px solid var(--bd)}.mz-gr button.on{background:var(--tx);color:var(--card);border-color:var(--tx)}.mz-gr button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -292,7 +293,7 @@ background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--ac) 13%,t
 <div class="mz-prog" aria-hidden="true"><i id="mzProg"></i></div>
 <div class="mz-ctl"><button class="mz-c" id="mzShuf" onclick="mzShuffle()" aria-pressed="true" aria-label="Lecture aléatoire" title="Lecture aléatoire"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><button class="mz-c" onclick="mzStep(-1)" aria-label="Morceau précédent"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button><button class="mz-play" id="mzPlay" onclick="mzToggle()" aria-label="Lecture"><svg id="mzPI" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></button><button class="mz-c" onclick="mzStep(1)" aria-label="Morceau suivant"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button><select id="mzTimer" class="mz-tim" onchange="mzSetTimer(this.value)" aria-label="Arrêt automatique" title="Arrêt automatique"><option value="0">⏱ Off</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">1 h</option></select></div>
 <label class="mz-vol"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/></svg><input type="range" min="0" max="100" value="55" id="mzVol" oninput="mzVolume(this.value)" aria-label="Volume"></label>
-<div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux"></div>
+<div class="mz-gr" id="mzGr" role="group" aria-label="Ambiance"></div><div class="mz-list" id="mzList" role="listbox" aria-label="Morceaux"></div>
 <p class="mz-note">Musique générée par ton navigateur : libre de droits, rien n’est téléchargé.</p>
 </div></div>
 <div class="qa" id="qaWrap" style="position:relative"><button id="qaBtn" class="qa-btn" onclick="qaToggle()" aria-haspopup="true"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span id="qaLbl">Se connecter</span></button><div id="qaPanel" class="hide" style="position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 10px 28px rgba(30,30,70,.16);padding:14px;z-index:40"></div></div></div>
@@ -1056,14 +1057,24 @@ document.addEventListener('DOMContentLoaded',()=>{moodRender();tipShow()});if(do
 
 /* ===== Musique apaisante : playlist chill composée en direct (Web Audio) ===== */
 const MZ=[
-{n:'Matin calme',d:'Piano doux et rythme léger',k:60,m:'maj',bpm:74,prog:[0,5,1,4],inst:'ep',dr:1},
-{n:'Thé chaud',d:'Lo-fi tranquille',k:62,m:'dor',bpm:70,prog:[0,3,0,3],inst:'ep',dr:1},
-{n:'Pluie de juillet',d:'Nappes et notes suspendues',k:65,m:'maj',bpm:64,prog:[3,2,1,0],inst:'pad',dr:0},
-{n:'Promenade',d:'Guitare pincée, pas léger',k:67,m:'maj',bpm:80,prog:[0,3,5,4],inst:'pl',dr:1},
-{n:'Nuit tranquille',d:'Lent, pour s’endormir',k:63,m:'maj',bpm:60,prog:[0,3,0,4],inst:'pad',dr:0},
-{n:'Bord de lac',d:'Piano et reflets',k:58,m:'maj',bpm:72,prog:[0,2,3,4],inst:'ep',dr:1},
-{n:'Fin d’après-midi',d:'Jazz chill, accords ronds',k:57,m:'dor',bpm:76,prog:[0,3,1,4],inst:'ep',dr:1},
-{n:'Respiration lente',d:'Très doux, sans rythme',k:60,m:'maj',bpm:56,prog:[0,3],inst:'pad',dr:0}];
+{n:'Coucher de soleil',d:'Marimba et rythme de plage',g:'ete',k:62,m:'maj',bpm:92,prog:[0,4,5,3],inst:'mar',dr:2},
+{n:'Hamac',d:'Balancement lent à l’ombre',g:'ete',k:60,m:'maj',bpm:84,prog:[0,3,1,4],inst:'mar',dr:1},
+{n:'Apéro au soleil',d:'Bossa nova douce',g:'ete',k:57,m:'maj',bpm:96,prog:[1,4,0,0],inst:'ep',dr:3},
+{n:'Brise marine',d:'Guitare et vent tiède',g:'ete',k:57,m:'dor',bpm:88,prog:[0,3],inst:'pl',dr:2},
+{n:'Road trip',d:'Fenêtres ouvertes, tête ailleurs',g:'ete',k:64,m:'maj',bpm:102,prog:[0,4,5,3],inst:'pl',dr:2},
+{n:'Glace à la vanille',d:'Piano léger et ensoleillé',g:'ete',k:67,m:'maj',bpm:98,prog:[0,5,3,4],inst:'ep',dr:2},
+{n:'Terrasse',d:'Marimba et bossa',g:'ete',k:62,m:'dor',bpm:90,prog:[0,3,1,4],inst:'mar',dr:3},
+{n:'Fin d’après-midi',d:'Jazz chill, accords ronds',g:'det',k:57,m:'dor',bpm:76,prog:[0,3,1,4],inst:'ep',dr:1},
+{n:'Matin calme',d:'Piano doux et rythme léger',g:'det',k:60,m:'maj',bpm:74,prog:[0,5,1,4],inst:'ep',dr:1},
+{n:'Thé chaud',d:'Lo-fi tranquille',g:'det',k:62,m:'dor',bpm:70,prog:[0,3,0,3],inst:'ep',dr:1},
+{n:'Promenade',d:'Guitare pincée, pas léger',g:'det',k:67,m:'maj',bpm:80,prog:[0,3,5,4],inst:'pl',dr:1},
+{n:'Bord de lac',d:'Piano et reflets',g:'det',k:58,m:'maj',bpm:72,prog:[0,2,3,4],inst:'ep',dr:1},
+{n:'Carillon',d:'Marimba seul, sans rythme',g:'det',k:65,m:'maj',bpm:70,prog:[0,3,5,4],inst:'mar',dr:0},
+{n:'Pluie de juillet',d:'Nappes et notes suspendues',g:'dodo',k:65,m:'maj',bpm:64,prog:[3,2,1,0],inst:'pad',dr:0},
+{n:'Nuit tranquille',d:'Lent, pour s’endormir',g:'dodo',k:63,m:'maj',bpm:60,prog:[0,3,0,4],inst:'pad',dr:0},
+{n:'Nuage',d:'Flotter, ne penser à rien',g:'dodo',k:60,m:'maj',bpm:58,prog:[0,5,3,4],inst:'pad',dr:0},
+{n:'Respiration lente',d:'Très doux, sans rythme',g:'dodo',k:60,m:'maj',bpm:56,prog:[0,3],inst:'pad',dr:0}];
+const MZG=[['all','Tout'],['ete','Été chill'],['det','Détente'],['dodo','Sommeil']];let mzGr='all';
 const SCALES={maj:[0,2,4,5,7,9,11],dor:[0,2,3,5,7,9,10]};
 let mzI=Math.floor(Math.random()*MZ.length),mzCtx=null,mzMaster=null,mzBus=null,mzRev=null,mzDel=null,mzNoiseBuf=null,mzOn=false,mzSched=null,mzStepN=0,mzNext=0,mzRng=Math.random,mzMotif=[],mzShuf=true,mzStopTmr=null,mzBars=56;
 function mzR(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -1082,6 +1093,7 @@ function mzEP(m,t,len,v,rev){const c=mzCtx,g=c.createGain();mzEnv(g,t,.008,.11*v
 const f=mf(m),g2=c.createGain();g2.gain.value=.22;g2.connect(g);mzOsc('sine',f,t,t+len+2,g);mzOsc('sine',f*2.001,t,t+len+2,g2);mzOsc('triangle',f,t,t+len+2,g,4)}
 function mzPad(m,t,len){const c=mzCtx,g=c.createGain();mzEnv(g,t,1.4,.028,.85,len,1.6);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=950;g.connect(lp);lp.connect(mzBus);lp.connect(mzRev);[-8,8].forEach(d=>mzOsc('sawtooth',mf(m),t,t+len+5,g,d))}
 function mzPluck(m,t,v){const c=mzCtx,g=c.createGain();mzEnv(g,t,.004,.09*v,0,.05,.25);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;g.connect(lp);lp.connect(mzBus);lp.connect(mzDel);lp.connect(mzRev);mzOsc('triangle',mf(m),t,t+1.6,g)}
+function mzMar(m,t,v){const c=mzCtx,g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12*v,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+.9);const g2=c.createGain();g2.gain.setValueAtTime(.05*v,t);g2.gain.exponentialRampToValueAtTime(.0001,t+.12);g.connect(mzBus);g.connect(mzRev);g2.connect(mzBus);mzOsc('sine',mf(m),t,t+1,g);mzOsc('sine',mf(m)*3.98,t,t+.2,g2)}
 function mzBass(m,t,len){const c=mzCtx,g=c.createGain();mzEnv(g,t,.012,.2,.6,len*.85,.15);const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;g.connect(lp);lp.connect(mzBus);mzOsc('sine',mf(m),t,t+len+1,g);mzOsc('triangle',mf(m),t,t+len+1,g,-3)}
 function mzNoise(t,dur,type,freq,q,peak){const c=mzCtx,s=c.createBufferSource();s.buffer=mzNoiseBuf;const f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;f.Q.value=q;const g=c.createGain();g.gain.setValueAtTime(peak,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(mzBus);s.start(t,Math.random()*.5);s.stop(t+dur+.05)}
 function mzKick(t){const c=mzCtx,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(115,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);g.gain.setValueAtTime(.42,t);g.gain.exponentialRampToValueAtTime(.0001,t+.32);o.connect(g);g.connect(mzBus);o.start(t);o.stop(t+.35)}
@@ -1092,10 +1104,14 @@ function mzTick(){const tr=MZ[mzI],e=60/tr.bpm/2,c=mzCtx;
 while(mzNext<c.currentTime+.18){const s=mzStepN,bar=Math.floor(s/8),st=s%8,t=mzNext,deg=tr.prog[bar%tr.prog.length];
 if(bar>=mzBars){mzAuto();return}
 const sw=st%2?e*.16:0,tt=t+sw;
-if(st===0){const ch=mzChord(tr,deg);if(tr.inst==='pad')ch.forEach(n=>mzPad(n,t,e*8));else{ch.forEach((n,i)=>mzEP(n,t+i*.012,e*(tr.inst==='pl'?3:7),.9,1));}}
+if(st===0){const ch=mzChord(tr,deg);if(tr.inst==='pad')ch.forEach(n=>mzPad(n,t,e*8));else if(tr.inst==='mar')ch.forEach(n=>mzPad(n-12,t,e*8));else{ch.forEach((n,i)=>mzEP(n,t+i*.012,e*(tr.inst==='pl'?3:7),.9,1));}}
+if(tr.inst==='mar'&&[0,2,3,5,6].includes(st)){const ch=mzChord(tr,deg);const idx=[0,1,2,3,2][[0,2,3,5,6].indexOf(st)];mzMar(ch[idx]+12,tt,st===0?.9:.65)}
+if(tr.dr===3&&(st===2||st===5)&&bar>=1)mzChord(tr,deg).slice(1).forEach((n,i)=>mzEP(n,tt+i*.008,e*.8,.55,0));
 if(tr.inst==='pl'&&(st===3||st===6)){mzChord(tr,deg).slice(1).forEach((n,i)=>mzPluck(n+12,tt+i*.03,.7))}
-if(st===0||(st===5&&tr.dr)||(st===4&&!tr.dr))mzBass(mzNote(tr,deg,-2),tt,e*(tr.dr?2.5:4));
-if(tr.dr&&bar>=2){if(st===0||st===5)mzKick(tt);if(st===2||st===6)mzNoise(tt,.07,'bandpass',1900,1.5,.07);mzNoise(tt,.035,'highpass',8000,.7,st%2?.018:.03);if(mzRng()<.06)mzNoise(tt,.01,'highpass',3000,.5,.025)}
+if(st===0||(st===5&&tr.dr)||(st===3&&tr.dr===3)||(st===4&&!tr.dr))mzBass(mzNote(tr,deg,-2),tt,e*(tr.dr?2.5:4));
+if(tr.dr===1&&bar>=2){if(st===0||st===5)mzKick(tt);if(st===2||st===6)mzNoise(tt,.07,'bandpass',1900,1.5,.07);mzNoise(tt,.035,'highpass',8000,.7,st%2?.018:.03);if(mzRng()<.06)mzNoise(tt,.01,'highpass',3000,.5,.025)}
+if(tr.dr===2&&bar>=2){if(st===0||st===4)mzKick(tt);if(st===2||st===6)mzNoise(tt,.09,'bandpass',1500,1.2,.06);mzNoise(tt,.05,'highpass',6500,.8,st%2?.035:.016)}
+if(tr.dr===3&&bar>=1){const cl=bar%2?[2,4]:[0,3,6];if(cl.includes(st))mzNoise(tt,.04,'bandpass',2600,3,.08);if(st===0||st===3||st===4||st===7)mzKick(tt);mzNoise(tt,.04,'highpass',7000,.8,.014)}
 if(bar>=4&&bar<mzBars-2){if(bar%8===0&&st===0&&mzRng()<.5){mzMotif=mzMotif.map(x=>mzRng()<.2?(x==null?null:x+(mzRng()<.5?1:-1)):x)}
 const n=mzMotif[s%32];if(n!=null){const m=mzNote(tr,n,1);tr.inst==='pad'?mzPluck(m,tt,.55):mzEP(m,tt,e*1.6,.75,1)}}
 mzStepN++;mzNext+=e}
@@ -1109,7 +1125,9 @@ function mzStop(now){mzOn=false;clearInterval(mzSched);mzSched=null;if(mzCtx){if
 window.mzStop=mzStop;
 function mzToggle(){mzOn?mzStop():mzPlay()}
 function mzGo(i){mzI=(i+MZ.length)%MZ.length;if(mzOn){clearInterval(mzSched);mzFade(0,.6);setTimeout(()=>{if(mzOn)mzStart()},650)}mzUI()}
-function mzStep(d){if(mzShuf&&d>0){let j;do{j=Math.floor(Math.random()*MZ.length)}while(j===mzI&&MZ.length>1);mzGo(j)}else mzGo(mzI+d)}
+function mzPool(){const L=MZ.map((x,i)=>i).filter(i=>mzGr==='all'||MZ[i].g===mzGr);return L.length?L:MZ.map((x,i)=>i)}
+function mzStep(d){const P=mzPool();if(mzShuf&&d>0){let j;do{j=P[Math.floor(Math.random()*P.length)]}while(j===mzI&&P.length>1);mzGo(j)}else{const k=P.indexOf(mzI);mzGo(P[((k<0?0:k+d)+P.length)%P.length])}}
+function mzGroup(g){mzGr=g;mzUI()}
 function mzAuto(){mzStep(1)}
 function mzPick(i){mzI=i;mzOn?mzGo(i):mzPlay();mzUI()}
 function mzShuffle(){mzShuf=!mzShuf;mzUI()}
@@ -1117,7 +1135,7 @@ function mzSetTimer(m){clearTimeout(mzStopTmr);m=+m;if(m)mzStopTmr=setTimeout(()
 function mzOpen(v){const p=$('mzPanel'),b=$('mzBubble');const open=v==null?p.hidden:v;p.hidden=!open;b.setAttribute('aria-expanded',open);if(open)setTimeout(()=>$('mzPlay').focus(),20)}
 function mzUI(){const t=MZ[mzI];$('mzTitle').textContent=t.n;$('mzSub').textContent=t.d+' · '+t.bpm+' bpm';$('mzPI').innerHTML=mzOn?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$('mzPlay').setAttribute('aria-label',mzOn?'Pause':'Lecture');
 $('mz').classList.toggle('on',mzOn);const sh=$('mzShuf');sh.setAttribute('aria-pressed',mzShuf);sh.classList.toggle('act',mzShuf);
-$('mzList').innerHTML=MZ.map((x,i)=>`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})"><span class="mz-n">${i===mzI&&mzOn?'<span class="mz-eq"><i></i><i></i><i></i></span>':String(i+1).padStart(2,'0')}</span><span class="mz-tt">${x.n}<small>${x.d}</small></span></button>`).join('');
+$('mzGr').innerHTML=MZG.map(([k,l])=>`<button class="${mzGr===k?'on':''}" aria-pressed="${mzGr===k}" onclick="mzGroup('${k}')">${l}</button>`).join('');$('mzList').innerHTML=MZ.map((x,i)=>(mzGr!=='all'&&x.g!==mzGr)?'':`<button role="option" aria-selected="${i===mzI}" class="${i===mzI?'sel':''}" onclick="mzPick(${i})"><span class="mz-n">${i===mzI&&mzOn?'<span class="mz-eq"><i></i><i></i><i></i></span>':({ete:'☀️',det:'🍃',dodo:'🌙'})[x.g]}</span><span class="mz-tt">${x.n}<small>${x.d}</small></span></button>`).join('');
 $('mzBubble').querySelector('.mz-lbl').textContent=mzOn?t.n:'Musique apaisante'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('mzPanel');if(p&&!p.hidden){mzOpen(false);document.getElementById('mzBubble').focus()}}});
 document.addEventListener('click',e=>{const m=document.getElementById('mz');const p=document.getElementById('mzPanel');if(m&&p&&!p.hidden&&!m.contains(e.target))mzOpen(false)});
