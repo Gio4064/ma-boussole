@@ -270,7 +270,8 @@ h+=`<div class="card"><h2>Étape suivante</h2>${minorNote()}<p>${r.lv==2?"Tes r�
 h+=nearCard('nearRes',CATS[r.theme]||CATS_DEFAULT,'📍 Près de chez toi — '+esc(r.label));
 $('v').innerHTML=h}
 function catList(){return [['Toutes les catégories','__all'],...(CATS[aideThemeSel]||CATS_DEFAULT)]}
-function aideV(){const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
+let aideKeepCat=false;
+function aideV(){loadRdv();if(!aideKeepCat)catSel=null;aideKeepCat=false;place='';osmList=[];resGroups=null;resPage=1;resFilter='all';osmGen++;const CL=catList();if(!catSel||!CL.some(c=>c[1]===catSel))catSel=CL[0][1];
 $('v').innerHTML=`${aideThemeSel==='viol'||aideThemeSel==='harc'?EXIT_TIP:''}<div class="card" id="aide-recherche"><h2>Trouver de l’aide près de chez moi${aideThemeSel?' — <span style="color:var(--ac)">'+esc(BTHEMES.find(t=>t[0]==aideThemeSel)[1])+'</span>':''}</h2>${aideThemeSel?'<button class="s" style="margin:0 0 10px" onclick="aideThemeSel=null;aideV()">Voir toutes les catégories</button>':'<p class="mu">Fais un bilan pour voir ici des catégories adaptées à ta situation, ou choisis directement ci-dessous.</p>'}
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
 <div style="flex:1 1 190px;min-width:160px"><label class="mu" style="display:block;font-size:.82rem">Je cherche</label><select id="plCat" onchange="catSel=this.value;if(place)aideSearch()" style="width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit">${CL.map(([n,q])=>`<option value="${esc(q)}" ${q===catSel?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
@@ -286,7 +287,7 @@ $('v').innerHTML=`${aideThemeSel==='viol'||aideThemeSel==='harc'?EXIT_TIP:''}<di
 <div id="lk"></div></div>
 ${aideThemeSel?themeHotlineCard(aideThemeSel):''}
 ${ecoute()}
-<div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;if(place)aideSearch()}
+<div class="card"><h3>Pour s’informer</h3><ul><li><a href="https://www.psycom.org" target="_blank" rel="noopener">Psycom</a> : santé mentale, pour comprendre et s’orienter</li><li><a href="https://monsoutienpsy.ameli.fr" target="_blank" rel="noopener">Mon soutien psy</a> : séances avec un psychologue partenaire, prises en charge selon conditions, sur adressage d’un médecin</li></ul></div>`;}
 async function aideSearch(){place=$('pl').value.trim();if(!place)return;savePrefs();const sel=$('plCat');if(sel)catSel=sel.value;const CL=catList();const found=CL.find(c=>c[1]===catSel);showMap(found?found[0]:'Résultats',catSel);await aideL()}
 let mapCur=null,osmList=[],osmAbort=null,osmGen=0,aideThemeSel=null,catSel='',osmErr=false;
 const SEARCH_KM=20;
@@ -386,7 +387,7 @@ const dist=same?'à '+esc(x.ville):(x.d!=null?(x.mode&&x.mode!=='E'&&x.src!=='os
 return `<div class="place-card"><div class="ico" aria-hidden="true">${ico}</div><div class="body"><b>${esc(x.name)}</b><span class="mu">${esc(x.prof||(mapCur?mapCur.label:''))}</span>${dist?`<span class="pc-dist">📍 ${dist}</span>`:''}${x.mode?`<span class="mu">${esc(MODE_LBL[x.mode]||'')}${x.struct?' — '+esc(x.struct):''}</span>`:''}${x.addr?`<span class="mu">${esc(x.addr)}</span>`:''}${x.phone?`<a href="${telHref}">☎️ ${esc(x.phone)}</a>`:`<a href="${findTel}" target="_blank" rel="noopener">☎️ Trouver le numéro ↗</a>`}${x.mail?`<a href="mailto:${esc(x.mail)}">✉️ ${esc(x.mail)}</a>`:''}${x.site?`<a href="${esc(x.site)}" target="_blank" rel="noopener">🌐 Site</a>`:''}${SRC_LBL[x.src]?`<span class="badge-off">✔ ${SRC_LBL[x.src]}</span>`:''}<div class="pc-btns"><a class="pc-btn" href="${ext}" target="_blank" rel="noopener">🗺️ Voir sur Google Maps</a>${dl?(dl.direct?`<a class="pc-btn pc-doc" href="${dl.profile}" target="_blank" rel="noopener">📅 Prendre RDV en ligne</a>`:`<a class="pc-btn pc-doc pc-doc-q" href="${dl.profile}" target="_blank" rel="noopener">🔎 Chercher sur Doctolib</a>`):''}</div>${dl?(dl.direct?`<span class="pc-alt mu">✔ Lien de rendez-vous vérifié</span>`:`<span class="pc-alt mu">Sa fiche s’affiche en premier résultat si elle est sur Doctolib. Sinon : <a href="${dl.list}" target="_blank" rel="noopener">tous les ${esc(dl.label)} à ${esc(x.ville)}</a> ou appelez le cabinet.</span>`):''}${dl&&!dl.direct&&RDV_CONTACT?`<button class="pc-claim" onclick="rdvClaim(${cardRef(x)})">Vous êtes ce professionnel ? Ajoutez votre lien de RDV</button>`:''}<span class="pc-links"><a href="${dir}" target="_blank" rel="noopener">🧭 Itinéraire ↗</a></span></div></div>`}
 
 let RDV=null;
-function loadRdv(){if(RDV)return;RDV={links:[],deps:[],manual:{}};fetch('rdv_links.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j){RDV=j;if(osmList&&osmList.length&&$('resGrid'))renderResults(false)}}).catch(()=>{})}
+function loadRdv(){if(RDV)return;RDV={links:[],deps:[],manual:{}};fetch('rdv_links.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j){RDV=j;if($('resGrid')){if(resGroups)renderGroups();else if(osmList&&osmList.length)renderResults(false)}}}).catch(()=>{})}
 function rdvLinkOf(x,n){if(!RDV)return null;const dep=String(x.cp||'').slice(0,2);if(!(RDV.deps||[]).includes(dep))return null;
 const key=n+'|'+dep;if(RDV.manual&&RDV.manual[key])return RDV.manual[key];
 const m=(RDV.links||[]).find(l=>l.slug===n||l.slug.startsWith(n+'-'));return m?m.url:null}
@@ -457,7 +458,7 @@ if(!$(id))return;
 if(res.every(g=>!g.list)){body.innerHTML='<p class="mu">Les annuaires sont momentanément indisponibles. <a href="#" onclick="go(\'aide\');return false">Ouvrir la recherche complète</a></p>';return}
 body.innerHTML=res.map(g=>{const ico=catIcon(g.t),L=g.list?sortRes(g.list):[];const tq=g.t.replace(/'/g,"\\'");
 return `<div class="res-group"><h3><span aria-hidden="true">${ico}</span>${esc(g.label)} <span class="mu" style="font-weight:400;font-size:.85rem">${L.length?L.length+' à moins de '+km+' km':'aucun à moins de '+km+' km'}</span></h3>${L.length?`<div class="grid">${L.slice(0,3).map(x=>cardHtml(x,ico)).join('')}</div>`:''}<button class="s" style="margin:8px 0 0" onclick="openAide('${tq}')">${L.length>3?'Voir les '+L.length+' ▸':'Chercher plus loin ▸'}</button></div>`}).join('')+updNote()}
-function openAide(t){if(!catList().some(c=>c[1]===t))aideThemeSel=null;catSel=t;go('aide')}
+function openAide(t){if(!catList().some(c=>c[1]===t))aideThemeSel=null;catSel=t;aideKeepCat=true;go('aide')}
 function resortResults(){resPage=1;if(resGroups){resGroups.forEach(g=>{if(g.list)sortRes(g.list)});renderGroups()}else if(osmList.length){sortRes(osmList);renderResults(false)}}
 let lastRef=null,resGroups=null,resOthers=[];
 function renderGroups(){const box=$('resGrid'),empty=$('resEmpty'),more=$('resMore');if(!box||!resGroups)return;if(more)more.classList.add('hide');
