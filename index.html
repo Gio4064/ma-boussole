@@ -882,7 +882,7 @@ d.setFillColor(...hex(LVC));d.roundedRect(W-M-46,y+3.5,40,8,4,4,'F');font(9.5,1,
 d.setFillColor(236,234,244);d.roundedRect(M+6,y+14,CW-12,4,2,2,'F');d.setFillColor(...hex(LVC));d.roundedRect(M+6,y+14,Math.max(4,(CW-12)*r.sc/r.max),4,2,2,'F');
 font(9.5,0);d.text(S,M+6,y+24);y+=h+G}
 {const SCL=scaleOf(r.age);
-const N=an.neg.map(o=>({t:wrap(o.txt,9.5,1,HW-14),ex:wrap('Ex. : « '+o.ex.t.replace(/\.$/,'')+' » — '+SCL[o.ex.a],8,0,HW-14)}));
+const N=an.neg.map(o=>({t:wrap(o.txt,9.5,1,HW-14),ex:wrap('Ex. : « '+o.ex.t.replace(/\.$/,'')+' » — '+ansLabel(o.ex.q,o.ex.a,r.age),8,0,HW-14)}));
 const P=an.pos.map(t=>wrap(t,9.5,0,HW-14));
 const hN=16+N.reduce((s,o)=>s+o.t.length*LH(9.5)+o.ex.length*LH(8)+3,0),hP=16+P.reduce((s,L)=>s+L.length*LH(9.5)+3,0);
 const h=Math.max(hN,hP,26);
