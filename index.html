@@ -1246,14 +1246,17 @@ N.forEach(o=>{d.setFillColor(...hex(LVC));d.circle(M+7.2,z-1.2,1.1,'F');font(9.5
 const x2=M+HW+G;box(x2,y,HW,h);head('Tes points d’appui',x2,y);z=y+15.5;
 P.forEach(L=>{d.setFillColor(47,158,107);d.circle(x2+7.2,z-1.2,1.1,'F');font(9.5,0,TX);d.text(L,x2+10,z);z+=L.length*LH(9.5)+3});
 y+=h+G}
-{const A=an.tips.slice(0,2).map(t=>wrap(t,9.5,0,CW-22));const pk=(r.exP||(r.exP=exPick(r)));
-const X=pk.map(o=>{const e=EX[o.key];const w=wrap(o.why,8,0,CW-60);return{t:e.t,f:e.f==='s'?'1 fois par semaine':'Chaque jour',w:w.length>1?w[0].replace(/\s*\S*$/,'')+'…':w[0]}});
-const h=14+A.reduce((s,L)=>s+L.length*LH(9.5)+2.5,0)+9+X.length*(LH(9.5)+LH(8)+3.2)+LH(7.5)+2;box(M,y,CW,h);head('Mes conseils et mes exercices',M,y);let z=y+16;
-A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.8,'F');font(8.5,1,[255,255,255]);d.text(String(i+1),M+9,z-.2,{align:'center'});font(9.5,0,TX);d.text(L,M+15,z);z+=L.length*LH(9.5)+2.5});
-z+=1;d.setDrawColor(228,226,238);d.setLineWidth(.3);d.line(M+6,z,W-M-6,z);z+=6;font(8.5,1,INK);d.text('À faire dans les prochains jours, choisis d’après tes réponses :',M+6,z);z+=LH(9.5)+1.2;
-X.forEach(o=>{d.setDrawColor(...hex(T.c1));d.setLineWidth(.5);d.roundedRect(M+7,z-3.2,3.6,3.6,.8,.8,'S');font(9.5,1,TX);d.text(o.t,M+14,z);font(8,1,INK);d.text(o.f,W-M-6,z,{align:'right'});z+=LH(8)+.6+1.6;font(8,0,MU);d.text(o.w,M+14,z);z+=LH(9.5)+1.4});
-font(7.5,0,MU);d.text(user?'Ces exercices sont dans ton dossier Ma Boussole, avec un suivi jour après jour.':'Crée ton dossier gratuit sur Ma Boussole pour les suivre jour après jour.',M+6,z+.5);
+{const pk=(r.exP||(r.exP=exPick(r)));const fit=(t,w,z,b)=>{font(z,b);if(d.getTextWidth(t)<=w)return t;while(t.length>4&&d.getTextWidth(t+'…')>w)t=t.slice(0,-1);return t.trim()+'…'};
+const A=an.tips.slice(0,2).map(t=>wrap(t,9,0,HW-20));
+const X=pk.map(o=>{const e=EX[o.key];return{t:wrap(e.t,9.5,1,HW-22),w:fit((e.f==='s'?'1 fois par semaine':'Chaque jour')+(o.q?' · selon ta réponse à « '+o.q+' »':''),HW-22,7.5)}});
+const hA=16+A.reduce((s,L)=>s+L.length*LH(9)+2.5,0),hX=16+X.reduce((s,o)=>s+o.t.length*LH(9.5)+LH(7.5)+3.2,0)+LH(7.5)+1,h=Math.max(hA,hX);
+box(M,y,HW,h);head('Mes conseils',M,y);let z=y+16;
+A.forEach((L,i)=>{d.setFillColor(...hex(T.c1));d.circle(M+9,z-1.3,2.6,'F');font(8,1,[255,255,255]);d.text(String(i+1),M+9,z-.3,{align:'center'});font(9,0,TX);d.text(L,M+14,z);z+=L.length*LH(9)+2.5});
+const x2=M+HW+G;box(x2,y,HW,h);head('Mes exercices',x2,y);z=y+16;
+X.forEach(o=>{d.setDrawColor(...hex(T.c1));d.setLineWidth(.5);d.roundedRect(x2+6.5,z-3.1,3.4,3.4,.8,.8,'S');font(9.5,1,TX);d.text(o.t,x2+13,z);z+=o.t.length*LH(9.5)+.4;font(7.5,0,MU);d.text(o.w,x2+13,z);z+=LH(7.5)+2.8});
+font(7.5,1,INK);d.text(fit(user?'Suivi jour après jour dans ton dossier.':'À suivre dans ton dossier Ma Boussole.',HW-12,7.5,1),x2+6,y+h-4);
 y+=h+G}
+if(297-14-y<52){d.addPage();d.addImage(pdfBg(T,false),'JPEG',0,0,210,297);y=18}
 const avail=297-14-y;
 {const rc=recoFor(r);const idx=THEME_HOTLINE_IDX[r.theme];let lines=(idx!=null?THEMES[idx][1]:THEMES[0][1].slice(0,2));if(rc.line)lines=[rc.line].concat(lines.filter(l=>l[0]!==rc.line[0]));lines=lines.slice(0,3);
 const rowsL=lines.map(([n,ds])=>({n,L:wrap(ds,8.5,0,HW-12)}));
@@ -1652,7 +1655,7 @@ const D=EX_BY[r.theme]||[],rk=k=>{const i=D.indexOf(k);return i<0?9:i};
 const keys=Object.keys(sc).sort((a,b)=>sc[b]-sc[a]||rk(a)-rk(b));const N=r.lv===0&&keys.length<3?2:3,out=[];
 if((r.sec||(r.theme==='viol'&&r.lv===2))&&!out.includes('plan'))out.push('plan');
 for(const k of keys)if(!out.includes(k)&&out.length<N)out.push(k);for(const k of D)if(!out.includes(k)&&out.length<N)out.push(k);
-return out.map(k=>{const w=why[k];return{key:k,why:!w?`Conseillé pour le thème ${r.label}`:w.x.sec?'Conseillé d’après certaines de tes réponses : à préparer au calme, pour les moments difficiles.':`Tu as répondu « ${ansLabel(w.x,w.a,r.age)} » à « ${w.x.t.replace(/\.$/,'')} »`}})}
+return out.map(k=>{const w=why[k];return{key:k,q:w&&!w.x.sec?w.x.t.replace(/\.$/,''):null,why:!w?`Conseillé pour le thème ${r.label}`:w.x.sec?'Conseillé d’après certaines de tes réponses : à préparer au calme, pour les moments difficiles.':`Tu as répondu « ${ansLabel(w.x,w.a,r.age)} » à « ${w.x.t.replace(/\.$/,'')} »`}})}
 const TH_IC=k=>(BTHEMES.find(t=>t[0]===k)||[])[2]||'🧭';
 function dosK(n){return'mb_'+n+'_'+user.hash}
 async function dosGet(n,d){return user?hGet(user.name,dosK(n),d):d}
